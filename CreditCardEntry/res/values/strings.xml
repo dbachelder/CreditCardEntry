@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">CreditCardEntry</string>
+    <string name="CreditCardNumberHelp">Enter credit or debit card number</string>
+    <string name="ExpirationDateHelp">Expiration date (MM/DD)</string>
+    <string name="SecurityCodeHelp">Security code</string>
+    <string name="ZipHelp">Zip code of billing address</string>
+
+</resources>

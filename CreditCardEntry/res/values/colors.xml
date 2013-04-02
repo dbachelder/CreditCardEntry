@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="stroke">#000</color>
+    <color name="grey_dark">#fff</color>
+    <color name="grey_light">#ddd</color>
+</resources>
