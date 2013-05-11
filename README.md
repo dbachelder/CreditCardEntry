@@ -1,17 +1,17 @@
 CreditCardEntry
 =========
 
-![][1]
-
 Smooth interface
 
-![][2]
+![][1]
 
 Identifies credit card type
 
-![][3]
+![][2]
 
 Hides number for privacy
+
+![][3]
 
 # Version History
 
