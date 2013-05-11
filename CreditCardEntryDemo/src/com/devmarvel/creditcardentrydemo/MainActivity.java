@@ -20,7 +20,6 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		
 		setContentView(R.layout.activity_main);
 		linearLayout = (LinearLayout) findViewById(R.id.layer);
 		
@@ -29,7 +28,7 @@ public class MainActivity extends Activity {
 		
 		buttonAuthorize = (Button) findViewById(R.id.buttonAuthorize);
 		buttonAuthorize.setOnClickListener(new OnClickListener() {
-			
+		
 			@Override
 			public void onClick(View arg0) {
 				if(form.isCreditCardValid())
