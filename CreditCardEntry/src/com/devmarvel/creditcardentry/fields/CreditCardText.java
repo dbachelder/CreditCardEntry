@@ -58,6 +58,7 @@ public class CreditCardText extends CreditEntryFieldBase {
 				this.setSelection(3);
 				this.addTextChangedListener(this);
 				delegate.onBadInput(this);
+				setValid(false);
 				return;
 			}
 
@@ -80,8 +81,10 @@ public class CreditCardText extends CreditEntryFieldBase {
 					.lengthOfFormattedStringForType(type)) {
 				if (CreditCardUtil.isValidNumber(formatted)) {
 					delegate.onCreditCardNumberValid();
+					setValid(true);
 				} else {
 					delegate.onBadInput(this);
+					setValid(false);
 				}
 			}
 

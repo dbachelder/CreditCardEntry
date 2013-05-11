@@ -29,6 +29,7 @@ import com.devmarvel.creditcardentry.fields.SecurityCodeText;
 import com.devmarvel.creditcardentry.fields.ZipCodeText;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil.CardType;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil.CreditCardFieldDelegate;
+import com.devmarvel.creditcardentry.library.CreditCard;
 
 public class CreditCardEntry extends HorizontalScrollView implements
 		OnTouchListener, OnGestureListener, CreditCardFieldDelegate {
@@ -295,5 +296,21 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	public void setTextHelper(TextView textHelper) {
 		this.textHelper = textHelper;
+	}
+
+	public boolean isCreditCardValid() {
+		return creditCardText.isValid() && expDateText.isValid()
+				&& securityCodeText.isValid() && zipCodeText.isValid();
+	}
+
+	public CreditCard getCreditCard() {
+		if (isCreditCardValid()) {
+			return new CreditCard(creditCardText.getText().toString(),
+					expDateText.getText().toString(), securityCodeText
+							.getText().toString(), zipCodeText.getText()
+							.toString());
+		} else {
+			return null;
+		}
 	}
 }

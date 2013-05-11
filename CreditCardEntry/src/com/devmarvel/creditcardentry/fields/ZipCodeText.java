@@ -36,10 +36,14 @@ public class ZipCodeText extends CreditEntryFieldBase {
 	}
 
 	public void afterTextChanged(Editable s) {
-
 		String zipCode = s.toString();
 		if (zipCode.length() == 5) {
 			delegate.onZipCodeValid();
+			setValid(true);
+		}
+		else
+		{
+			setValid(false);
 		}
 	}
 

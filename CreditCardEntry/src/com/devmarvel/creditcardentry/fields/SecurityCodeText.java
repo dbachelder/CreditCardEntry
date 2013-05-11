@@ -47,6 +47,11 @@ public class SecurityCodeText extends CreditEntryFieldBase {
 
 			if (number.length() == length) {
 				delegate.onSecurityCodeValid();
+				setValid(true);
+			}
+			else
+			{
+				setValid(false);
 			}
 		} else {
 			this.removeTextChangedListener(this);

@@ -3,7 +3,6 @@ package com.devmarvel.creditcardentry.fields;
 import android.R.color;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Point;
 import android.os.SystemClock;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -28,6 +27,8 @@ public abstract class CreditEntryFieldBase extends EditText implements
 	protected CreditCardFieldDelegate delegate;
 
 	protected Context context;
+	
+	private boolean valid = false;
 
 	public CreditEntryFieldBase(Context context) {
 		super(context);
@@ -173,5 +174,13 @@ public abstract class CreditEntryFieldBase extends EditText implements
 	}
 
 	public abstract String helperText();
+
+	public boolean isValid() {
+		return valid;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
 
 }

@@ -13,6 +13,8 @@ import com.devmarvel.creditcardentry.R;
 import com.devmarvel.creditcardentry.internal.CreditCardEntry;
 
 public class CreditCardForm extends RelativeLayout {
+	
+	private CreditCardEntry entry;
 
 	public CreditCardForm(Context context) {
 		super(context);
@@ -31,61 +33,6 @@ public class CreditCardForm extends RelativeLayout {
 
 	public void init(Context context) {
 
-		// <?xml version="1.0" encoding="utf-8"?>
-		// <RelativeLayout
-		// xmlns:android="http://schemas.android.com/apk/res/android"
-		// android:layout_width="match_parent"
-		// android:layout_height="match_parent" >
-		//
-		// <LinearLayout
-		// android:id="@+id/linearLayout1"
-		//
-		//
-		// <FrameLayout android:layout_width="wrap_content"
-		// android:layout_height="wrap_content">
-		// <ImageView
-		// android:id="@+id/imageView1"
-		// android:layout_width="wrap_content"
-		// android:layout_height="wrap_content"
-		// android:src="@drawable/amex" />
-		//
-		// <ImageView
-		// android:id="@+id/imageView2"
-		// android:layout_width="wrap_content"
-		// android:layout_height="wrap_content"
-		// android:src="@drawable/amex_back" />
-		//
-		// </FrameLayout>
-		//
-		//
-		//
-		// <EditText
-		// android:id="@+id/editText1"
-		// android:layout_width="wrap_content"
-		// android:layout_height="wrap_content"
-		// android:ems="10" >
-		//
-		// <requestFocus />
-		// </EditText>
-		// </LinearLayout>
-		//
-		// <TextView
-		// android:id="@+id/textView1"
-		// android:layout_width="wrap_content"
-		// android:layout_height="wrap_content"
-		// android:layout_below="@+id/linearLayout1"
-		// android:layout_centerHorizontal="true"
-		// android:layout_marginTop="31dp"
-		// android:text="TextView" />
-		//
-		// </RelativeLayout>
-
-		// android:layout_width="wrap_content"
-		// android:layout_height="wrap_content"
-		// android:layout_alignParentLeft="true"
-		// android:layout_alignParentTop="true"
-		// android:layout_marginLeft="22dp"
-		// android:layout_marginTop="40dp" >
 		LinearLayout layout = new LinearLayout(context);
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
@@ -131,7 +78,7 @@ public class CreditCardForm extends RelativeLayout {
 		r.setMargins(0, 30, 0, 0);
 		textHelp.setLayoutParams(r);
 
-		CreditCardEntry entry = new CreditCardEntry(context);
+		entry = new CreditCardEntry(context);
 		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 		entry.setLayoutParams(r);
@@ -142,25 +89,16 @@ public class CreditCardForm extends RelativeLayout {
 		layout.addView(entry);
 		this.addView(layout);
 		this.addView(textHelp);
-		// <TextView
-		// android:id="@+id/textView1"
-		// android:layout_width="wrap_content"
-		// android:layout_height="wrap_content"
-		// android:layout_below="@+id/linearLayout1"
-		// android:layout_centerHorizontal="true"
-		// android:layout_marginTop="31dp"
-		// android:text="TextView" />
-		/*
-		 * 
-		 * 
-		 * <requestFocus /> </EditText>
-		 * 
-		 * <Button android:id="@+id/button1" android:layout_width="wrap_content"
-		 * android:layout_height="wrap_content"
-		 * android:layout_alignRight="@+id/editText1"
-		 * android:layout_below="@+id/editText1" android:layout_marginTop="30dp"
-		 * android:text="Button" />
-		 */
+	}
+	
+	public boolean isCreditCardValid()
+	{
+		return entry.isCreditCardValid();
+	}
+	
+	public CreditCard getCreditCard()
+	{
+		return entry.getCreditCard();
 	}
 
 }
