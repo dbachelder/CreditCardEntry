@@ -1,9 +1,22 @@
 CreditCardEntry
 =========
 
+![][1]
+
+Smooth interface
+
+![][2]
+
+Identifies credit card type
+
+![][3]
+
+Hides number for privacy
+
 # Version History
 
 4/2/2013 - Initial Commit
+5/11/2013 - Updated Demo added screenshots
 
 # Introduction
 
@@ -21,9 +34,30 @@ Please see below for an example. Delegate calls for valid entry and accessors fo
       protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
   
-        form = new CreditCardForm(this);
         setContentView(R.layout.activity_main);
-        linearLayout = (LinearLayout) findViewById(R.id.layer);
-        linearLayout.addView(form);
-      }
+    	linearLayout = (LinearLayout) findViewById(R.id.layer);
+		
+        form = new CreditCardForm(this);
+    	linearLayout.addView(form);
+    	
+    	buttonAuthorize = (Button) findViewById(R.id.buttonAuthorize);
+    	buttonAuthorize.setOnClickListener(new OnClickListener() {
+    		
+    		@Override
+    		public void onClick(View arg0) {
+    			if(form.isCreditCardValid())
+    			{
+    				CreditCard card = form.getCreditCard();
+    				//Pass credit card to service
+    			}
+    			else
+    			{
+    				//Alert Credit card invalid
+    			}
+    		}
+    	});
     }
+    
+[1]: https://raw.github.com/jgrana/CreditCardEntry/master/screenshot1.png "Screenshot 1"
+[2]: https://raw.github.com/jgrana/CreditCardEntry/master/screenshot2.png "Screenshot 2"
+[3]: https://raw.github.com/jgrana/CreditCardEntry/master/screenshot3.png "Screenshot 3"
