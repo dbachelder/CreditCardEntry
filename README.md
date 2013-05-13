@@ -1,6 +1,7 @@
 CreditCardEntry
 =========
 
+
 Smooth interface
 
 ![][1]
@@ -17,10 +18,6 @@ Hides number for privacy
 
 4/2/2013 - Initial Commit
 5/11/2013 - Updated Demo added screenshots
-
-# Introduction
-
-This library provides an elegant form for credit card entry that can be easily added to a activity or fragment. Regex is used to validate credit card types and a Luhn check is performed on the card numbers. This form was inspired by the credit entry UI on Square.
 
 # Using the library
 
