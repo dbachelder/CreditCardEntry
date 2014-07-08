@@ -1,0 +1,40 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+    }
+}
+apply plugin: 'com.android.library'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion '20'
+
+    defaultConfig {
+        applicationId "com.devmarvel.creditcardentry"
+        minSdkVersion 8
+        targetSdkVersion 20
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs       = ['CreditCardEntry/assets']
+            res.srcDirs          = ['CreditCardEntry/res']
+            aidl.srcDirs         = ['CreditCardEntry/src']
+            resources.srcDirs    = ['CreditCardEntry/src']
+            renderscript.srcDirs = ['CreditCardEntry/src']
+            java.srcDirs         = ['CreditCardEntry/src']
+            manifest.srcFile 'CreditCardEntry/AndroidManifest.xml'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:20.+'
+}
