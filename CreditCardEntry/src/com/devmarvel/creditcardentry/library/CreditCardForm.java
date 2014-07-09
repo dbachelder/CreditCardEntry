@@ -74,7 +74,7 @@ public class CreditCardForm extends RelativeLayout {
 		layout.setId(1);
 
 		TextView textHelp = new TextView(context);
-		textHelp.setText("Enter credit or debit card number");
+		textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
         textHelp.setTextColor(getResources().getColor(R.color.text_helper_color));
 		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
