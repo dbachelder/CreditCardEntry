@@ -3,4 +3,5 @@
     <color name="stroke">#000</color>
     <color name="grey_dark">#fff</color>
     <color name="grey_light">#ddd</color>
+    <color name="text_helper_color">#ffffff</color>
 </resources>
