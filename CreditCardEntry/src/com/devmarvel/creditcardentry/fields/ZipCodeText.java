@@ -44,6 +44,7 @@ public class ZipCodeText extends CreditEntryFieldBase {
             InputMethodManager inputManager =
                     (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(this.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            clearFocus();
         }
 		else
 		{
