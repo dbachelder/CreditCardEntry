@@ -36,12 +36,12 @@ public class CreditCardForm extends RelativeLayout {
 	public void init(Context context) {
 
 		LinearLayout layout = new LinearLayout(context);
-		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 		params.addRule(LinearLayout.HORIZONTAL);
-		params.setMargins(10, 40, 10, 0);
+		params.setMargins(0, 0, 0, 0);
 		layout.setLayoutParams(params);
 		layout.setBackgroundResource(R.drawable.background_white);
 
