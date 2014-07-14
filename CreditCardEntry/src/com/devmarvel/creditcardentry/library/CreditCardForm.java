@@ -80,7 +80,7 @@ public class CreditCardForm extends RelativeLayout {
 				LayoutParams.WRAP_CONTENT);
 		r.addRule(RelativeLayout.BELOW, layout.getId());
 		r.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		r.setMargins(0, 15, 0, 30);
+		r.setMargins(0, 15, 0, 20);
 		textHelp.setLayoutParams(r);
 
 		entry = new CreditCardEntry(context);
