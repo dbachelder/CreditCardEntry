@@ -237,20 +237,11 @@ public class CreditCardEntry extends HorizontalScrollView implements
 			this.textHelper.setText(field.helperText());
 		}
 
-		if (field.getClass().equals(CreditCardText.class)) {
-			new CountDownTimer(1000, 20) {
-
-				public void onTick(long millisUntilFinished) {
-					CreditCardEntry.this.scrollTo((int) (millisUntilFinished),
-							0);
-				}
-
-				public void onFinish() {
-					CreditCardEntry.this.scrollTo(0, 0);
-				}
-			}.start();
-		} else {
-			new CountDownTimer(1500, 20) {
+        // NOTE(evyatar): the logic ahead is a weird hacky. it was here in the original package,
+        // and I was unable to make the widget look good without it. If we keep the timer's
+        // numbers small, the sliding effect will remain un-noticable.
+		if (! field.getClass().equals(CreditCardText.class)) {
+			new CountDownTimer(100, 10) {
 
 				public void onTick(long millisUntilFinished) {
 					CreditCardEntry.this.scrollTo(
