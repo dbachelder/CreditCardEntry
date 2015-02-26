@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
 apply plugin: 'com.android.library'
@@ -13,13 +13,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 20
-    buildToolsVersion '20'
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
-        applicationId "com.devmarvel.creditcardentry"
         minSdkVersion 8
-        targetSdkVersion 20
+        targetSdkVersion 21
     }
 
     sourceSets {
@@ -36,5 +35,5 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:support-v4:21.0.3'
 }
