@@ -46,4 +46,15 @@ public class CreditCard {
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("CreditCard{");
+		sb.append("cardNumber='").append(cardNumber).append('\'');
+		sb.append(", expDate='").append(expDate).append('\'');
+		sb.append(", securityCode='").append(securityCode).append('\'');
+		sb.append(", zipCode='").append(zipCode).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

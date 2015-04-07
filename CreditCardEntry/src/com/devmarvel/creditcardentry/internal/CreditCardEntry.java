@@ -15,6 +15,7 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -29,14 +30,14 @@ import com.devmarvel.creditcardentry.fields.SecurityCodeText;
 import com.devmarvel.creditcardentry.fields.ZipCodeText;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil.CardType;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil.CreditCardFieldDelegate;
+import com.devmarvel.creditcardentry.library.CardValidCallback;
 import com.devmarvel.creditcardentry.library.CreditCard;
 
 public class CreditCardEntry extends HorizontalScrollView implements
 		OnTouchListener, OnGestureListener, CreditCardFieldDelegate {
 
 	private Context context;
-
-	private LinearLayout container;
+	private final boolean includeZip;
 
 	private ImageView cardImage;
 	private ImageView backCardImage;
@@ -50,13 +51,15 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	private TextView textHelper;
 
 	private boolean showingBack;
+	private CardValidCallback onCardValidCallback;
 
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
-	public CreditCardEntry(Context context) {
+	public CreditCardEntry(Context context, boolean includeZip) {
 		super(context);
 
 		this.context = context;
+		this.includeZip = includeZip;
 
 		WindowManager wm = (WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE);
@@ -83,14 +86,14 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		this.setOnTouchListener(this);
 		this.setSmoothScrollingEnabled(true);
 
-		container = new LinearLayout(context);
+		LinearLayout container = new LinearLayout(context);
 		container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT));
+						LayoutParams.WRAP_CONTENT));
 		container.setOrientation(LinearLayout.HORIZONTAL);
 
 		creditCardText = new CreditCardText(context);
 		creditCardText.setDelegate(this);
-		creditCardText.setWidth((int) (width));
+		creditCardText.setWidth(width);
 		container.addView(creditCardText);
 
 		textFourDigits = new TextView(context);
@@ -106,8 +109,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		container.addView(securityCodeText);
 
 		zipCodeText = new ZipCodeText(context);
-		zipCodeText.setDelegate(this);
-		container.addView(zipCodeText);
+		if (includeZip) {
+			zipCodeText.setDelegate(this);
+			container.addView(zipCodeText);
+		}
 
 		this.addView(container);
 
@@ -183,12 +188,20 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	@Override
 	public void onSecurityCodeValid() {
-		focusOnField(zipCodeText);
+		if(includeZip) {
+			focusOnField(zipCodeText);
+		} else {
+			hideKeyboard();
+			securityCodeText.clearFocus();
+			if(onCardValidCallback != null) onCardValidCallback.cardValid(getCreditCard());
+		}
 	}
 
 	@Override
 	public void onZipCodeValid() {
-
+		hideKeyboard();
+		zipCodeText.clearFocus();
+		if(onCardValidCallback != null) onCardValidCallback.cardValid(getCreditCard());
 	}
 
 	@Override
@@ -300,7 +313,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	public boolean isCreditCardValid() {
 		return creditCardText.isValid() && expDateText.isValid()
-				&& securityCodeText.isValid() && zipCodeText.isValid();
+				&& securityCodeText.isValid() && (!includeZip || zipCodeText.isValid());
 	}
 
 	public CreditCard getCreditCard() {
@@ -312,5 +325,15 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		} else {
 			return null;
 		}
+	}
+
+	private void hideKeyboard() {
+		InputMethodManager inputManager =
+						(InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(this.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+
+	public void setOnCardValidCallback(CardValidCallback onCardValidCallback) {
+		this.onCardValidCallback = onCardValidCallback;
 	}
 }

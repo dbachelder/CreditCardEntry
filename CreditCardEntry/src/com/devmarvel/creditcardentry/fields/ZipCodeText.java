@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.util.AttributeSet;
-import android.view.inputmethod.InputMethodManager;
 
 import com.devmarvel.creditcardentry.R;
 
@@ -41,11 +40,7 @@ public class ZipCodeText extends CreditEntryFieldBase {
 		if (zipCode.length() == 5) {
 			delegate.onZipCodeValid();
 			setValid(true);
-            InputMethodManager inputManager =
-                    (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(this.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            clearFocus();
-        }
+		}
 		else
 		{
 			setValid(false);
