@@ -14,6 +14,10 @@ CreditCardEntry
  - added callback when data entry is complete and card is valid
  - optionally specify helper text color in XML attrs
 
+###4/8/2015
+ - Always return CreditCard object when requested even when invalid
+
+
 # Introduction
 
 This library provides an elegant form for credit card entry that can be easily added to a activity or fragment. Regex is used to validate credit card types and a Luhn check is performed on the card numbers. This form was inspired by the credit entry UI on Square.
