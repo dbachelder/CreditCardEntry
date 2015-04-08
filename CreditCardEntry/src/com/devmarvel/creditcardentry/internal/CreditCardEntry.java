@@ -317,19 +317,12 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	}
 
 	public CreditCard getCreditCard() {
-		if (isCreditCardValid()) {
-			return new CreditCard(creditCardText.getText().toString(),
-					expDateText.getText().toString(), securityCodeText
-							.getText().toString(), zipCodeText.getText()
-							.toString());
-		} else {
-			return null;
-		}
+		return new CreditCard(creditCardText.getText().toString(), expDateText.getText().toString(),
+													securityCodeText.getText().toString(), zipCodeText.getText().toString());
 	}
 
 	private void hideKeyboard() {
-		InputMethodManager inputManager =
-						(InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputManager.hideSoftInputFromWindow(this.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
