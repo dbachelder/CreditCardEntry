@@ -46,4 +46,35 @@ public class CreditCard {
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
+
+	public Integer getExpMonth() {
+		return getDateFragment(0);
+	}
+
+	public Integer getExpYear() {
+		return getDateFragment(1);
+	}
+
+	private Integer getDateFragment(int position) {
+		if(expDate != null && expDate.contains("/")) {
+			String[] split = expDate.split("/");
+			if(split.length > 1) {
+				try {
+					return Integer.valueOf(split[position]);
+				} catch (NumberFormatException ignore) {}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("CreditCard{");
+		sb.append("cardNumber='").append(cardNumber).append('\'');
+		sb.append(", expDate='").append(expDate).append('\'');
+		sb.append(", securityCode='").append(securityCode).append('\'');
+		sb.append(", zipCode='").append(zipCode).append('\'');
+		sb.append('}');
+		return sb.toString();
+	}
 }

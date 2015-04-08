@@ -3,8 +3,20 @@ CreditCardEntry
 
 # Version History
 
-4/2/2013 - Initial Commit
-5/11/2013 - Updated Demo added screenshots
+###4/2/2013
+ - Initial Commit
+
+###5/11/2013
+ - Updated Demo added screenshots
+
+###4/7/2015
+ - Made zip code optional
+ - added callback when data entry is complete and card is valid
+ - optionally specify helper text color in XML attrs
+
+###4/8/2015
+ - Always return CreditCard object when requested even when invalid
+
 
 # Introduction
 

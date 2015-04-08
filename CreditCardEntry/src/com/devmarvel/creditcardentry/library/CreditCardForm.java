@@ -1,10 +1,10 @@
 package com.devmarvel.creditcardentry.library;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,24 +17,46 @@ import com.devmarvel.creditcardentry.internal.CreditCardEntry;
 public class CreditCardForm extends RelativeLayout {
 	
 	private CreditCardEntry entry;
+	private boolean includeZip = true;
+	private int textHelperColor = R.color.text_helper_color;
 
 	public CreditCardForm(Context context) {
-		super(context);
-		init(context);
+		this(context, null);
 	}
 
 	public CreditCardForm(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init(context);
+		this(context, attrs, 0);
 	}
 
 	public CreditCardForm(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+
+		if(!isInEditMode()) {
+
+			// If the attributes are available, use them to color the icon
+			if(attrs != null){
+
+				TypedArray typedArray = null;
+				try {
+					typedArray = context.getTheme().obtainStyledAttributes(
+                  attrs,
+                  R.styleable.CreditCardForm,
+                  0,
+                  0
+          );
+
+					this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
+					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(textHelperColor));
+				} finally {
+					if (typedArray != null) typedArray.recycle();
+				}
+			}
+		}
+
 		init(context);
 	}
 
 	public void init(Context context) {
-
 		LinearLayout layout = new LinearLayout(context);
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.WRAP_CONTENT);
@@ -71,11 +93,11 @@ public class CreditCardForm extends RelativeLayout {
 		frame.addView(backView);
 		layout.addView(frame);
 
-		layout.setId(1);
+		layout.setId(R.id.linearLayout1);
 
 		TextView textHelp = new TextView(context);
 		textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
-        textHelp.setTextColor(getResources().getColor(R.color.text_helper_color));
+		textHelp.setTextColor(this.textHelperColor);
 		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 		r.addRule(RelativeLayout.BELOW, layout.getId());
@@ -83,7 +105,7 @@ public class CreditCardForm extends RelativeLayout {
 		r.setMargins(0, 15, 0, 20);
 		textHelp.setLayoutParams(r);
 
-		entry = new CreditCardEntry(context);
+		entry = new CreditCardEntry(context, includeZip);
 		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 		entry.setLayoutParams(r);
@@ -95,7 +117,11 @@ public class CreditCardForm extends RelativeLayout {
 		this.addView(layout);
 		this.addView(textHelp);
 	}
-	
+
+	public void setOnCardValidCallback(CardValidCallback callback) {
+		entry.setOnCardValidCallback(callback);
+	}
+
 	public boolean isCreditCardValid()
 	{
 		return entry.isCreditCardValid();
