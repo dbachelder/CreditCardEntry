@@ -18,7 +18,7 @@ public class CreditCardForm extends RelativeLayout {
 	
 	private CreditCardEntry entry;
 	private boolean includeZip = true;
-	private CardValidCallback callback = null;
+	private int textHelperColor = R.color.text_helper_color;
 
 	public CreditCardForm(Context context) {
 		this(context, null);
@@ -45,7 +45,8 @@ public class CreditCardForm extends RelativeLayout {
                   0
           );
 
-					this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_includeZip, true);
+					this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
+					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(textHelperColor));
 				} finally {
 					if (typedArray != null) typedArray.recycle();
 				}
@@ -96,7 +97,7 @@ public class CreditCardForm extends RelativeLayout {
 
 		TextView textHelp = new TextView(context);
 		textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
-        textHelp.setTextColor(getResources().getColor(R.color.text_helper_color));
+		textHelp.setTextColor(this.textHelperColor);
 		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 		r.addRule(RelativeLayout.BELOW, layout.getId());
@@ -118,7 +119,6 @@ public class CreditCardForm extends RelativeLayout {
 	}
 
 	public void setOnCardValidCallback(CardValidCallback callback) {
-		this.callback = callback;
 		entry.setOnCardValidCallback(callback);
 	}
 

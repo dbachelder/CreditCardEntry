@@ -12,6 +12,7 @@ CreditCardEntry
 ###4/7/2015
  - Made zip code optional
  - added callback when data entry is complete and card is valid
+ - optionally specify helper text color in XML attrs
 
 # Introduction
 
