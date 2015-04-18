@@ -10,13 +10,15 @@ CreditCardEntry
  - Updated Demo added screenshots
 
 ###4/7/2015
- - Made zip code optional
+ - Made zip code optional (app:include_zipp="false")
  - added callback when data entry is complete and card is valid
  - optionally specify helper text color in XML attrs
 
 ###4/8/2015
  - Always return CreditCard object when requested even when invalid
 
+###4/18/2015
+ - Made helper optional (app:include_helper="false")
 
 # Introduction
 

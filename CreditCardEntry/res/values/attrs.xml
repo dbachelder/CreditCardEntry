@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="CreditCardForm">
         <attr name="include_zip" format="boolean"/>
+        <attr name="include_helper" format="boolean"/>
         <attr name="helper_text_color" format="color"/>
     </declare-styleable>
 </resources>

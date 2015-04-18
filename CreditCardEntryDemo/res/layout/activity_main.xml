@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/zip_label"
         android:padding="15dp"
-        app:helper_text_color="@color/text_helper_color2"
+        app:include_helper="false"
         app:include_zip="true"/>
 
     <Button

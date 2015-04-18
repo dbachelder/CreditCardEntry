@@ -15,9 +15,10 @@ import com.devmarvel.creditcardentry.R;
 import com.devmarvel.creditcardentry.internal.CreditCardEntry;
 
 public class CreditCardForm extends RelativeLayout {
-	
+
 	private CreditCardEntry entry;
 	private boolean includeZip = true;
+	private boolean includeHelper;
 	private int textHelperColor = R.color.text_helper_color;
 
 	public CreditCardForm(Context context) {
@@ -46,6 +47,7 @@ public class CreditCardForm extends RelativeLayout {
           );
 
 					this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
+					this.includeHelper = typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
 					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(textHelperColor));
 				} finally {
 					if (typedArray != null) typedArray.recycle();
@@ -95,27 +97,30 @@ public class CreditCardForm extends RelativeLayout {
 
 		layout.setId(R.id.linearLayout1);
 
-		TextView textHelp = new TextView(context);
-		textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
-		textHelp.setTextColor(this.textHelperColor);
-		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
-		r.addRule(RelativeLayout.BELOW, layout.getId());
-		r.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		r.setMargins(0, 15, 0, 20);
-		textHelp.setLayoutParams(r);
-
 		entry = new CreditCardEntry(context, includeZip);
 		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 		entry.setLayoutParams(r);
 		entry.setCardImageView(view);
 		entry.setBackCardImage(backView);
-		entry.setTextHelper(textHelp);
+
+		this.addView(layout);
+
+		if (includeHelper) {
+			TextView textHelp = new TextView(context);
+			textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
+			textHelp.setTextColor(this.textHelperColor);
+			r = new LayoutParams(LayoutParams.WRAP_CONTENT,
+              LayoutParams.WRAP_CONTENT);
+			r.addRule(RelativeLayout.BELOW, layout.getId());
+			r.addRule(RelativeLayout.CENTER_HORIZONTAL);
+			r.setMargins(0, 15, 0, 20);
+			textHelp.setLayoutParams(r);
+			entry.setTextHelper(textHelp);
+			this.addView(textHelp);
+		}
 
 		layout.addView(entry);
-		this.addView(layout);
-		this.addView(textHelp);
 	}
 
 	public void setOnCardValidCallback(CardValidCallback callback) {
