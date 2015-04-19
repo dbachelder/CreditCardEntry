@@ -6,9 +6,9 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -29,24 +29,24 @@ import com.devmarvel.creditcardentry.fields.ExpDateText;
 import com.devmarvel.creditcardentry.fields.SecurityCodeText;
 import com.devmarvel.creditcardentry.fields.ZipCodeText;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil.CardType;
-import com.devmarvel.creditcardentry.internal.CreditCardUtil.CreditCardFieldDelegate;
 import com.devmarvel.creditcardentry.library.CardValidCallback;
 import com.devmarvel.creditcardentry.library.CreditCard;
 
+@SuppressLint("ViewConstructor")
 public class CreditCardEntry extends HorizontalScrollView implements
 		OnTouchListener, OnGestureListener, CreditCardFieldDelegate {
 
-	private Context context;
+	private final Context context;
 	private final boolean includeZip;
 
 	private ImageView cardImage;
 	private ImageView backCardImage;
-	private CreditCardText creditCardText;
-	private ExpDateText expDateText;
-	private SecurityCodeText securityCodeText;
-	private ZipCodeText zipCodeText;
+	private final CreditCardText creditCardText;
+	private final ExpDateText expDateText;
+	private final SecurityCodeText securityCodeText;
+	private final ZipCodeText zipCodeText;
 
-	private TextView textFourDigits;
+	private final TextView textFourDigits;
 
 	private TextView textHelper;
 
@@ -61,34 +61,28 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		this.context = context;
 		this.includeZip = includeZip;
 
-		WindowManager wm = (WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE);
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
 
-		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-		int width, height;
+		int width;
 
-		if (currentapiVersion < 13) {
+		if (android.os.Build.VERSION.SDK_INT < 13) {
 			width = display.getWidth(); // deprecated
-			height = display.getHeight();
 		} else {
 			Point size = new Point();
 			display.getSize(size);
 			width = size.x;
-			height = size.y;
 		}
 
-		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
+		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		params.gravity = Gravity.CENTER_VERTICAL;
 		setLayoutParams(params);
-
 		this.setHorizontalScrollBarEnabled(false);
 		this.setOnTouchListener(this);
 		this.setSmoothScrollingEnabled(true);
 
 		LinearLayout container = new LinearLayout(context);
-		container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-						LayoutParams.WRAP_CONTENT));
+		container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		container.setOrientation(LinearLayout.HORIZONTAL);
 
 		creditCardText = new CreditCardText(context);
@@ -116,14 +110,15 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 		this.addView(container);
 
+		// when the user taps the last 4 digits of the card, they probably want to edit it
+		textFourDigits.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				focusOnField(creditCardText);
+			}
+		});
+
 		creditCardText.requestFocus();
-	}
-
-	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
-
-		focusOnField(creditCardText);
 	}
 
 	@Override
@@ -132,8 +127,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	}
 
 	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 		return true;
 	}
 
@@ -147,8 +141,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	}
 
 	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 		return false;
 	}
 
@@ -163,10 +156,8 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	@Override
 	public void onCardTypeChange(CardType type) {
-		cardImage.setImageResource(CreditCardUtil.cardImageForCardType(type,
-				false));
-		backCardImage.setImageResource(CreditCardUtil.cardImageForCardType(
-				type, true));
+		cardImage.setImageResource(CreditCardUtil.cardImageForCardType(type, false));
+		backCardImage.setImageResource(CreditCardUtil.cardImageForCardType(type, true));
 		updateCardImage(false);
 	}
 
@@ -178,7 +169,6 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		int length = number.length();
 		String digits = number.substring(length - 4);
 		textFourDigits.setText(digits);
-		Log.i("CreditCardNumber", number);
 	}
 
 	@Override
@@ -223,7 +213,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		cardImage = image;
 	}
 
-	public void updateCardImage(boolean back) {
+	private void updateCardImage(boolean back) {
 		if (showingBack != back) {
 			flipCardImage();
 		}
@@ -231,7 +221,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		showingBack = back;
 	}
 
-	public void flipCardImage() {
+	private void flipCardImage() {
 		FlipAnimator animator = new FlipAnimator(cardImage, backCardImage,
 				backCardImage.getWidth() / 2, backCardImage.getHeight() / 2);
 		if (cardImage.getVisibility() == View.GONE) {
@@ -241,42 +231,44 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	}
 
 	@Override
-	public void focusOnField(CreditEntryFieldBase field) {
-		field.setFocusableInTouchMode(true);
-		field.requestFocus();
-		field.setFocusableInTouchMode(false);
-
+	public void focusOnField(final CreditEntryFieldBase field) {
 		if (this.textHelper != null) {
 			this.textHelper.setText(field.helperText());
 		}
 
-		if (field.getClass().equals(CreditCardText.class)) {
-			new CountDownTimer(1000, 20) {
+		View childAt = getChildAt(0);
+		int childWidth = childAt == null ? 0 : childAt.getMeasuredWidth();
+		if (field instanceof CreditCardText) {
+			new CountDownTimer(500, 16) {
+				public void onTick(long millisUntilFinished) 	{ scrollTo((int) (millisUntilFinished), 0); }
+				public void onFinish() 												{
+					scrollTo(0, 0);
+					field.requestFocus();
+				}
+			}.start();
+		} else if(getScrollX() + getWidth() < childWidth) {
+			// if we're not already scrolled all the way right
+			final int target = field.getLeft();
+			final int duration = 500;
+			new CountDownTimer(duration, 16) {
+				final int startingPoint = getScrollX();
 
 				public void onTick(long millisUntilFinished) {
-					CreditCardEntry.this.scrollTo((int) (millisUntilFinished),
-							0);
+					long increment = target * (duration - millisUntilFinished) / duration;
+					long scrollTo = startingPoint + increment;
+						scrollTo((int) scrollTo, 0);
 				}
 
 				public void onFinish() {
-					CreditCardEntry.this.scrollTo(0, 0);
+					scrollTo(target, 0);
+					field.requestFocus();
 				}
 			}.start();
 		} else {
-			new CountDownTimer(1500, 20) {
-
-				public void onTick(long millisUntilFinished) {
-					CreditCardEntry.this.scrollTo(
-							(int) (2000 - millisUntilFinished), 0);
-				}
-
-				public void onFinish() {
-
-				}
-			}.start();
+			field.requestFocus();
 		}
 
-		if (field.getClass().equals(SecurityCodeText.class)) {
+		if (field instanceof SecurityCodeText) {
 			((SecurityCodeText) field).setType(creditCardText.getType());
 			updateCardImage(true);
 		} else {
@@ -286,15 +278,16 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	@Override
 	public void focusOnPreviousField(CreditEntryFieldBase field) {
-		if (field.getClass().equals(ExpDateText.class)) {
+		if (field instanceof ExpDateText) {
 			focusOnField(creditCardText);
-		} else if (field.getClass().equals(SecurityCodeText.class)) {
+		} else if (field instanceof SecurityCodeText) {
 			focusOnField(expDateText);
-		} else if (field.getClass().equals(ZipCodeText.class)) {
+		} else if (field instanceof ZipCodeText) {
 			focusOnField(securityCodeText);
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public ImageView getBackCardImage() {
 		return backCardImage;
 	}
@@ -303,6 +296,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		this.backCardImage = backCardImage;
 	}
 
+	@SuppressWarnings("unused")
 	public TextView getTextHelper() {
 		return textHelper;
 	}

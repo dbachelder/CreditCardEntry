@@ -1,15 +1,15 @@
 package com.devmarvel.creditcardentry.fields;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 
 import com.devmarvel.creditcardentry.R;
+import com.devmarvel.creditcardentry.internal.CreditCardFieldDelegate;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil.CardType;
-import com.devmarvel.creditcardentry.internal.CreditCardUtil.CreditCardFieldDelegate;
 
 public class CreditCardText extends CreditEntryFieldBase {
 
@@ -33,7 +33,8 @@ public class CreditCardText extends CreditEntryFieldBase {
 		init();
 	}
 
-	public void init() {
+	@SuppressLint("RtlHardcoded")
+	void init() {
 		super.init();
 		setGravity(Gravity.LEFT);
 		setHint("1234 5678 9012 3456");
@@ -70,7 +71,6 @@ public class CreditCardText extends CreditEntryFieldBase {
 			String formatted = CreditCardUtil.formatForViewing(number, type);
 
 			if (!number.equalsIgnoreCase(formatted)) {
-				Log.i("CreditCardText", formatted);
 				this.removeTextChangedListener(this);
 				this.setText(formatted);
 				this.setSelection(formatted.length());

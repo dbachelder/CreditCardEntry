@@ -1,9 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".MainActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/no_zip_label"
@@ -18,49 +19,25 @@
         android:id="@+id/form_no_zip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/no_zip_label"
         android:padding="15dp"
         app:helper_text_color="@color/text_helper_color"
         app:include_zip="false"/>
-
-    <Button
-        android:id="@+id/button_no_zip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/form_no_zip"
-        android:padding="15dp"
-        android:text="Authorize"
-        tools:ignore="HardcodedText,RtlHardcoded"/>
 
     <TextView
         android:id="@+id/zip_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_no_zip"
-        android:layout_marginTop="40dp"
         android:paddingLeft="15dp"
         android:paddingTop="15dp"
-        android:text="Form with zip"
+        android:text="Form with zip and no helper text"
         tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
 
     <com.devmarvel.creditcardentry.library.CreditCardForm
         android:id="@+id/form_with_zip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/zip_label"
         android:padding="15dp"
         app:include_helper="false"
         app:include_zip="true"/>
 
-    <Button
-        android:id="@+id/button_with_zip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/form_with_zip"
-        android:padding="15dp"
-        android:text="Authorize"
-        tools:ignore="HardcodedText,RtlHardcoded"/>
-
-</RelativeLayout>
+</LinearLayout>

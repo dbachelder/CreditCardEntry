@@ -58,7 +58,7 @@ public class CreditCardForm extends RelativeLayout {
 		init(context);
 	}
 
-	public void init(Context context) {
+	private void init(Context context) {
 		LinearLayout layout = new LinearLayout(context);
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.WRAP_CONTENT);
@@ -75,6 +75,7 @@ public class CreditCardForm extends RelativeLayout {
         frameParams.gravity = Gravity.CENTER_VERTICAL;
 
 		frame.setLayoutParams(frameParams);
+		frame.setFocusable(true);
 		frame.setPadding(10, 0, 0, 0);
 
 		ImageView view = new ImageView(context);
@@ -95,11 +96,11 @@ public class CreditCardForm extends RelativeLayout {
 		frame.addView(backView);
 		layout.addView(frame);
 
-		layout.setId(R.id.linearLayout1);
+		layout.setId(R.id.cc_layout);
 
 		entry = new CreditCardEntry(context, includeZip);
-		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
+		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
 		entry.setLayoutParams(r);
 		entry.setCardImageView(view);
 		entry.setBackCardImage(backView);
@@ -127,14 +128,13 @@ public class CreditCardForm extends RelativeLayout {
 		entry.setOnCardValidCallback(callback);
 	}
 
-	public boolean isCreditCardValid()
-	{
+	@SuppressWarnings("unused")
+	public boolean isCreditCardValid() {
 		return entry.isCreditCardValid();
 	}
 	
-	public CreditCard getCreditCard()
-	{
+	@SuppressWarnings("unused")
+	public CreditCard getCreditCard() {
 		return entry.getCreditCard();
 	}
-
 }
