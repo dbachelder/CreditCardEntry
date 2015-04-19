@@ -23,6 +23,7 @@ CreditCardEntry
  - Fixed vertical alignment of form fields
  - Fixed over excited animation scroll
  - Last 4 of card now tappable to enter edit mode
+ - updated image assets
 
 # Introduction
 
