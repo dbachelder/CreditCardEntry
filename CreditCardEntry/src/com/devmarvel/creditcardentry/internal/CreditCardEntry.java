@@ -51,6 +51,8 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	private TextView textHelper;
 
 	private boolean showingBack;
+	private boolean scrolling = false;
+
 	private CardValidCallback onCardValidCallback;
 
 	@SuppressWarnings("deprecation")
@@ -119,39 +121,6 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		});
 
 		creditCardText.requestFocus();
-	}
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		return true;
-	}
-
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-		return true;
-	}
-
-	@Override
-	public boolean onDown(MotionEvent e) {
-		return false;
-	}
-
-	@Override
-	public void onLongPress(MotionEvent e) {
-	}
-
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-		return false;
-	}
-
-	@Override
-	public void onShowPress(MotionEvent e) {
-	}
-
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		return false;
 	}
 
 	@Override
@@ -236,36 +205,41 @@ public class CreditCardEntry extends HorizontalScrollView implements
 			this.textHelper.setText(field.helperText());
 		}
 
-		View childAt = getChildAt(0);
-		int childWidth = childAt == null ? 0 : childAt.getMeasuredWidth();
-		if (field instanceof CreditCardText) {
-			new CountDownTimer(500, 16) {
-				public void onTick(long millisUntilFinished) 	{ scrollTo((int) (millisUntilFinished), 0); }
-				public void onFinish() 												{
-					scrollTo(0, 0);
-					field.requestFocus();
-				}
-			}.start();
-		} else if(getScrollX() + getWidth() < childWidth) {
-			// if we're not already scrolled all the way right
-			final int target = field.getLeft();
-			final int duration = 500;
-			new CountDownTimer(duration, 16) {
-				final int startingPoint = getScrollX();
+		if (!scrolling) {
+			scrolling = true;
+			View childAt = getChildAt(0);
+			int childWidth = childAt == null ? 0 : childAt.getMeasuredWidth();
+			if (field instanceof CreditCardText) {
+        new CountDownTimer(400, 16) {
+          public void onTick(long millisUntilFinished) 	{ scrollTo((int) (millisUntilFinished), 0); }
+          public void onFinish() 												{
+            scrollTo(0, 0);
+            field.requestFocus();
+						scrolling = false;
+          }
+        }.start();
+      } else if(getScrollX() + getWidth() < childWidth) {
+        // if we're not already scrolled all the way right
+        final int target = field.getLeft();
+        final int duration = 400;
+        new CountDownTimer(duration, 16) {
+          final int startingPoint = getScrollX();
 
-				public void onTick(long millisUntilFinished) {
-					long increment = target * (duration - millisUntilFinished) / duration;
-					long scrollTo = startingPoint + increment;
-						scrollTo((int) scrollTo, 0);
-				}
+          public void onTick(long millisUntilFinished) {
+            long increment = target * (duration - millisUntilFinished) / duration;
+            long scrollTo = startingPoint + increment;
+              scrollTo((int) scrollTo, 0);
+          }
 
-				public void onFinish() {
-					scrollTo(target, 0);
-					field.requestFocus();
-				}
-			}.start();
-		} else {
-			field.requestFocus();
+          public void onFinish() {
+            scrollTo(target, 0);
+            field.requestFocus();
+						scrolling = false;
+          }
+        }.start();
+      } else {
+        field.requestFocus();
+      }
 		}
 
 		if (field instanceof SecurityCodeText) {
@@ -323,4 +297,25 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	public void setOnCardValidCallback(CardValidCallback onCardValidCallback) {
 		this.onCardValidCallback = onCardValidCallback;
 	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) { return true; }
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) { return true; }
+
+	@Override
+	public boolean onDown(MotionEvent e) { return false; }
+
+	@Override
+	public void onLongPress(MotionEvent e) { }
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) { return false; }
+
+	@Override
+	public void onShowPress(MotionEvent e) { }
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) { return false; }
 }

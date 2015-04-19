@@ -103,3 +103,6 @@ Please see below for an example. Delegate calls for valid entry and accessors fo
  - Fixed over excited animation scroll
  - Last 4 of card now tappable to enter edit mode
  - updated image assets
+
+###4/19/2015
+ - Don't scroll when scrolling is already happening
