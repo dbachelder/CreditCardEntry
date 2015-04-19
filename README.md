@@ -1,37 +1,14 @@
 CreditCardEntry
 =========
 
-# Version History
-
-###4/2/2013
- - Initial Commit
-
-###5/11/2013
- - Updated Demo added screenshots
-
-###4/7/2015
- - Made zip code optional (app:include_zip="false")
- - added callback when data entry is complete and card is valid
- - optionally specify helper text color in XML attrs
-
-###4/8/2015
- - Always return CreditCard object when requested even when invalid
-
-###4/18/2015
- - Made helper optional (app:include_helper="false")
- - Fixed a ton of lint warnings
- - Fixed vertical alignment of form fields
- - Fixed over excited animation scroll
- - Last 4 of card now tappable to enter edit mode
- - updated image assets
-
 # Introduction
 
 This library provides an elegant form for credit card entry that can be easily added to a activity or fragment. Regex is used to validate credit card types and a Luhn check is performed on the card numbers. This form was inspired by the credit entry UI on Square.
 
-Smooth interface
-Identifies credit card type
-Hides number for privacy
+ - Smooth interface
+ - Identifies credit card type
+ - Hides number for privacy
+ - Supports VISA, MasterCard, Discover and AMEX
 
 ![][1]
 
@@ -103,4 +80,26 @@ Please see below for an example. Delegate calls for valid entry and accessors fo
     
 [1]: https://raw.github.com/zumper/CreditCardEntry/master/demo.gif "Demo GIF"
 
+# Version History
 
+###4/2/2013
+ - Initial Commit
+
+###5/11/2013
+ - Updated Demo added screenshots
+
+###4/7/2015
+ - Made zip code optional (app:include_zip="false")
+ - added callback when data entry is complete and card is valid
+ - optionally specify helper text color in XML attrs
+
+###4/8/2015
+ - Always return CreditCard object when requested even when invalid
+
+###4/18/2015
+ - Made helper optional (app:include_helper="false")
+ - Fixed a ton of lint warnings
+ - Fixed vertical alignment of form fields
+ - Fixed over excited animation scroll
+ - Last 4 of card now tappable to enter edit mode
+ - updated image assets

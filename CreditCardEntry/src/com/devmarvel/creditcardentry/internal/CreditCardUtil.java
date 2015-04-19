@@ -26,9 +26,9 @@ public class CreditCardUtil {
 	private static final String REGX_DISCOVER 		= "^6(?:011|5[0-9]{2})[0-9]{12}$"; // Discover 16
 	private static final String REGX_DINERS_CLUB 	= "^3(?:0[0-5]|[68][0-9])[0-9]{11}$"; // DinersClub 14
 
-	private static final String REGX_AMEX_REG_TYPE 	 	= "^3[47][0-9]{2}$"; // AMEX 15
 	private static final String REGX_VISA_TYPE 			 	= "^4[0-9]{3}?"; // VISA 16
 	private static final String REGX_MC_TYPE 				 	= "^5[1-5][0-9]{2}$"; // MC 16
+	private static final String REGX_AMEX_REG_TYPE 	 	= "^3[47][0-9]{2}$"; // AMEX 15
 	private static final String REGX_DISCOVER_TYPE 	 	= "^6(?:011|5[0-9]{2})$"; // Discover 16
 	private static final String REGX_DINERS_CLUB_TYPE = "^3(?:0[0-5]|[68][0-9])[0-9]$"; // DinersClub
 
