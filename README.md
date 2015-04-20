@@ -36,7 +36,7 @@ Add the project to your `dependencies`
 
         ...
 
-        compile 'com.github.jgrana:CreditCardEntry:1.0'
+        compile 'com.github.jgrana:CreditCardEntry:1.0.1'
     }
 ```
 
