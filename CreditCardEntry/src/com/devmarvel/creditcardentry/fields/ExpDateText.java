@@ -3,14 +3,13 @@ package com.devmarvel.creditcardentry.fields;
 import android.content.Context;
 import android.text.Editable;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.devmarvel.creditcardentry.R;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil;
 
 public class ExpDateText extends CreditEntryFieldBase {
 
-	String previousString;
+	private String previousString;
 
 	public ExpDateText(Context context) {
 		super(context);
@@ -27,37 +26,31 @@ public class ExpDateText extends CreditEntryFieldBase {
 		init();
 	}
 
-	public void init() {
+	void init() {
 		super.init();
 		setHint("MM/YY");
 	}
 
 	/* TextWatcher Implementation Methods */
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 		previousString = s.toString();
 	}
 
 	public void afterTextChanged(Editable s) {
 		String updatedString = s.toString();
 
-		// if delete occured do not format
+		// if delete occurred do not format
 		if (updatedString.length() > previousString.length()) {
 			this.removeTextChangedListener(this);
-			String formatted = CreditCardUtil
-					.formatExpirationDate(s.toString());
-			Log.i("CreditCardText", formatted);
+			String formatted = CreditCardUtil.formatExpirationDate(s.toString());
 			this.setText(formatted);
 			this.setSelection(formatted.length());
 			this.addTextChangedListener(this);
 			
-			if(formatted.length() == 5)
-			{
+			if(formatted.length() == 5) {
 				delegate.onExpirationDateValid();
 				setValid(true);
-			}
-			else if(formatted.length() < updatedString.length())
-			{
+			} else if(formatted.length() < updatedString.length()) {
 				delegate.onBadInput(this);
 				setValid(false);
 			}

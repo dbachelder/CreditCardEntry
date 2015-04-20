@@ -30,7 +30,7 @@ public class SecurityCodeText extends CreditEntryFieldBase {
 		init();
 	}
 
-	public void init() {
+	void init() {
 		super.init();
 		setHint("CVV");
 	}
@@ -61,6 +61,7 @@ public class SecurityCodeText extends CreditEntryFieldBase {
 
 	}
 
+	@SuppressWarnings("unused")
 	public CardType getType() {
 		return type;
 	}
@@ -69,9 +70,9 @@ public class SecurityCodeText extends CreditEntryFieldBase {
 		this.type = type;
 		this.length = CreditCardUtil.securityCodeValid(type);
 		
-		setFilters(new InputFilter[] { new InputFilter.LengthFilter(length) });
+		setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
 	}
-	
+
 	@Override
 	public String helperText() {
 		return context.getString(R.string.SecurityCodeHelp);

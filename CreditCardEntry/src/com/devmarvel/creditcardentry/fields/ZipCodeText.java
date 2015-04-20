@@ -24,31 +24,27 @@ public class ZipCodeText extends CreditEntryFieldBase {
 		init();
 	}
 
-	public void init() {
+	void init() {
 		super.init();
 		setHint("   ZIP   ");
-		setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
+		setFilters(new InputFilter[]{new InputFilter.LengthFilter(5)});
+	}
+
+	@Override
+	public String helperText() {
+		return context.getString(R.string.ZipHelp);
 	}
 
 	/* TextWatcher Implementation Methods */
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-	}
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
 	public void afterTextChanged(Editable s) {
 		String zipCode = s.toString();
 		if (zipCode.length() == 5) {
 			delegate.onZipCodeValid();
 			setValid(true);
-		}
-		else
-		{
+		} else {
 			setValid(false);
 		}
-	}
-
-	@Override
-	public String helperText() {
-		return context.getString(R.string.ZipHelp);
 	}
 }

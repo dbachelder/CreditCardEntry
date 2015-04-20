@@ -1,21 +1,18 @@
 package com.devmarvel.creditcardentry.fields;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 
 import com.devmarvel.creditcardentry.R;
+import com.devmarvel.creditcardentry.internal.CreditCardFieldDelegate;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil.CardType;
-import com.devmarvel.creditcardentry.internal.CreditCardUtil.CreditCardFieldDelegate;
 
 public class CreditCardText extends CreditEntryFieldBase {
-
 	private CardType type;
-	private CreditCardFieldDelegate delegate;
-
 	private String previousNumber;
 
 	public CreditCardText(Context context) {
@@ -33,20 +30,22 @@ public class CreditCardText extends CreditEntryFieldBase {
 		init();
 	}
 
-	public void init() {
+	@SuppressLint("RtlHardcoded")
+	@Override
+	void init() {
 		super.init();
 		setGravity(Gravity.LEFT);
 		setHint("1234 5678 9012 3456");
 	}
 
 	/* TextWatcher Implementation Methods */
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 		previousNumber = s.toString();
 	}
 
+	@Override
 	public void afterTextChanged(Editable s) {
-
 		String number = s.toString();
 
 		if (number.length() >= CreditCardUtil.CC_LEN_FOR_TYPE) {
@@ -70,7 +69,6 @@ public class CreditCardText extends CreditEntryFieldBase {
 			String formatted = CreditCardUtil.formatForViewing(number, type);
 
 			if (!number.equalsIgnoreCase(formatted)) {
-				Log.i("CreditCardText", formatted);
 				this.removeTextChangedListener(this);
 				this.setText(formatted);
 				this.setSelection(formatted.length());
@@ -96,13 +94,9 @@ public class CreditCardText extends CreditEntryFieldBase {
 		}
 	}
 
+	@Override
 	public CreditCardFieldDelegate getDelegate() {
 		return delegate;
-	}
-
-	public void setDelegate(CreditCardFieldDelegate delegate) {
-		this.delegate = delegate;
-		delegate.focusOnField(this);
 	}
 
 	public CardType getType() {

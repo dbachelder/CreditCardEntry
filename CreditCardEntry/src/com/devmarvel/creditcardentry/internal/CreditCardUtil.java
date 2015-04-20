@@ -1,5 +1,9 @@
 package com.devmarvel.creditcardentry.internal;
 
+import android.annotation.SuppressLint;
+
+import com.devmarvel.creditcardentry.R;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,37 +12,27 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.annotation.SuppressLint;
-import android.widget.EditText;
-
-import com.devmarvel.creditcardentry.R;
-import com.devmarvel.creditcardentry.fields.CreditEntryFieldBase;
-
+/**
+ * TODO - diners club not yet implemented
+ */
 @SuppressLint("SimpleDateFormat")
 public class CreditCardUtil {
+	public static final int CC_LEN_FOR_TYPE = 4; // number of characters to determine length
 
 	// See: http://www.regular-expressions.info/creditcard.html
-	public static final String REGX_VISA = "^4[0-9]{15}?";// VISA 16
-	public static final String REGX_MC = "^5[1-5][0-9]{14}$"; // MC 16
-	public static final String REGX_AMEX = "^3[47][0-9]{13}$";// AMEX 15
-	public static final String REGX_DISCOVER = "^6(?:011|5[0-9]{2})[0-9]{12}$";// Discover
-																				// 16
-	public static final String REGX_DINERS_CLUB = "^3(?:0[0-5]|[68][0-9])[0-9]{11}$";// DinersClub
-																						// 14
-																						// //
-																						// 38812345678901
+	private static final String REGX_VISA 				= "^4[0-9]{15}?"; // VISA 16
+	private static final String REGX_MC 					= "^5[1-5][0-9]{14}$"; // MC 16
+	private static final String REGX_AMEX 				= "^3[47][0-9]{13}$"; // AMEX 15
+	private static final String REGX_DISCOVER 		= "^6(?:011|5[0-9]{2})[0-9]{12}$"; // Discover 16
+	private static final String REGX_DINERS_CLUB 	= "^3(?:0[0-5]|[68][0-9])[0-9]{11}$"; // DinersClub 14
 
-	public static final int CC_LEN_FOR_TYPE = 4; // number of characters to
-													// determine length
+	private static final String REGX_VISA_TYPE 			 	= "^4[0-9]{3}?"; // VISA 16
+	private static final String REGX_MC_TYPE 				 	= "^5[1-5][0-9]{2}$"; // MC 16
+	private static final String REGX_AMEX_REG_TYPE 	 	= "^3[47][0-9]{2}$"; // AMEX 15
+	private static final String REGX_DISCOVER_TYPE 	 	= "^6(?:011|5[0-9]{2})$"; // Discover 16
+	private static final String REGX_DINERS_CLUB_TYPE = "^3(?:0[0-5]|[68][0-9])[0-9]$"; // DinersClub
 
-	public static final String REGX_AMEX_REG_TYPE = "^3[47][0-9]{2}$";// AMEX 15
-	public static final String REGX_DINERS_CLUB_TYPE = "^3(?:0[0-5]|[68][0-9])[0-9]$";// DinersClub
-	public static final String REGX_VISA_TYPE = "^4[0-9]{3}?";// VISA 16
-	public static final String REGX_MC_TYPE = "^5[1-5][0-9]{2}$";// MC 16
-	public static final String REGX_DISCOVER_TYPE = "^6(?:011|5[0-9]{2})$";// Discover
-																			// 16
-
-	public static String cleanNumber(String number) {
+	private static String cleanNumber(String number) {
 		return number.replaceAll("\\s", "");
 	}
 
@@ -46,7 +40,6 @@ public class CreditCardUtil {
 
 		if (number.length() < CC_LEN_FOR_TYPE) {
 			return CardType.INVALID;
-
 		}
 
 		String reg = null;
@@ -69,12 +62,14 @@ public class CreditCardUtil {
 				break;
 			}
 
-			Pattern pattern = Pattern.compile(reg);
-			Matcher matcher = pattern.matcher(number.substring(0,
-					CC_LEN_FOR_TYPE));
+			if (reg != null) {
+				Pattern pattern = Pattern.compile(reg);
+				Matcher matcher = pattern.matcher(number.substring(0,
+            CC_LEN_FOR_TYPE));
 
-			if (matcher.matches()) {
-				return type;
+				if (matcher.matches()) {
+          return type;
+        }
 			}
 		}
 
@@ -82,11 +77,9 @@ public class CreditCardUtil {
 	}
 
 	public static boolean isValidNumber(String number) {
-		boolean result = false;
-
 		String cleaned = cleanNumber(number);
 
-		String reg = null;
+		String reg;
 
 		switch (findCardType(cleaned)) {
 		case AMEX:
@@ -95,16 +88,15 @@ public class CreditCardUtil {
 		case DISCOVER:
 			reg = REGX_DISCOVER;
 			break;
-		case INVALID:
-			return result;
 		case MASTERCARD:
 			reg = REGX_MC;
 			break;
 		case VISA:
 			reg = REGX_VISA;
 			break;
+		case INVALID:
 		default:
-			return result;
+			return false;
 		}
 
 		Pattern pattern = Pattern.compile(reg);
@@ -113,9 +105,9 @@ public class CreditCardUtil {
 		return matcher.matches() && validateCardNumber(cleaned);
 	}
 
-	public static boolean validateCardNumber(String cardNumber)
+	private static boolean validateCardNumber(String cardNumber)
 			throws NumberFormatException {
-		int sum = 0, digit, addend = 0;
+		int sum = 0, digit, addend;
 		boolean doubled = false;
 		for (int i = cardNumber.length() - 1; i >= 0; i--) {
 			digit = Integer.parseInt(cardNumber.substring(i, i + 1));
@@ -133,10 +125,6 @@ public class CreditCardUtil {
 		return (sum % 10) == 0;
 	}
 
-	public static String formatForViewing(String enteredNumber) {
-		return formatForViewing(enteredNumber, findCardType(enteredNumber));
-	}
-
 	public static String formatForViewing(String enteredNumber, CardType type) {
 		String cleaned = cleanNumber(enteredNumber);
 		int len = cleaned.length();
@@ -144,13 +132,7 @@ public class CreditCardUtil {
 		if (len <= CC_LEN_FOR_TYPE)
 			return cleaned;
 
-		// NSRange r2; r2.location = NSNotFound;
-		// NSRange r3; r3.location = NSNotFound;
-		// NSRange r4; r4.location = NSNotFound;
-		// NSMutableArray *gaps = [NSMutableArray arrayWithObjects:@"", @"",
-		// @"", nil];
-
-		ArrayList<String> gaps = new ArrayList<String>();
+		ArrayList<String> gaps = new ArrayList<>();
 
 		int segmentLengths[] = { 0, 0, 0 };
 
@@ -178,7 +160,7 @@ public class CreditCardUtil {
 		}
 
 		int end = CC_LEN_FOR_TYPE;
-		int start = 0;
+		int start;
 		String segment1 = cleaned.substring(0, end);
 		start = end;
 		end = segmentLengths[0] + end > len ? len : segmentLengths[0] + end;
@@ -196,27 +178,8 @@ public class CreditCardUtil {
 		return ret.trim();
 	}
 
-	public static int lengthOfStringForType(CardType type) {
-		int idx = 0;
-
-		switch (type) {
-		case VISA:
-		case MASTERCARD:
-		case DISCOVER: // { 4-4-4-4}
-			idx = 16;
-			break;
-		case AMEX: // {4-6-5}
-			idx = 15;
-			break;
-		default:
-			idx = 0;
-		}
-
-		return idx;
-	}
-
 	public static int lengthOfFormattedStringForType(CardType type) {
-		int idx = 0;
+		int idx;
 
 		switch (type) {
 		case VISA:
@@ -231,24 +194,6 @@ public class CreditCardUtil {
 			idx = 0;
 		}
 
-		return idx;
-	}
-
-	public static int lengthOfFormattedStringTilLastGroupForType(CardType type) {
-		int idx = 0;
-
-		switch (type) {
-		case VISA:
-		case MASTERCARD:
-		case DISCOVER: // { 4-4-4-4}
-			idx = 16 + 3 - 4;
-			break;
-		case AMEX: // {4-6-5}
-			idx = 15 + 2 - 5;
-			break;
-		default:
-			idx = 0;
-		}
 		return idx;
 	}
 
@@ -364,27 +309,7 @@ public class CreditCardUtil {
 		}
 	}
 
-	public static enum CardType {
-		VISA, MASTERCARD, AMEX, DISCOVER, INVALID;
-	}
-
-	public static interface CreditCardFieldDelegate {
-		// When the card type is identified
-		public void onCardTypeChange(CardType type);
-
-		public void onCreditCardNumberValid();
-
-		public void onExpirationDateValid();
-
-		// Image should flip to back for security code
-		public void onSecurityCodeValid();
-
-		public void onZipCodeValid();
-
-		public void onBadInput(EditText field);
-
-		public void focusOnField(CreditEntryFieldBase field);
-
-		public void focusOnPreviousField(CreditEntryFieldBase field);
+	public enum CardType {
+		VISA, MASTERCARD, AMEX, DISCOVER, INVALID
 	}
 }

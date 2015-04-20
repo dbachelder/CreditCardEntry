@@ -7,16 +7,16 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-public class FlipAnimator extends Animation {
+class FlipAnimator extends Animation {
 	private Camera camera;
 
 	private View fromView;
 
 	private View toView;
 
-	private float centerX;
+	private final float centerX;
 
-	private float centerY;
+	private final float centerY;
 
 	private boolean forward = true;
 
@@ -36,8 +36,6 @@ public class FlipAnimator extends Animation {
 	 *            The center of the views in the x-axis.
 	 * @param centerY
 	 *            The center of the views in the y-axis.
-	 * @param forward
-	 *            The direction of the animation.
 	 */
 	public FlipAnimator(View fromView, View toView, int centerX, int centerY) {
 		this.fromView = fromView;
