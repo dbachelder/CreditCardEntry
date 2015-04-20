@@ -1,6 +1,8 @@
 CreditCardEntry
 =========
 
+[![Join the chat at https://gitter.im/jgrana/CreditCardEntry](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jgrana/CreditCardEntry?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 # Introduction
 
 This library provides an elegant form for credit card entry that can be easily added to a activity or fragment.
