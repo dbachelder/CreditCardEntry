@@ -18,7 +18,9 @@ Regex is used to validate credit card types and a Luhn check is performed on the
 
 # Including in your project
 
-Add [jitpack.io] to the end of your `repositories`
+This project uses [JitPack](https://jitpack.io) to build and release.
+
+Add JitPack to the end of your `repositories`
 
 ```
     repositories {
@@ -81,8 +83,6 @@ Adding the form is simply as seen below, or it can be added through an Android l
 # TODO
 
   - Diner's Club is not yet implemented, although the assets and regex seem to be in place
-    
-[1]: https://raw.github.com/jgrana/CreditCardEntry/master/demo.gif "Demo GIF"
 
 # Version History
 
@@ -114,3 +114,5 @@ Adding the form is simply as seen below, or it can be added through an Android l
 ###4/20/2015
  - Flip the card image back to the front after CVV field loses focus
  - Expose CardType on CreditCard object
+
+[1]: https://raw.github.com/jgrana/CreditCardEntry/master/demo.gif "Demo GIF"
