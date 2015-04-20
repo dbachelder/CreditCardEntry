@@ -206,11 +206,11 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		}
 
 		if (!scrolling) {
-			scrolling = true;
 			View childAt = getChildAt(0);
 			int childWidth = childAt == null ? 0 : childAt.getMeasuredWidth();
 			if (field instanceof CreditCardText) {
-        new CountDownTimer(400, 16) {
+				scrolling = true;
+        new CountDownTimer(300, 16) {
           public void onTick(long millisUntilFinished) 	{ scrollTo((int) (millisUntilFinished), 0); }
           public void onFinish() 												{
             scrollTo(0, 0);
@@ -219,6 +219,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
           }
         }.start();
       } else if(getScrollX() + getWidth() < childWidth) {
+				scrolling = true;
         // if we're not already scrolled all the way right
         final int target = field.getLeft();
         final int duration = 400;

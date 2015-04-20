@@ -12,10 +12,7 @@ import com.devmarvel.creditcardentry.internal.CreditCardUtil;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil.CardType;
 
 public class CreditCardText extends CreditEntryFieldBase {
-
 	private CardType type;
-	private CreditCardFieldDelegate delegate;
-
 	private String previousNumber;
 
 	public CreditCardText(Context context) {
@@ -34,6 +31,7 @@ public class CreditCardText extends CreditEntryFieldBase {
 	}
 
 	@SuppressLint("RtlHardcoded")
+	@Override
 	void init() {
 		super.init();
 		setGravity(Gravity.LEFT);
@@ -41,13 +39,13 @@ public class CreditCardText extends CreditEntryFieldBase {
 	}
 
 	/* TextWatcher Implementation Methods */
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 		previousNumber = s.toString();
 	}
 
+	@Override
 	public void afterTextChanged(Editable s) {
-
 		String number = s.toString();
 
 		if (number.length() >= CreditCardUtil.CC_LEN_FOR_TYPE) {
@@ -96,13 +94,9 @@ public class CreditCardText extends CreditEntryFieldBase {
 		}
 	}
 
+	@Override
 	public CreditCardFieldDelegate getDelegate() {
 		return delegate;
-	}
-
-	public void setDelegate(CreditCardFieldDelegate delegate) {
-		this.delegate = delegate;
-		delegate.focusOnField(this);
 	}
 
 	public CardType getType() {

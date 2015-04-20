@@ -24,7 +24,6 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		TextWatcher, OnKeyListener, OnClickListener {
 
 	CreditCardFieldDelegate delegate;
-
 	final Context context;
 	
 	private boolean valid = false;
@@ -58,6 +57,7 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		setOnClickListener(this);
 	}
 
+	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int end) {
 		if (start == 0 && before == 1 && s.length() == 0) {
 			if (delegate != null) {
@@ -72,60 +72,6 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		outAttrs.inputType = InputType.TYPE_NULL;
 		outAttrs.imeOptions = EditorInfo.IME_ACTION_NONE;
 		return new BackInputConnection(super.onCreateInputConnection(outAttrs));
-	}
-
-	private class BackInputConnection extends InputConnectionWrapper {
-
-		public BackInputConnection(InputConnection target) {
-			super(target, false);
-		}
-
-		@Override
-		public boolean sendKeyEvent(KeyEvent event) {
-			if (event.getAction() == KeyEvent.ACTION_DOWN
-					&& event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-				backInput();
-				// Un-comment if you wish to cancel the backspace:
-				// return false;
-			}
-			return super.sendKeyEvent(event);
-		}
-
-		// From Android 4.1 this is called when the DEL key is pressed on the
-		// soft keyboard (and
-		// sendKeyEvent() is not called). We convert this to a "normal" key
-		// event.
-		@Override
-		public boolean deleteSurroundingText(int beforeLength, int afterLength) {
-
-			if (android.os.Build.VERSION.SDK_INT < 11) {
-				return super.deleteSurroundingText(beforeLength, afterLength);
-			} else {
-
-				long eventTime = SystemClock.uptimeMillis();
-
-				int flags = KeyEvent.FLAG_SOFT_KEYBOARD
-								| KeyEvent.FLAG_KEEP_TOUCH_MODE
-								| KeyEvent.FLAG_EDITOR_ACTION;
-
-				sendKeyEvent(new KeyEvent(eventTime, eventTime,
-						KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL, 0, 0,
-						KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
-
-				sendKeyEvent(new KeyEvent(SystemClock.uptimeMillis(),
-						eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL, 0,
-						0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
-				return true;
-			}
-		}
-	}
-
-	private void backInput() {
-		if (this.getText().toString().length() == 0) {
-			if (delegate != null) {
-				delegate.focusOnPreviousField(this);
-			}
-		}
 	}
 
 	@Override
@@ -171,4 +117,57 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		this.valid = valid;
 	}
 
+	private void backInput() {
+		if (this.getText().toString().length() == 0) {
+			if (delegate != null) {
+				delegate.focusOnPreviousField(this);
+			}
+		}
+	}
+
+	private class BackInputConnection extends InputConnectionWrapper {
+
+		public BackInputConnection(InputConnection target) {
+			super(target, false);
+		}
+
+		@Override
+		public boolean sendKeyEvent(KeyEvent event) {
+			if (event.getAction() == KeyEvent.ACTION_DOWN
+							&& event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+				backInput();
+				// Un-comment if you wish to cancel the backspace:
+				// return false;
+			}
+			return super.sendKeyEvent(event);
+		}
+
+		// From Android 4.1 this is called when the DEL key is pressed on the
+		// soft keyboard (and
+		// sendKeyEvent() is not called). We convert this to a "normal" key
+		// event.
+		@Override
+		public boolean deleteSurroundingText(int beforeLength, int afterLength) {
+
+			if (android.os.Build.VERSION.SDK_INT < 11) {
+				return super.deleteSurroundingText(beforeLength, afterLength);
+			} else {
+
+				long eventTime = SystemClock.uptimeMillis();
+
+				int flags = KeyEvent.FLAG_SOFT_KEYBOARD
+								| KeyEvent.FLAG_KEEP_TOUCH_MODE
+								| KeyEvent.FLAG_EDITOR_ACTION;
+
+				sendKeyEvent(new KeyEvent(eventTime, eventTime,
+								KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL, 0, 0,
+								KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
+
+				sendKeyEvent(new KeyEvent(SystemClock.uptimeMillis(),
+								eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL, 0,
+								0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
+				return true;
+			}
+		}
+	}
 }
