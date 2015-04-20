@@ -34,7 +34,7 @@ Add the project to your `dependencies`
 
         ...
 
-        compile 'com.github.zumper:CreditCardEntry:838f228a0a4e6bf7d2e56f43e265490d2b491e28'
+        compile 'com.github.jgrana:CreditCardEntry:1.0'
     }
 ```
 
@@ -80,7 +80,7 @@ Adding the form is simply as seen below, or it can be added through an Android l
 
   - Diner's Club is not yet implemented, although the assets and regex seem to be in place
     
-[1]: https://raw.github.com/zumper/CreditCardEntry/master/demo.gif "Demo GIF"
+[1]: https://raw.github.com/jgrana/CreditCardEntry/master/demo.gif "Demo GIF"
 
 # Version History
 
