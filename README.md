@@ -1,7 +1,7 @@
 CreditCardEntry
 =========
 
-[![Join the chat at https://gitter.im/jgrana/CreditCardEntry](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jgrana/CreditCardEntry?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/dbachelder/CreditCardEntry](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dbachelder/CreditCardEntry?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Introduction
 
@@ -38,7 +38,7 @@ Add the project to your `dependencies`
 
         ...
 
-        compile 'com.github.jgrana:CreditCardEntry:1.0.1'
+        compile 'com.github.dbachelder:CreditCardEntry:1.0.1'
     }
 ```
 
@@ -114,5 +114,6 @@ Adding the form is simply as seen below, or it can be added through an Android l
 ###4/20/2015
  - Flip the card image back to the front after CVV field loses focus
  - Expose CardType on CreditCard object
+ - Transferred repo ownership
 
-[1]: https://raw.github.com/jgrana/CreditCardEntry/master/demo.gif "Demo GIF"
+[1]: https://raw.github.com/dbachelder/CreditCardEntry/master/demo.gif "Demo GIF"
