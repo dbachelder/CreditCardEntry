@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 import com.devmarvel.creditcardentry.R;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil;
-import com.devmarvel.creditcardentry.internal.CreditCardUtil.CardType;
+import com.devmarvel.creditcardentry.library.CardType;
 
 public class SecurityCodeText extends CreditEntryFieldBase {
 

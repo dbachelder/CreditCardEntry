@@ -111,3 +111,4 @@ Adding the form is simply as seen below, or it can be added through an Android l
 
 ###4/20/2015
  - Flip the card image back to the front after CVV field loses focus
+ - Expose CardType on CreditCard object

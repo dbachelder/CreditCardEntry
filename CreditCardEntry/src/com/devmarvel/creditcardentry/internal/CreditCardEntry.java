@@ -28,7 +28,7 @@ import com.devmarvel.creditcardentry.fields.CreditEntryFieldBase;
 import com.devmarvel.creditcardentry.fields.ExpDateText;
 import com.devmarvel.creditcardentry.fields.SecurityCodeText;
 import com.devmarvel.creditcardentry.fields.ZipCodeText;
-import com.devmarvel.creditcardentry.internal.CreditCardUtil.CardType;
+import com.devmarvel.creditcardentry.library.CardType;
 import com.devmarvel.creditcardentry.library.CardValidCallback;
 import com.devmarvel.creditcardentry.library.CreditCard;
 
@@ -288,7 +288,8 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	public CreditCard getCreditCard() {
 		return new CreditCard(creditCardText.getText().toString(), expDateText.getText().toString(),
-													securityCodeText.getText().toString(), zipCodeText.getText().toString());
+													securityCodeText.getText().toString(), zipCodeText.getText().toString(),
+													creditCardText.getType());
 	}
 
 	private void hideKeyboard() {

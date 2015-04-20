@@ -3,6 +3,7 @@ package com.devmarvel.creditcardentry.internal;
 import android.annotation.SuppressLint;
 
 import com.devmarvel.creditcardentry.R;
+import com.devmarvel.creditcardentry.library.CardType;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -309,7 +310,4 @@ public class CreditCardUtil {
 		}
 	}
 
-	public enum CardType {
-		VISA, MASTERCARD, AMEX, DISCOVER, INVALID
-	}
 }

@@ -3,13 +3,14 @@ package com.devmarvel.creditcardentry.internal;
 import android.widget.EditText;
 
 import com.devmarvel.creditcardentry.fields.CreditEntryFieldBase;
+import com.devmarvel.creditcardentry.library.CardType;
 
 /**
  * contract for delegate
  */
 public interface CreditCardFieldDelegate {
   // When the card type is identified
-  void onCardTypeChange(CreditCardUtil.CardType type);
+  void onCardTypeChange(CardType type);
 
   void onCreditCardNumberValid();
 
