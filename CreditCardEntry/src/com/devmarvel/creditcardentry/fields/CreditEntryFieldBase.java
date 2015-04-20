@@ -55,6 +55,7 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		addTextChangedListener(this);
 		setOnKeyListener(this);
 		setOnClickListener(this);
+		setPadding(20,0,20,0);
 	}
 
 	@Override

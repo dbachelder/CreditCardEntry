@@ -3,7 +3,8 @@ CreditCardEntry
 
 # Introduction
 
-This library provides an elegant form for credit card entry that can be easily added to a activity or fragment. Regex is used to validate credit card types and a Luhn check is performed on the card numbers. This form was inspired by the credit entry UI on Square.
+This library provides an elegant form for credit card entry that can be easily added to a activity or fragment.
+Regex is used to validate credit card types and a Luhn check is performed on the card numbers. This form was inspired by the credit entry UI on Square.
 
  - Smooth interface
  - Identifies credit card type
@@ -39,7 +40,8 @@ Add the project to your `dependencies`
 
 # Using the library
 
-Please see below for an example. Delegate calls for valid entry and accessors for the data will be added in future updates. Adding the form is simply as seen below, or it can be added through an Android layout file.
+Please see below for an example. Delegate calls for valid entry and accessors for the data will be added in future updates.
+Adding the form is simply as seen below, or it can be added through an Android layout file.
 
     public class MainActivity extends Activity {
   
