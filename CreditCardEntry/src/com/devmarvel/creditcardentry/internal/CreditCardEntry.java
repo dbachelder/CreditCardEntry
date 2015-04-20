@@ -154,6 +154,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 			securityCodeText.clearFocus();
 			if(onCardValidCallback != null) onCardValidCallback.cardValid(getCreditCard());
 		}
+		updateCardImage(false);
 	}
 
 	@Override
