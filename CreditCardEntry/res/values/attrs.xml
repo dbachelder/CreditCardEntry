@@ -4,5 +4,6 @@
         <attr name="include_zip" format="boolean"/>
         <attr name="include_helper" format="boolean"/>
         <attr name="helper_text_color" format="color"/>
+        <attr name="card_place_holder" format="string"/>
     </declare-styleable>
 </resources>

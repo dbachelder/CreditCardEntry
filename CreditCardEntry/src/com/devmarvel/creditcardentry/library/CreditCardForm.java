@@ -20,6 +20,7 @@ public class CreditCardForm extends RelativeLayout {
 	private boolean includeZip = true;
 	private boolean includeHelper;
 	private int textHelperColor = R.color.text_helper_color;
+	private String cardPlaceHolderText = "1234 5678 9012 3456";
 
 	public CreditCardForm(Context context) {
 		this(context, null);
@@ -46,6 +47,7 @@ public class CreditCardForm extends RelativeLayout {
                   0
           );
 
+					this.cardPlaceHolderText = typedArray.getString(R.styleable.CreditCardForm_card_place_holder);
 					this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
 					this.includeHelper = typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
 					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(textHelperColor));
@@ -53,6 +55,7 @@ public class CreditCardForm extends RelativeLayout {
 					if (typedArray != null) typedArray.recycle();
 				}
 			}
+			if(cardPlaceHolderText == null) cardPlaceHolderText = "1234 5678 9012 3456";
 		}
 
 		init(context);
@@ -104,6 +107,7 @@ public class CreditCardForm extends RelativeLayout {
 		entry.setLayoutParams(r);
 		entry.setCardImageView(view);
 		entry.setBackCardImage(backView);
+		entry.setCardPlaceholderText(cardPlaceHolderText);
 
 		this.addView(layout);
 
@@ -126,6 +130,19 @@ public class CreditCardForm extends RelativeLayout {
 
 	public void setOnCardValidCallback(CardValidCallback callback) {
 		entry.setOnCardValidCallback(callback);
+	}
+
+	/**
+	 * all internal components will be attached this same focus listener
+	 */
+	@Override
+	public void setOnFocusChangeListener(OnFocusChangeListener l) {
+		entry.setOnFocusChangeListener(l);
+	}
+
+	@Override
+	public OnFocusChangeListener getOnFocusChangeListener() {
+		return entry.getOnFocusChangeListener();
 	}
 
 	@SuppressWarnings("unused")

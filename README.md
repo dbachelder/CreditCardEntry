@@ -108,6 +108,9 @@ In code:
 
 ###4/21/2015
  - Don't focus credit card by default. Add mechanism for clients to focus any field if desired.
+ - CardType now contains image drawable ids for front and back of card
+ - The credit card placeholder hint can now be specified via xml
+ - Setting focus change listener now delegates to all internal fields.
 
 ###4/20/2015
  - Flip the card image back to the front after CVV field loses focus
