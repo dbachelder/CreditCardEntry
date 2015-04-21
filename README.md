@@ -136,4 +136,7 @@ In code:
  - Expose CardType on CreditCard object
  - Transferred repo ownership
 
+###4/21/2015
+ - Don't focus credit card by default. Add mechanism for clients to focus any field if desired.
+
 [1]: https://raw.github.com/dbachelder/CreditCardEntry/master/demo.gif "Demo GIF"

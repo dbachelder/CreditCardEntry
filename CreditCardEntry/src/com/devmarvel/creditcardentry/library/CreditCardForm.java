@@ -137,4 +137,36 @@ public class CreditCardForm extends RelativeLayout {
 	public CreditCard getCreditCard() {
 		return entry.getCreditCard();
 	}
+
+	/**
+	 * request focus for the credit card field
+	 */
+	@SuppressWarnings("unused")
+	public void focusCreditCard() {
+		entry.focusCreditCard();
+	}
+
+	/**
+	 * request focus for the expiration field
+	 */
+	@SuppressWarnings("unused")
+	public void focusExp() {
+		entry.focusExp();
+	}
+
+	/**
+	 * request focus for the security code field
+	 */
+	@SuppressWarnings("unused")
+	public void focusSecurityCode() {
+		entry.focusSecurityCode();
+	}
+
+	/**
+	 * request focus for the zip field (IF it's enabled)
+	 */
+	@SuppressWarnings("unused")
+	public void focusZip() {
+		entry.focusZip();
+	}
 }

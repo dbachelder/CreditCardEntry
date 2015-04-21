@@ -119,8 +119,6 @@ public class CreditCardEntry extends HorizontalScrollView implements
 				focusOnField(creditCardText);
 			}
 		});
-
-		creditCardText.requestFocus();
 	}
 
 	@Override
@@ -290,6 +288,36 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		return new CreditCard(creditCardText.getText().toString(), expDateText.getText().toString(),
 													securityCodeText.getText().toString(), zipCodeText.getText().toString(),
 													creditCardText.getType());
+	}
+
+	/**
+	 * request focus for the credit card field
+	 */
+	public void focusCreditCard() {
+		focusOnField(creditCardText);
+	}
+
+	/**
+	 * request focus for the expiration field
+	 */
+	public void focusExp() {
+		focusOnField(expDateText);
+	}
+
+	/**
+	 * request focus for the security code field
+	 */
+	public void focusSecurityCode() {
+		focusOnField(securityCodeText);
+	}
+
+	/**
+	 * request focus for the zip field (IF it's enabled)
+	 */
+	public void focusZip() {
+		if (includeZip) {
+			focusOnField(zipCodeText);
+		}
 	}
 
 	private void hideKeyboard() {
