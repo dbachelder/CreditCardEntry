@@ -106,19 +106,16 @@ In code:
 
 # Version History
 
-###4/2/2013
- - Initial Commit
+###4/21/2015
+ - Don't focus credit card by default. Add mechanism for clients to focus any field if desired.
 
-###5/11/2013
- - Updated Demo added screenshots
+###4/20/2015
+ - Flip the card image back to the front after CVV field loses focus
+ - Expose CardType on CreditCard object
+ - Transferred repo ownership
 
-###4/7/2015
- - Made zip code optional (app:include_zip="false")
- - added callback when data entry is complete and card is valid
- - optionally specify helper text color in XML attrs
-
-###4/8/2015
- - Always return CreditCard object when requested even when invalid
+###4/19/2015
+ - Don't scroll when scrolling is already happening
 
 ###4/18/2015
  - Made helper optional (app:include_helper="false")
@@ -128,15 +125,18 @@ In code:
  - Last 4 of card now tappable to enter edit mode
  - updated image assets
 
-###4/19/2015
- - Don't scroll when scrolling is already happening
+###4/8/2015
+ - Always return CreditCard object when requested even when invalid
 
-###4/20/2015
- - Flip the card image back to the front after CVV field loses focus
- - Expose CardType on CreditCard object
- - Transferred repo ownership
+###4/7/2015
+ - Made zip code optional (app:include_zip="false")
+ - added callback when data entry is complete and card is valid
+ - optionally specify helper text color in XML attrs
 
-###4/21/2015
- - Don't focus credit card by default. Add mechanism for clients to focus any field if desired.
+###5/11/2013
+ - Updated Demo added screenshots
+
+###4/2/2013
+ - Initial Commit
 
 [1]: https://raw.github.com/dbachelder/CreditCardEntry/master/demo.gif "Demo GIF"
