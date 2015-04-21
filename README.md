@@ -44,9 +44,29 @@ Add the project to your `dependencies`
 
 # Using the library
 
-Please see below for an example. Delegate calls for valid entry and accessors for the data will be added in future updates.
-Adding the form is simply as seen below, or it can be added through an Android layout file.
+Please see below for an example.
 
+XML
+
+```
+        <com.devmarvel.creditcardentry.library.CreditCardForm
+            android:id="@+id/credit_card_form"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:helper_text_color="@color/yellow_500"
+            app:include_helper="false"
+            app:include_zip="false"/>
+
+```
+
+`app:helper_text_color` - change the text color of the hints that appear below the widget by default.
+`app:include_helper` - boolean to show/hide the helper text under the widget (`true` by default (i.e. helper is shown))
+`app:include_zip` - boolean to show/hide the zip code in the form (`true` by default (i.e. zip is shown))
+
+
+In code:
+
+```
     public class MainActivity extends Activity {
   
       private LinearLayout linearLayout;
@@ -78,7 +98,7 @@ Adding the form is simply as seen below, or it can be added through an Android l
     		}
     	});
     }
-
+```
 
 # TODO
 
