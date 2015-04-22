@@ -37,11 +37,15 @@ class FlipAnimator extends Animation {
 	 * @param centerY
 	 *            The center of the views in the y-axis.
 	 */
-	public FlipAnimator(View fromView, View toView, int centerX, int centerY) {
+	public FlipAnimator(View fromView, View toView) {
 		this.fromView = fromView;
 		this.toView = toView;
-		this.centerX = centerX;
-		this.centerY = centerY;
+		View v = toView;
+		if(fromView.getVisibility() == View.VISIBLE) {
+			v = fromView;
+		}
+		this.centerX = v.getWidth() / 2;
+		this.centerY = v.getHeight() / 2;
 
 		setDuration(500);
 		setFillAfter(true);
@@ -64,6 +68,7 @@ class FlipAnimator extends Animation {
 
 	@Override
 	protected void applyTransformation(float interpolatedTime, Transformation t) {
+		System.out.println("interpolatedTime = " + interpolatedTime);
 		// Angle around the y-axis of the rotation at the given time. It is
 		// calculated both in radians and in the equivalent degrees.
 		final double radians = Math.PI * interpolatedTime;

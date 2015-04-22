@@ -202,8 +202,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	}
 
 	private void flipCardImage() {
-		FlipAnimator animator = new FlipAnimator(cardImage, backCardImage,
-				backCardImage.getWidth() / 2, backCardImage.getHeight() / 2);
+		FlipAnimator animator = new FlipAnimator(cardImage, backCardImage);
 		if (cardImage.getVisibility() == View.GONE) {
 			animator.reverse();
 		}
