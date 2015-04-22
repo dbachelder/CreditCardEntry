@@ -177,7 +177,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		}, 1000);
 	}
 
-	public void setCardPlaceholderText(String hint) {
+	public void setCardNumberHint(String hint) {
 		creditCardText.setHint(hint);
 	}
 

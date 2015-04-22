@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="15dp"
-        app:card_place_holder="XXXX XXXX XXXX XXXX"
+        app:card_number_hint="XXXX XXXX XXXX XXXX"
         app:helper_text_color="@color/text_helper_color"
         app:include_zip="false"/>
 
@@ -38,6 +38,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="15dp"
+        app:include_helper="false"
+        app:include_zip="true"/>
+
+    <TextView
+        android:id="@+id/yellow_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:text="Form with yellow background and red border"
+        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
+
+    <com.devmarvel.creditcardentry.library.CreditCardForm
+        android:id="@+id/yellow_form"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        app:input_background="@drawable/background_yellow"
         app:include_helper="false"
         app:include_zip="true"/>
 
