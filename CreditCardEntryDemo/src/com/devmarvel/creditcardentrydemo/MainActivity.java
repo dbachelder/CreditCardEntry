@@ -3,6 +3,7 @@ package com.devmarvel.creditcardentrydemo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.devmarvel.creditcardentry.library.CardValidCallback;
@@ -17,6 +18,16 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		final CreditCardForm noZipForm = (CreditCardForm) findViewById(R.id.form_no_zip);
+
+		// we can track gaining or losing focus for any particular field.
+		noZipForm.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					Toast.makeText(MainActivity.this, v.getClass().getSimpleName() + " gained focus.", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 
 		noZipForm.setOnCardValidCallback(new CardValidCallback() {
 			@Override

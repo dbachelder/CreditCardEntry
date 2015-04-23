@@ -2,6 +2,7 @@ package com.devmarvel.creditcardentry.library;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -19,7 +20,9 @@ public class CreditCardForm extends RelativeLayout {
 	private CreditCardEntry entry;
 	private boolean includeZip = true;
 	private boolean includeHelper;
-	private int textHelperColor = R.color.text_helper_color;
+	private int textHelperColor;
+	private Drawable inputBackground;
+	private String cardNumberHint = "1234 5678 9012 3456";
 
 	public CreditCardForm(Context context) {
 		this(context, null);
@@ -46,12 +49,21 @@ public class CreditCardForm extends RelativeLayout {
                   0
           );
 
+					this.cardNumberHint = typedArray.getString(R.styleable.CreditCardForm_card_number_hint);
 					this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
 					this.includeHelper = typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
-					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(textHelperColor));
+					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(R.color.text_helper_color));
+					this.inputBackground = typedArray.getDrawable(R.styleable.CreditCardForm_input_background);
 				} finally {
 					if (typedArray != null) typedArray.recycle();
 				}
+			}
+
+			// defaults if not set by user
+			if(cardNumberHint == null) cardNumberHint = "1234 5678 9012 3456";
+			if(inputBackground == null) {
+				//noinspection deprecation
+				inputBackground = context.getResources().getDrawable(R.drawable.background_white);
 			}
 		}
 
@@ -59,64 +71,67 @@ public class CreditCardForm extends RelativeLayout {
 	}
 
 	private void init(Context context) {
+		// the wrapper layout
 		LinearLayout layout = new LinearLayout(context);
-		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.WRAP_CONTENT);
+		layout.setId(R.id.cc_layout);
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 		params.addRule(LinearLayout.HORIZONTAL);
 		params.setMargins(0, 0, 0, 0);
 		layout.setLayoutParams(params);
-		layout.setBackgroundResource(R.drawable.background_white);
+		layout.setPadding(0,0,0,0);
+		//noinspection deprecation
+		layout.setBackgroundDrawable(inputBackground);
 
-		FrameLayout frame = new FrameLayout(context);
-        LinearLayout.LayoutParams frameParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
-        frameParams.gravity = Gravity.CENTER_VERTICAL;
+		// set up the card image container and images
+		FrameLayout cardImageFrame = new FrameLayout(context);
+		LinearLayout.LayoutParams frameParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		frameParams.gravity = Gravity.CENTER_VERTICAL;
+		cardImageFrame.setLayoutParams(frameParams);
+		cardImageFrame.setFocusable(true);
+		cardImageFrame.setPadding(10, 0, 0, 0);
 
-		frame.setLayoutParams(frameParams);
-		frame.setFocusable(true);
-		frame.setPadding(10, 0, 0, 0);
+		ImageView cardFrontImage = new ImageView(context);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		cardFrontImage.setLayoutParams(layoutParams);
+		cardFrontImage.setImageResource(CardType.INVALID.frontResource);
+		cardImageFrame.addView(cardFrontImage);
 
-		ImageView view = new ImageView(context);
-		LayoutParams r = new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
-		view.setLayoutParams(r);
-		view.setImageResource(R.drawable.unknown_cc);
+		ImageView cardBackImage = new ImageView(context);
+		layoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		cardBackImage.setLayoutParams(layoutParams);
+		cardBackImage.setImageResource(CardType.INVALID.backResource);
+		cardBackImage.setVisibility(View.GONE);
+		cardImageFrame.addView(cardBackImage);
+		layout.addView(cardImageFrame);
 
-		frame.addView(view);
-
-		ImageView backView = new ImageView(context);
-		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
-		backView.setLayoutParams(r);
-		backView.setImageResource(R.drawable.cc_back);
-		backView.setVisibility(View.GONE);
-
-		frame.addView(backView);
-		layout.addView(frame);
-
-		layout.setId(R.id.cc_layout);
-
+		// add the data entry form
+		LinearLayout.LayoutParams entryParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		entryParams.gravity = Gravity.CENTER_VERTICAL;
 		entry = new CreditCardEntry(context, includeZip);
-		r = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-		entry.setLayoutParams(r);
-		entry.setCardImageView(view);
-		entry.setBackCardImage(backView);
+		// this obnoxious 6 for bottom padding is to make the damn text centered on the image... if you know a better way... PLEASE HELP
+		entry.setPadding(0, 0, 0, 6);
+		entry.setLayoutParams(entryParams);
+
+		// set any passed in attrs
+		entry.setCardImageView(cardFrontImage);
+		entry.setBackCardImage(cardBackImage);
+		entry.setCardNumberHint(cardNumberHint);
 
 		this.addView(layout);
 
+		// set up optional helper text view
 		if (includeHelper) {
 			TextView textHelp = new TextView(context);
 			textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
 			textHelp.setTextColor(this.textHelperColor);
-			r = new LayoutParams(LayoutParams.WRAP_CONTENT,
-              LayoutParams.WRAP_CONTENT);
-			r.addRule(RelativeLayout.BELOW, layout.getId());
-			r.addRule(RelativeLayout.CENTER_HORIZONTAL);
-			r.setMargins(0, 15, 0, 20);
-			textHelp.setLayoutParams(r);
+			layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			layoutParams.addRule(RelativeLayout.BELOW, layout.getId());
+			layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+			layoutParams.setMargins(0, 15, 0, 20);
+			textHelp.setLayoutParams(layoutParams);
 			entry.setTextHelper(textHelp);
 			this.addView(textHelp);
 		}
@@ -126,6 +141,19 @@ public class CreditCardForm extends RelativeLayout {
 
 	public void setOnCardValidCallback(CardValidCallback callback) {
 		entry.setOnCardValidCallback(callback);
+	}
+
+	/**
+	 * all internal components will be attached this same focus listener
+	 */
+	@Override
+	public void setOnFocusChangeListener(OnFocusChangeListener l) {
+		entry.setOnFocusChangeListener(l);
+	}
+
+	@Override
+	public OnFocusChangeListener getOnFocusChangeListener() {
+		return entry.getOnFocusChangeListener();
 	}
 
 	@SuppressWarnings("unused")

@@ -2,7 +2,6 @@ package com.devmarvel.creditcardentry.internal;
 
 import android.annotation.SuppressLint;
 
-import com.devmarvel.creditcardentry.R;
 import com.devmarvel.creditcardentry.library.CardType;
 
 import java.text.ParseException;
@@ -20,19 +19,6 @@ import java.util.regex.Pattern;
 public class CreditCardUtil {
 	public static final int CC_LEN_FOR_TYPE = 4; // number of characters to determine length
 
-	// See: http://www.regular-expressions.info/creditcard.html
-	private static final String REGX_VISA 				= "^4[0-9]{15}?"; // VISA 16
-	private static final String REGX_MC 					= "^5[1-5][0-9]{14}$"; // MC 16
-	private static final String REGX_AMEX 				= "^3[47][0-9]{13}$"; // AMEX 15
-	private static final String REGX_DISCOVER 		= "^6(?:011|5[0-9]{2})[0-9]{12}$"; // Discover 16
-	private static final String REGX_DINERS_CLUB 	= "^3(?:0[0-5]|[68][0-9])[0-9]{11}$"; // DinersClub 14
-
-	private static final String REGX_VISA_TYPE 			 	= "^4[0-9]{3}?"; // VISA 16
-	private static final String REGX_MC_TYPE 				 	= "^5[1-5][0-9]{2}$"; // MC 16
-	private static final String REGX_AMEX_REG_TYPE 	 	= "^3[47][0-9]{2}$"; // AMEX 15
-	private static final String REGX_DISCOVER_TYPE 	 	= "^6(?:011|5[0-9]{2})$"; // Discover 16
-	private static final String REGX_DINERS_CLUB_TYPE = "^3(?:0[0-5]|[68][0-9])[0-9]$"; // DinersClub
-
 	private static String cleanNumber(String number) {
 		return number.replaceAll("\\s", "");
 	}
@@ -43,28 +29,9 @@ public class CreditCardUtil {
 			return CardType.INVALID;
 		}
 
-		String reg = null;
-
 		for (CardType type : CardType.values()) {
-			switch (type) {
-			case AMEX:
-				reg = REGX_AMEX_REG_TYPE;
-				break;
-			case DISCOVER:
-				reg = REGX_DISCOVER_TYPE;
-				break;
-			case MASTERCARD:
-				reg = REGX_MC_TYPE;
-				break;
-			case VISA:
-				reg = REGX_VISA_TYPE;
-				break;
-			default:
-				break;
-			}
-
-			if (reg != null) {
-				Pattern pattern = Pattern.compile(reg);
+			if (type.typeRegex != null) {
+				Pattern pattern = Pattern.compile(type.typeRegex);
 				Matcher matcher = pattern.matcher(number.substring(0,
             CC_LEN_FOR_TYPE));
 
@@ -79,28 +46,10 @@ public class CreditCardUtil {
 
 	public static boolean isValidNumber(String number) {
 		String cleaned = cleanNumber(number);
+		CardType cardType = findCardType(cleaned);
+		if(cardType == null || cardType.fullRegex == null) return false;
 
-		String reg;
-
-		switch (findCardType(cleaned)) {
-		case AMEX:
-			reg = REGX_AMEX;
-			break;
-		case DISCOVER:
-			reg = REGX_DISCOVER;
-			break;
-		case MASTERCARD:
-			reg = REGX_MC;
-			break;
-		case VISA:
-			reg = REGX_VISA;
-			break;
-		case INVALID:
-		default:
-			return false;
-		}
-
-		Pattern pattern = Pattern.compile(reg);
+		Pattern pattern = Pattern.compile(cardType.fullRegex);
 		Matcher matcher = pattern.matcher(cleaned);
 
 		return matcher.matches() && validateCardNumber(cleaned);
@@ -133,7 +82,7 @@ public class CreditCardUtil {
 		if (len <= CC_LEN_FOR_TYPE)
 			return cleaned;
 
-		ArrayList<String> gaps = new ArrayList<>();
+		ArrayList<String> gaps = new ArrayList<String>();
 
 		int segmentLengths[] = { 0, 0, 0 };
 
@@ -274,40 +223,4 @@ public class CreditCardUtil {
 			return 3;
 		}
 	}
-
-	public static int cardImageForCardType(CardType type, boolean back) {
-		switch (type) {
-		case AMEX:
-			if (back) {
-				return R.drawable.amex_back;
-			} else {
-				return R.drawable.amex;
-			}
-		case DISCOVER:
-			if (back) {
-				return R.drawable.cc_back;
-			} else {
-				return R.drawable.discover;
-			}
-		case MASTERCARD:
-			if (back) {
-				return R.drawable.cc_back;
-			} else {
-				return R.drawable.master_card;
-			}
-		case VISA:
-			if (back) {
-				return R.drawable.cc_back;
-			} else {
-				return R.drawable.visa;
-			}
-		default:
-			if (back) {
-				return R.drawable.cc_back;
-			} else {
-				return R.drawable.unknown_cc;
-			}
-		}
-	}
-
 }

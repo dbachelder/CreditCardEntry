@@ -62,6 +62,8 @@ XML
  * `app:helper_text_color` - change the text color of the hints that appear below the widget by default.
  * `app:include_helper` - boolean to show/hide the helper text under the widget (`true` by default (i.e. helper is shown))
  * `app:include_zip` - boolean to show/hide the zip code in the form (`true` by default (i.e. zip is shown))
+ * `app:card_number_hint` - string to put in as a placeholder (hint) in the credit card number field
+ * `app:input_background` - the drawable to use as a background (defaults to white square with black 1px border)
 
 
 In code:
@@ -108,6 +110,10 @@ In code:
 
 ###4/21/2015
  - Don't focus credit card by default. Add mechanism for clients to focus any field if desired.
+ - CardType now contains image drawable ids for front and back of card
+ - The credit card placeholder hint can now be specified via xml
+ - Setting focus change listener now delegates to all internal fields.
+ - Background of widget is now configurable
 
 ###4/20/2015
  - Flip the card image back to the front after CVV field loses focus

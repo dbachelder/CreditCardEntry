@@ -123,8 +123,8 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	@Override
 	public void onCardTypeChange(CardType type) {
-		cardImage.setImageResource(CreditCardUtil.cardImageForCardType(type, false));
-		backCardImage.setImageResource(CreditCardUtil.cardImageForCardType(type, true));
+		cardImage.setImageResource(type.frontResource);
+		backCardImage.setImageResource(type.backResource);
 		updateCardImage(false);
 	}
 
@@ -177,8 +177,20 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		}, 1000);
 	}
 
+	public void setCardNumberHint(String hint) {
+		creditCardText.setHint(hint);
+	}
+
 	public void setCardImageView(ImageView image) {
 		cardImage = image;
+	}
+
+	@Override
+	public void setOnFocusChangeListener(OnFocusChangeListener l) {
+		creditCardText.setOnFocusChangeListener(l);
+		expDateText.setOnFocusChangeListener(l);
+		securityCodeText.setOnFocusChangeListener(l);
+		zipCodeText.setOnFocusChangeListener(l);
 	}
 
 	private void updateCardImage(boolean back) {
@@ -190,8 +202,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	}
 
 	private void flipCardImage() {
-		FlipAnimator animator = new FlipAnimator(cardImage, backCardImage,
-				backCardImage.getWidth() / 2, backCardImage.getHeight() / 2);
+		FlipAnimator animator = new FlipAnimator(cardImage, backCardImage);
 		if (cardImage.getVisibility() == View.GONE) {
 			animator.reverse();
 		}

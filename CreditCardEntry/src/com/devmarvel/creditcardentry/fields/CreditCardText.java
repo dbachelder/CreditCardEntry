@@ -34,8 +34,7 @@ public class CreditCardText extends CreditEntryFieldBase {
 	@Override
 	void init() {
 		super.init();
-		setGravity(Gravity.LEFT);
-		setHint("1234 5678 9012 3456");
+		setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
 	}
 
 	/* TextWatcher Implementation Methods */
