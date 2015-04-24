@@ -62,6 +62,8 @@ XML
  * `app:helper_text_color` - change the text color of the hints that appear below the widget by default.
  * `app:include_helper` - boolean to show/hide the helper text under the widget (`true` by default (i.e. helper is shown))
  * `app:include_zip` - boolean to show/hide the zip code in the form (`true` by default (i.e. zip is shown))
+ * `app:include_exp` - boolean to show/hide the exp in the form (`true` by default (i.e. exp is shown))
+ * `app:include_security` - boolean to show/hide the security code in the form (`true` by default (i.e. security is shown))
  * `app:card_number_hint` - string to put in as a placeholder (hint) in the credit card number field
  * `app:input_background` - the drawable to use as a background (defaults to white square with black 1px border)
 
