@@ -38,7 +38,7 @@ Add the project to your `dependencies`
 
         ...
 
-        compile 'com.github.dbachelder:CreditCardEntry:v1.1.0'
+        compile 'com.github.dbachelder:CreditCardEntry:v1.2.0'
     }
 ```
 
