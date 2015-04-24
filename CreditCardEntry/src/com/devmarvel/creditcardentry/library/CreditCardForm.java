@@ -18,6 +18,8 @@ import com.devmarvel.creditcardentry.internal.CreditCardEntry;
 public class CreditCardForm extends RelativeLayout {
 
 	private CreditCardEntry entry;
+	private boolean includeExp = true;
+	private boolean includeSecurity = true;
 	private boolean includeZip = true;
 	private boolean includeHelper;
 	private int textHelperColor;
@@ -49,11 +51,13 @@ public class CreditCardForm extends RelativeLayout {
                   0
           );
 
-					this.cardNumberHint = typedArray.getString(R.styleable.CreditCardForm_card_number_hint);
-					this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
-					this.includeHelper = typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
-					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(R.color.text_helper_color));
-					this.inputBackground = typedArray.getDrawable(R.styleable.CreditCardForm_input_background);
+					this.cardNumberHint 	= typedArray.getString(R.styleable.CreditCardForm_card_number_hint);
+					this.includeExp 			= typedArray.getBoolean(R.styleable.CreditCardForm_include_exp, true);
+					this.includeSecurity 	= typedArray.getBoolean(R.styleable.CreditCardForm_include_security, true);
+					this.includeZip 			= typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
+					this.includeHelper 		= typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
+					this.textHelperColor 	= typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(R.color.text_helper_color));
+					this.inputBackground 	= typedArray.getDrawable(R.styleable.CreditCardForm_input_background);
 				} finally {
 					if (typedArray != null) typedArray.recycle();
 				}
@@ -80,7 +84,7 @@ public class CreditCardForm extends RelativeLayout {
 		params.addRule(LinearLayout.HORIZONTAL);
 		params.setMargins(0, 0, 0, 0);
 		layout.setLayoutParams(params);
-		layout.setPadding(0,0,0,0);
+		layout.setPadding(0, 0, 0, 0);
 		//noinspection deprecation
 		layout.setBackgroundDrawable(inputBackground);
 
@@ -90,6 +94,7 @@ public class CreditCardForm extends RelativeLayout {
 		frameParams.gravity = Gravity.CENTER_VERTICAL;
 		cardImageFrame.setLayoutParams(frameParams);
 		cardImageFrame.setFocusable(true);
+		cardImageFrame.setFocusableInTouchMode(true);
 		cardImageFrame.setPadding(10, 0, 0, 0);
 
 		ImageView cardFrontImage = new ImageView(context);
@@ -109,7 +114,7 @@ public class CreditCardForm extends RelativeLayout {
 		// add the data entry form
 		LinearLayout.LayoutParams entryParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		entryParams.gravity = Gravity.CENTER_VERTICAL;
-		entry = new CreditCardEntry(context, includeZip);
+		entry = new CreditCardEntry(context, includeExp, includeSecurity, includeZip);
 
 		// this obnoxious 6 for bottom padding is to make the damn text centered on the image... if you know a better way... PLEASE HELP
 		entry.setPadding(0, 0, 0, 6);

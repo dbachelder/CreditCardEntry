@@ -9,12 +9,14 @@ import android.os.Handler;
 import android.view.Display;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -32,19 +34,27 @@ import com.devmarvel.creditcardentry.library.CardType;
 import com.devmarvel.creditcardentry.library.CardValidCallback;
 import com.devmarvel.creditcardentry.library.CreditCard;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @SuppressLint("ViewConstructor")
 public class CreditCardEntry extends HorizontalScrollView implements
 		OnTouchListener, OnGestureListener, CreditCardFieldDelegate {
 
 	private final Context context;
-	private final boolean includeZip;
 
-	private ImageView cardImage;
+  private ImageView cardImage;
 	private ImageView backCardImage;
 	private final CreditCardText creditCardText;
 	private final ExpDateText expDateText;
 	private final SecurityCodeText securityCodeText;
 	private final ZipCodeText zipCodeText;
+
+  private Map<CreditEntryFieldBase, CreditEntryFieldBase> nextFocusField = new HashMap<>(4);
+  private Map<CreditEntryFieldBase, CreditEntryFieldBase> prevFocusField = new HashMap<>(4);
+  private List<CreditEntryFieldBase> includedFields = new ArrayList<>(4);
 
 	private final TextView textFourDigits;
 
@@ -57,11 +67,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
-	public CreditCardEntry(Context context, boolean includeZip) {
+	public CreditCardEntry(Context context, boolean includeExp, boolean includeSecurity, boolean includeZip) {
 		super(context);
 
 		this.context = context;
-		this.includeZip = includeZip;
 
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
@@ -91,24 +100,69 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		creditCardText.setDelegate(this);
 		creditCardText.setWidth(width);
 		container.addView(creditCardText);
+    includedFields.add(creditCardText);
+    CreditEntryFieldBase currentField = creditCardText;
 
 		textFourDigits = new TextView(context);
 		textFourDigits.setTextSize(20);
 		container.addView(textFourDigits);
 
 		expDateText = new ExpDateText(context);
-		expDateText.setDelegate(this);
-		container.addView(expDateText);
+		if (includeExp) {
+			expDateText.setDelegate(this);
+			container.addView(expDateText);
+      nextFocusField.put(currentField, expDateText);
+      prevFocusField.put(expDateText, currentField);
+      currentField = expDateText;
+      includedFields.add(currentField);
+    }
 
 		securityCodeText = new SecurityCodeText(context);
-		securityCodeText.setDelegate(this);
-		container.addView(securityCodeText);
+		if (includeSecurity) {
+			securityCodeText.setDelegate(this);
+			if (!includeZip) {
+        securityCodeText.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE);
+      }
+
+			securityCodeText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+          if (EditorInfo.IME_ACTION_DONE == actionId) {
+            onSecurityCodeValid();
+            return true;
+          }
+          return false;
+        }
+      });
+			container.addView(securityCodeText);
+      nextFocusField.put(currentField, securityCodeText);
+      prevFocusField.put(securityCodeText, currentField);
+      currentField = securityCodeText;
+      includedFields.add(currentField);
+    }
 
 		zipCodeText = new ZipCodeText(context);
 		if (includeZip) {
 			zipCodeText.setDelegate(this);
 			container.addView(zipCodeText);
-		}
+			zipCodeText.setImeActionLabel("DONE", EditorInfo.IME_ACTION_DONE);
+			zipCodeText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+          if (EditorInfo.IME_ACTION_DONE == actionId) {
+            onZipCodeValid();
+            return true;
+          }
+          return false;
+        }
+      });
+      nextFocusField.put(currentField, zipCodeText);
+      prevFocusField.put(zipCodeText, currentField);
+      currentField = zipCodeText;
+      includedFields.add(currentField);
+    }
+
+    nextFocusField.put(currentField, null);
 
 		this.addView(container);
 
@@ -130,7 +184,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	@Override
 	public void onCreditCardNumberValid() {
-		focusOnField(expDateText);
+    nextField(this.creditCardText);
 
 		String number = creditCardText.getText().toString();
 		int length = number.length();
@@ -140,26 +194,18 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	@Override
 	public void onExpirationDateValid() {
-		focusOnField(securityCodeText);
+    nextField(this.expDateText);
 	}
 
-	@Override
+  @Override
 	public void onSecurityCodeValid() {
-		if(includeZip) {
-			focusOnField(zipCodeText);
-		} else {
-			hideKeyboard();
-			securityCodeText.clearFocus();
-			if(onCardValidCallback != null) onCardValidCallback.cardValid(getCreditCard());
-		}
+    nextField(securityCodeText);
 		updateCardImage(false);
 	}
 
-	@Override
-	public void onZipCodeValid() {
-		hideKeyboard();
-		zipCodeText.clearFocus();
-		if(onCardValidCallback != null) onCardValidCallback.cardValid(getCreditCard());
+  @Override
+  public void onZipCodeValid() {
+		nextField(zipCodeText);
 	}
 
 	@Override
@@ -170,11 +216,11 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 		final Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				field.setTextColor(Color.BLACK);
-			}
-		}, 1000);
+      @Override
+      public void run() {
+        field.setTextColor(Color.BLACK);
+      }
+    }, 1000);
 	}
 
 	public void setCardNumberHint(String hint) {
@@ -191,22 +237,6 @@ public class CreditCardEntry extends HorizontalScrollView implements
 		expDateText.setOnFocusChangeListener(l);
 		securityCodeText.setOnFocusChangeListener(l);
 		zipCodeText.setOnFocusChangeListener(l);
-	}
-
-	private void updateCardImage(boolean back) {
-		if (showingBack != back) {
-			flipCardImage();
-		}
-
-		showingBack = back;
-	}
-
-	private void flipCardImage() {
-		FlipAnimator animator = new FlipAnimator(cardImage, backCardImage);
-		if (cardImage.getVisibility() == View.GONE) {
-			animator.reverse();
-		}
-		cardImage.startAnimation(animator);
 	}
 
 	@Override
@@ -263,13 +293,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 	@Override
 	public void focusOnPreviousField(CreditEntryFieldBase field) {
-		if (field instanceof ExpDateText) {
-			focusOnField(creditCardText);
-		} else if (field instanceof SecurityCodeText) {
-			focusOnField(expDateText);
-		} else if (field instanceof ZipCodeText) {
-			focusOnField(securityCodeText);
-		}
+    CreditEntryFieldBase view = prevFocusField.get(field);
+    if(view != null) {
+      focusOnField(view);
+    }
 	}
 
 	@SuppressWarnings("unused")
@@ -291,8 +318,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	}
 
 	public boolean isCreditCardValid() {
-		return creditCardText.isValid() && expDateText.isValid()
-				&& securityCodeText.isValid() && (!includeZip || zipCodeText.isValid());
+    for (CreditEntryFieldBase includedField : includedFields) {
+      if(!includedField.isValid()) return false;
+    }
+    return true;
 	}
 
 	public CreditCard getCreditCard() {
@@ -312,26 +341,61 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	 * request focus for the expiration field
 	 */
 	public void focusExp() {
-		focusOnField(expDateText);
+    if(includedFields.contains(expDateText)) {
+      focusOnField(expDateText);
+    }
 	}
 
 	/**
 	 * request focus for the security code field
 	 */
 	public void focusSecurityCode() {
-		focusOnField(securityCodeText);
+    if(includedFields.contains(securityCodeText)) {
+      focusOnField(securityCodeText);
+    }
 	}
 
 	/**
 	 * request focus for the zip field (IF it's enabled)
 	 */
 	public void focusZip() {
-		if (includeZip) {
-			focusOnField(zipCodeText);
-		}
+    if(includedFields.contains(zipCodeText)) {
+      focusOnField(zipCodeText);
+    }
 	}
 
-	private void hideKeyboard() {
+  private void nextField(CreditEntryFieldBase currentField) {
+		CreditEntryFieldBase next = nextFocusField.get(currentField);
+    if(next == null) {
+      entryComplete(currentField);
+    } else {
+      focusOnField(next);
+    }
+  }
+
+  private void entryComplete(View clearField) {
+    hideKeyboard();
+    clearField.clearFocus();
+    if (onCardValidCallback != null) onCardValidCallback.cardValid(getCreditCard());
+  }
+
+  private void updateCardImage(boolean back) {
+    if (showingBack != back) {
+      flipCardImage();
+    }
+
+    showingBack = back;
+  }
+
+  private void flipCardImage() {
+    FlipAnimator animator = new FlipAnimator(cardImage, backCardImage);
+    if (cardImage.getVisibility() == View.GONE) {
+      animator.reverse();
+    }
+    cardImage.startAnimation(animator);
+  }
+
+  private void hideKeyboard() {
 		InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputManager.hideSoftInputFromWindow(this.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
