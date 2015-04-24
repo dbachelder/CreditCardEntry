@@ -13,39 +13,37 @@ import com.devmarvel.creditcardentry.library.CreditCardForm;
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
 
+	CardValidCallback cardValidCallback = new CardValidCallback() {
+		@Override
+		public void cardValid(CreditCard card) {
+			Log.d(TAG, "valid card: " + card);
+			Toast.makeText(MainActivity.this, "Card valid and complete", Toast.LENGTH_SHORT).show();
+		}
+	};
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		final CreditCardForm noZipForm = (CreditCardForm) findViewById(R.id.form_no_zip);
+		noZipForm.setOnCardValidCallback(cardValidCallback);
 
 		// we can track gaining or losing focus for any particular field.
 		noZipForm.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
-					Toast.makeText(MainActivity.this, v.getClass().getSimpleName() + " gained focus.", Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-
-		noZipForm.setOnCardValidCallback(new CardValidCallback() {
-			@Override
-			public void cardValid(CreditCard card) {
-				Log.d(TAG, "valid card: " + card);
-				Toast.makeText(MainActivity.this, "Card valid and complete", Toast.LENGTH_SHORT).show();
+				Log.d(TAG, v.getClass().getSimpleName() + " " + (hasFocus ? "gained" : "lost") + " focus.");
 			}
 		});
 
 		final CreditCardForm zipForm = (CreditCardForm) findViewById(R.id.form_with_zip);
-
-		zipForm.setOnCardValidCallback(new CardValidCallback() {
-			@Override
-			public void cardValid(CreditCard card) {
-				Log.d(TAG, "valid card: " + card);
-				Toast.makeText(MainActivity.this, "Card valid and complete", Toast.LENGTH_SHORT).show();
-			}
-		});
+		zipForm.setOnCardValidCallback(cardValidCallback);
+		final CreditCardForm yellowForm = (CreditCardForm) findViewById(R.id.yellow_form);
+		yellowForm.setOnCardValidCallback(cardValidCallback);
+		final CreditCardForm justCard   = (CreditCardForm) findViewById(R.id.just_card_form);
+		justCard.setOnCardValidCallback(cardValidCallback);
+		final CreditCardForm cardAndZip   = (CreditCardForm) findViewById(R.id.card_and_zip_form);
+		cardAndZip.setOnCardValidCallback(cardValidCallback);
 	}
 
 }
