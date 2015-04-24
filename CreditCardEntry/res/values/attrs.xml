@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CreditCardForm">
-        <attr name="include_zip" format="boolean"/>
-        <attr name="include_helper" format="boolean"/>
-        <attr name="helper_text_color" format="color"/>
-        <attr name="card_number_hint" format="string"/>
-        <attr name="input_background" format="reference"/>
+        <attr name="include_exp"        format="boolean"/>
+        <attr name="include_security"   format="boolean"/>
+        <attr name="include_zip"        format="boolean"/>
+        <attr name="include_helper"     format="boolean"/>
+
+        <attr name="helper_text_color"  format="color"/>
+        <attr name="card_number_hint"   format="string"/>
+        <attr name="input_background"   format="reference"/>
     </declare-styleable>
 </resources>

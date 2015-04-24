@@ -1,62 +1,108 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context=".MainActivity">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/no_zip_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingTop="15dp"
-        android:text="Form with no zip"
-        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  tools:context=".MainActivity">
 
-    <com.devmarvel.creditcardentry.library.CreditCardForm
-        android:id="@+id/form_no_zip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        app:card_number_hint="XXXX XXXX XXXX XXXX"
-        app:helper_text_color="@color/text_helper_color"
-        app:include_zip="false"/>
+        <TextView
+            android:id="@+id/no_zip_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingTop="15dp"
+            android:text="Form with no zip"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
 
-    <TextView
-        android:id="@+id/zip_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingTop="15dp"
-        android:text="Form with zip and no helper text"
-        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
+        <com.devmarvel.creditcardentry.library.CreditCardForm
+            android:id="@+id/form_no_zip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            app:card_number_hint="XXXX XXXX XXXX XXXX"
+            app:helper_text_color="@color/text_helper_color"
+            app:include_zip="false"/>
 
-    <com.devmarvel.creditcardentry.library.CreditCardForm
-        android:id="@+id/form_with_zip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        app:include_helper="false"
-        app:include_zip="true"/>
+        <TextView
+            android:id="@+id/zip_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingTop="15dp"
+            android:text="Form with zip and no helper text"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
 
-    <TextView
-        android:id="@+id/yellow_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingTop="15dp"
-        android:text="Form with yellow background and red border"
-        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
+        <com.devmarvel.creditcardentry.library.CreditCardForm
+            android:id="@+id/form_with_zip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            app:include_helper="false"
+            app:include_zip="true"/>
 
-    <com.devmarvel.creditcardentry.library.CreditCardForm
-        android:id="@+id/yellow_form"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        app:input_background="@drawable/background_yellow"
-        app:include_helper="false"
-        app:include_zip="true"/>
+        <TextView
+            android:id="@+id/yellow_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingTop="15dp"
+            android:text="Form with yellow background and red border"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
 
-</LinearLayout>
+        <com.devmarvel.creditcardentry.library.CreditCardForm
+            android:id="@+id/yellow_form"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            app:include_helper="false"
+            app:include_zip="true"
+            app:input_background="@drawable/background_yellow"/>
+
+        <TextView
+            android:id="@+id/just_card_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingTop="15dp"
+            android:text="Form with just card number"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
+
+        <com.devmarvel.creditcardentry.library.CreditCardForm
+            android:id="@+id/just_card_form"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            app:include_exp="false"
+            app:include_helper="false"
+            app:include_security="false"
+            app:include_zip="false"/>
+
+        <TextView
+            android:id="@+id/card_and_zip_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingTop="15dp"
+            android:text="Form with just card number and zip"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
+
+        <com.devmarvel.creditcardentry.library.CreditCardForm
+            android:id="@+id/card_and_zip_form"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            app:include_exp="false"
+            app:include_helper="false"
+            app:include_security="false"
+            app:include_zip="true"/>
+
+    </LinearLayout>
+</ScrollView>
+

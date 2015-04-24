@@ -108,6 +108,10 @@ In code:
 
 # Version History
 
+###4/24/2015
+ - Done IME causes validation check and keyboard dismiss
+ - All fields except credit card # are now optional
+
 ###4/21/2015
  - Don't focus credit card by default. Add mechanism for clients to focus any field if desired.
  - CardType now contains image drawable ids for front and back of card
