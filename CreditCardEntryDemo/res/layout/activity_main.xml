@@ -103,6 +103,25 @@
             app:include_security="false"
             app:include_zip="true"/>
 
+        <TextView
+            android:id="@+id/pre_populated_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingTop="15dp"
+            android:text="Form with prepopulated card number"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
+
+        <com.devmarvel.creditcardentry.library.CreditCardForm
+            android:id="@+id/pre_populated_form"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            app:include_exp="false"
+            app:include_helper="false"
+            app:include_security="false"
+            app:include_zip="true"/>
+
     </LinearLayout>
 </ScrollView>
 

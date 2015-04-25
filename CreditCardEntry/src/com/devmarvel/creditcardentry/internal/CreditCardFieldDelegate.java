@@ -7,6 +7,8 @@ import com.devmarvel.creditcardentry.library.CardType;
 
 /**
  * contract for delegate
+ *
+ * TODO gut this delegate business
  */
 public interface CreditCardFieldDelegate {
   // When the card type is identified

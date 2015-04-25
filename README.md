@@ -38,7 +38,7 @@ Add the project to your `dependencies`
 
         ...
 
-        compile 'com.github.dbachelder:CreditCardEntry:v1.2.0'
+        compile 'com.github.dbachelder:CreditCardEntry:v1.2.1'
     }
 ```
 
@@ -113,6 +113,7 @@ In code:
 ###4/24/2015
  - Done IME causes validation check and keyboard dismiss
  - All fields except credit card # are now optional
+ - Allow setting credit card number programmatically
 
 ###4/21/2015
  - Don't focus credit card by default. Add mechanism for clients to focus any field if desired.

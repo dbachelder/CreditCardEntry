@@ -202,4 +202,12 @@ public class CreditCardForm extends RelativeLayout {
 	public void focusZip() {
 		entry.focusZip();
 	}
+
+	/**
+	 * @param cardNumber the card number to show
+	 * @param focusNextField true to go to next field (only works if the number is valid)
+	 */
+	public void setCardNumber(String cardNumber, boolean focusNextField) {
+		entry.setCardNumber(cardNumber, focusNextField);
+	}
 }

@@ -186,10 +186,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 	public void onCreditCardNumberValid() {
     nextField(this.creditCardText);
 
-		String number = creditCardText.getText().toString();
-		int length = number.length();
-		String digits = number.substring(length - 4);
-		textFourDigits.setText(digits);
+		updateLast4();
 	}
 
 	@Override
@@ -216,11 +213,11 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
 		final Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
-      @Override
-      public void run() {
-        field.setTextColor(Color.BLACK);
-      }
-    }, 1000);
+			@Override
+			public void run() {
+				field.setTextColor(Color.BLACK);
+			}
+		}, 1000);
 	}
 
 	public void setCardNumberHint(String hint) {
@@ -324,6 +321,34 @@ public class CreditCardEntry extends HorizontalScrollView implements
     return true;
 	}
 
+	/**
+	 * set the card number will auto focus next field if param is true
+	 */
+	public void setCardNumber(String cardNumber, boolean nextField) {
+		final CreditCardFieldDelegate delegate;
+		if(!nextField) {
+			delegate = creditCardText.getDelegate();
+			// temp delegate that only deals with type.. this sucks.. TODO gut this delegate business
+			creditCardText.setDelegate(new CreditCardFieldDelegate() {
+				@Override public void onCardTypeChange(CardType type) { delegate.onCardTypeChange(type);}
+				@Override public void onCreditCardNumberValid() { updateLast4(); }
+				@Override public void onExpirationDateValid() { }
+				@Override public void onSecurityCodeValid() { }
+				@Override public void onZipCodeValid() { }
+				@Override public void onBadInput(EditText field) { delegate.onBadInput(field); }
+				@Override public void focusOnField(CreditEntryFieldBase field) { }
+				@Override public void focusOnPreviousField(CreditEntryFieldBase field) { }
+			});
+		} else {
+			delegate = null;
+		}
+
+		creditCardText.setText(cardNumber);
+		if(!nextField) {
+			creditCardText.setDelegate(delegate);
+		}
+	}
+
 	public CreditCard getCreditCard() {
 		return new CreditCard(creditCardText.getText().toString(), expDateText.getText().toString(),
 													securityCodeText.getText().toString(), zipCodeText.getText().toString(),
@@ -364,7 +389,14 @@ public class CreditCardEntry extends HorizontalScrollView implements
     }
 	}
 
-  private void nextField(CreditEntryFieldBase currentField) {
+	private void updateLast4() {
+		String number = creditCardText.getText().toString();
+		int length = number.length();
+		String digits = number.substring(length - 4);
+		textFourDigits.setText(digits);
+	}
+
+	private void nextField(CreditEntryFieldBase currentField) {
 		CreditEntryFieldBase next = nextFocusField.get(currentField);
     if(next == null) {
       entryComplete(currentField);

@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 
 import com.devmarvel.creditcardentry.R;
-import com.devmarvel.creditcardentry.internal.CreditCardFieldDelegate;
 import com.devmarvel.creditcardentry.internal.CreditCardUtil;
 import com.devmarvel.creditcardentry.library.CardType;
 
@@ -91,11 +90,6 @@ public class CreditCardText extends CreditEntryFieldBase {
 				delegate.onCardTypeChange(CardType.INVALID);
 			}
 		}
-	}
-
-	@Override
-	public CreditCardFieldDelegate getDelegate() {
-		return delegate;
 	}
 
 	public CardType getType() {
