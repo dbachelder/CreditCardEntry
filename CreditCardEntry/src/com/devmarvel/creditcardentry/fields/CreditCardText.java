@@ -12,7 +12,6 @@ import com.devmarvel.creditcardentry.library.CardType;
 
 public class CreditCardText extends CreditEntryFieldBase {
 	private CardType type;
-	private String previousNumber;
 
 	public CreditCardText(Context context) {
 		super(context);
@@ -37,23 +36,15 @@ public class CreditCardText extends CreditEntryFieldBase {
 	}
 
 	/* TextWatcher Implementation Methods */
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-		previousNumber = s.toString();
-	}
+	@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
 	@Override
 	public void afterTextChanged(Editable s) {
 		String number = s.toString();
-
 		if (number.length() >= CreditCardUtil.CC_LEN_FOR_TYPE) {
 			CardType type = CreditCardUtil.findCardType(number);
 
 			if (type.equals(CardType.INVALID)) {
-				this.removeTextChangedListener(this);
-				this.setText(previousNumber);
-				this.setSelection(3);
-				this.addTextChangedListener(this);
 				delegate.onBadInput(this);
 				setValid(false);
 				return;
@@ -65,7 +56,6 @@ public class CreditCardText extends CreditEntryFieldBase {
 			this.type = type;
 
 			String formatted = CreditCardUtil.formatForViewing(number, type);
-
 			if (!number.equalsIgnoreCase(formatted)) {
 				this.removeTextChangedListener(this);
 				this.setText(formatted);
@@ -73,8 +63,7 @@ public class CreditCardText extends CreditEntryFieldBase {
 				this.addTextChangedListener(this);
 			}
 
-			if (formatted.length() >= CreditCardUtil
-					.lengthOfFormattedStringForType(type)) {
+			if (formatted.length() >= CreditCardUtil.lengthOfFormattedStringForType(type)) {
 				if (CreditCardUtil.isValidNumber(formatted)) {
 					delegate.onCreditCardNumberValid();
 					setValid(true);
