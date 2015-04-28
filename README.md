@@ -110,6 +110,13 @@ In code:
 
 # Version History
 
+###4/27/2015
+ - removed a bunch of dead resources reducing aar size by ~17%
+
+###4/26/2015
+ - fixed corner radius of card back
+ - allow setting an invalid number programmatically
+
 ###4/24/2015
  - Done IME causes validation check and keyboard dismiss
  - All fields except credit card # are now optional

@@ -1,6 +1,5 @@
 <resources>
 
-    <string name="app_name">CreditCardEntry</string>
     <string name="CreditCardNumberHelp"/>
     <string name="ExpirationDateHelp">Expiration date (MM/DD)</string>
     <string name="SecurityCodeHelp">Security code (CVV)</string>

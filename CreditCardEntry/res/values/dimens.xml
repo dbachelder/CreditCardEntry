@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <dimen name="radius">5dp</dimen>
-    <dimen name="strokeWidth">1dp</dimen>
-
-</resources>
