@@ -2,6 +2,7 @@ CreditCardEntry
 =========
 
 [![Join the chat at https://gitter.im/dbachelder/CreditCardEntry](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dbachelder/CreditCardEntry?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-CreditCardEntry-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1771)
 
 # Introduction
 
