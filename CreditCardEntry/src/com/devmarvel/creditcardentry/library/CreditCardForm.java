@@ -204,6 +204,14 @@ public class CreditCardForm extends RelativeLayout {
 	}
 
 	/**
+	 * clear and reset the entire form
+	 */
+	@SuppressWarnings("unused")
+	public void clearForm() {
+		entry.clearAll();
+	}
+
+	/**
 	 * @param cardNumber the card number to show
 	 * @param focusNextField true to go to next field (only works if the number is valid)
 	 */

@@ -49,6 +49,14 @@ public class MainActivity extends Activity {
 		prepopulated.setOnCardValidCallback(cardValidCallback);
 		// populate the card, but don't try to focus the next field
 		prepopulated.setCardNumber("4242 4242 4242 4242", false);
+
+		final CreditCardForm clear = (CreditCardForm) findViewById(R.id.clear_test_form);
+		findViewById(R.id.clear_test_button).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				clear.clearForm();
+			}
+		});
 	}
 
 }

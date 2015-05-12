@@ -111,6 +111,9 @@ In code:
 
 # Version History
 
+###5/11/2015
+ - Added clearForm()
+
 ###4/27/2015
  - removed a bunch of dead resources reducing aar size by ~17%
 
