@@ -128,7 +128,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
             android:paddingTop="15dp"
-            android:text="Form with prepopulated card number"
+            android:text="Form with clear button"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
 
         <com.devmarvel.creditcardentry.library.CreditCardForm
@@ -145,7 +145,8 @@
             android:id="@+id/clear_test_button"
             android:text="Clear Form"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            tools:ignore="HardcodedText"/>
 
     </LinearLayout>
 </ScrollView>
