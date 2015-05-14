@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="cc_layout" type="id">5555</item>
+    <item name="cc_form_layout" type="id">1111</item>
+    <item name="cc_entry" type="id">1000</item>
+    <item name="cc_entry_internal" type="id">3000</item>
+    <item name="cc_card" type="id">2222</item>
+    <item name="cc_exp" type="id">3333</item>
+    <item name="cc_ccv" type="id">4444</item>
+    <item name="cc_zip" type="id">5555</item>
+    <item name="text_helper" type="id">2000</item>
 </resources>

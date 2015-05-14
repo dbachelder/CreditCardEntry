@@ -1,6 +1,8 @@
 package com.devmarvel.creditcardentry.library;
 
-public class CreditCard {
+import java.io.Serializable;
+
+public class CreditCard implements Serializable {
 	
 	private final String cardNumber;
 	private final String expDate;

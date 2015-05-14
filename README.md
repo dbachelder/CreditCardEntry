@@ -111,6 +111,10 @@ In code:
 
 # Version History
 
+###5/13/2015
+ - add setters for other CC fields
+ - correctly manage state such that more than one form on a screen can handle state change
+
 ###5/11/2015
  - Added clearForm()
 

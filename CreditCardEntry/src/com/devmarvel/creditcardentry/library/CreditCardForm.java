@@ -3,7 +3,14 @@ package com.devmarvel.creditcardentry.library;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.v4.os.ParcelableCompat;
+import android.support.v4.os.ParcelableCompatCreatorCallbacks;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -40,24 +47,24 @@ public class CreditCardForm extends RelativeLayout {
 		if(!isInEditMode()) {
 
 			// If the attributes are available, use them to color the icon
-			if(attrs != null){
+			if (attrs != null) {
 
 				TypedArray typedArray = null;
 				try {
 					typedArray = context.getTheme().obtainStyledAttributes(
-                  attrs,
-                  R.styleable.CreditCardForm,
-                  0,
-                  0
-          );
+							attrs,
+							R.styleable.CreditCardForm,
+							0,
+							0
+					);
 
-					this.cardNumberHint 	= typedArray.getString(R.styleable.CreditCardForm_card_number_hint);
-					this.includeExp 			= typedArray.getBoolean(R.styleable.CreditCardForm_include_exp, true);
-					this.includeSecurity 	= typedArray.getBoolean(R.styleable.CreditCardForm_include_security, true);
-					this.includeZip 			= typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
-					this.includeHelper 		= typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
-					this.textHelperColor 	= typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(R.color.text_helper_color));
-					this.inputBackground 	= typedArray.getDrawable(R.styleable.CreditCardForm_input_background);
+					this.cardNumberHint = typedArray.getString(R.styleable.CreditCardForm_card_number_hint);
+					this.includeExp = typedArray.getBoolean(R.styleable.CreditCardForm_include_exp, true);
+					this.includeSecurity = typedArray.getBoolean(R.styleable.CreditCardForm_include_security, true);
+					this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
+					this.includeHelper = typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
+					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(R.color.text_helper_color));
+					this.inputBackground = typedArray.getDrawable(R.styleable.CreditCardForm_input_background);
 				} finally {
 					if (typedArray != null) typedArray.recycle();
 				}
@@ -71,13 +78,18 @@ public class CreditCardForm extends RelativeLayout {
 			}
 		}
 
-		init(context);
+		init(context, defStyle);
 	}
 
-	private void init(Context context) {
+	private void init(Context context, int style) {
 		// the wrapper layout
-		LinearLayout layout = new LinearLayout(context);
-		layout.setId(R.id.cc_layout);
+		LinearLayout layout;
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			layout = new LinearLayout(context);
+		} else {
+			layout = new LinearLayout(context);
+		}
+		layout.setId(R.id.cc_form_layout);
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -114,7 +126,8 @@ public class CreditCardForm extends RelativeLayout {
 		// add the data entry form
 		LinearLayout.LayoutParams entryParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		entryParams.gravity = Gravity.CENTER_VERTICAL;
-		entry = new CreditCardEntry(context, includeExp, includeSecurity, includeZip);
+		entry = new CreditCardEntry(context, includeExp, includeSecurity, includeZip,style);
+        entry.setId(R.id.cc_entry);
 
 		// this obnoxious 6 for bottom padding is to make the damn text centered on the image... if you know a better way... PLEASE HELP
 		entry.setPadding(0, 0, 0, 6);
@@ -130,6 +143,7 @@ public class CreditCardForm extends RelativeLayout {
 		// set up optional helper text view
 		if (includeHelper) {
 			TextView textHelp = new TextView(context);
+            textHelp.setId(R.id.text_helper);
 			textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
 			textHelp.setTextColor(this.textHelperColor);
 			layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -217,5 +231,94 @@ public class CreditCardForm extends RelativeLayout {
 	 */
 	public void setCardNumber(String cardNumber, boolean focusNextField) {
 		entry.setCardNumber(cardNumber, focusNextField);
+	}
+
+	/**
+	 * @param expirationDate the exp to show
+	 * @param focusNextField true to go to next field (only works if the number is valid)
+	 */
+	@SuppressWarnings("unused")
+	public void setExpDate(String expirationDate, boolean focusNextField) {
+		entry.setExpDate(expirationDate, focusNextField);
+	}
+
+	/**
+	 * @param securityCode the security code to show
+	 * @param focusNextField true to go to next field (only works if the number is valid)
+	 */
+	@SuppressWarnings("unused")
+	public void setSecurityCode(String securityCode, boolean focusNextField) {
+		entry.setSecurityCode(securityCode, focusNextField);
+	}
+
+	/**
+	 * @param zip the zip to show
+	 * @param focusNextField true to go to next field (only works if the number is valid)
+	 */
+	@SuppressWarnings("unused")
+	public void setZipCode(String zip, boolean focusNextField) {
+		entry.setZipCode(zip, focusNextField);
+	}
+
+	@Override
+	protected void dispatchSaveInstanceState(@NonNull SparseArray<Parcelable> container) {
+		dispatchFreezeSelfOnly(container);
+	}
+
+	@Override
+	protected void dispatchRestoreInstanceState(@NonNull SparseArray<Parcelable> container) {
+		dispatchThawSelfOnly(container);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Parcelable state) {
+		SavedState ss = (SavedState) state;
+		super.onRestoreInstanceState(ss.getSuperState());
+		for (int i = 0; i < getChildCount(); i++) {
+			getChildAt(i).restoreHierarchyState(ss.childrenStates);
+		}
+	}
+
+	@Override
+	protected Parcelable onSaveInstanceState() {
+		Parcelable superState = super.onSaveInstanceState();
+		SavedState ss = new SavedState(superState);
+		ss.childrenStates = new SparseArray();
+		for (int i = 0; i < getChildCount(); i++) {
+			getChildAt(i).saveHierarchyState(ss.childrenStates);
+		}
+		return ss;
+	}
+
+	static class SavedState extends BaseSavedState {
+		SparseArray childrenStates;
+
+		SavedState(Parcelable superState) {
+			super(superState);
+		}
+
+		private SavedState(Parcel in, ClassLoader classLoader) {
+			super(in);
+			childrenStates = in.readSparseArray(classLoader);
+		}
+
+		@Override
+		public void writeToParcel(Parcel out, int flags) {
+			super.writeToParcel(out, flags);
+			out.writeSparseArray(childrenStates);
+		}
+
+		public static final Creator<SavedState> CREATOR
+				= ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<SavedState>() {
+			@Override
+			public SavedState createFromParcel(Parcel in, ClassLoader loader) {
+				return new SavedState(in, loader);
+			}
+
+			@Override
+			public SavedState[] newArray(int size) {
+				return new SavedState[size];
+			}
+		});
 	}
 }

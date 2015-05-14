@@ -4,8 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.v4.os.ParcelableCompat;
+import android.support.v4.os.ParcelableCompatCreatorCallbacks;
+import android.util.SparseArray;
 import android.view.Display;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.Gravity;
@@ -51,6 +58,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
     private final ExpDateText expDateText;
     private final SecurityCodeText securityCodeText;
     private final ZipCodeText zipCodeText;
+    private final LinearLayout container;
 
     private Map<CreditEntryFieldBase, CreditEntryFieldBase> nextFocusField = new HashMap<>(4);
     private Map<CreditEntryFieldBase, CreditEntryFieldBase> prevFocusField = new HashMap<>(4);
@@ -66,8 +74,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
     private CardValidCallback onCardValidCallback;
 
     @SuppressWarnings("deprecation")
-    @SuppressLint("NewApi")
-    public CreditCardEntry(Context context, boolean includeExp, boolean includeSecurity, boolean includeZip) {
+    public CreditCardEntry(Context context, boolean includeExp, boolean includeSecurity, boolean includeZip, int style) {
         super(context);
 
         this.context = context;
@@ -92,11 +99,17 @@ public class CreditCardEntry extends HorizontalScrollView implements
         this.setOnTouchListener(this);
         this.setSmoothScrollingEnabled(true);
 
-        LinearLayout container = new LinearLayout(context);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            container = new LinearLayout(context);
+        } else {
+            container = new LinearLayout(context);
+        }
+        container.setId(R.id.cc_entry_internal);
         container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         container.setOrientation(LinearLayout.HORIZONTAL);
 
         creditCardText = new CreditCardText(context);
+        creditCardText.setId(R.id.cc_card);
         creditCardText.setDelegate(this);
         creditCardText.setWidth(width);
         container.addView(creditCardText);
@@ -108,6 +121,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         container.addView(textFourDigits);
 
         expDateText = new ExpDateText(context);
+        expDateText.setId(R.id.cc_exp);
         if (includeExp) {
             expDateText.setDelegate(this);
             container.addView(expDateText);
@@ -118,6 +132,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         }
 
         securityCodeText = new SecurityCodeText(context);
+        securityCodeText.setId(R.id.cc_ccv);
         if (includeSecurity) {
             securityCodeText.setDelegate(this);
             if (!includeZip) {
@@ -142,6 +157,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         }
 
         zipCodeText = new ZipCodeText(context);
+        zipCodeText.setId(R.id.cc_zip);
         if (includeZip) {
             zipCodeText.setDelegate(this);
             container.addView(zipCodeText);
@@ -206,6 +222,36 @@ public class CreditCardEntry extends HorizontalScrollView implements
     }
 
     @Override
+    protected void dispatchSaveInstanceState(@NonNull SparseArray<Parcelable> container) {
+        dispatchFreezeSelfOnly(container);
+    }
+
+    @Override
+    protected void dispatchRestoreInstanceState(@NonNull SparseArray<Parcelable> container) {
+        dispatchThawSelfOnly(container);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).restoreHierarchyState(ss.childrenStates);
+        }
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.childrenStates = new SparseArray();
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).saveHierarchyState(ss.childrenStates);
+        }
+        return ss;
+    }
+
+    @Override
     public void onBadInput(final EditText field) {
         Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
         field.startAnimation(shake);
@@ -218,14 +264,6 @@ public class CreditCardEntry extends HorizontalScrollView implements
                 field.setTextColor(Color.BLACK);
             }
         }, 1000);
-    }
-
-    public void setCardNumberHint(String hint) {
-        creditCardText.setHint(hint);
-    }
-
-    public void setCardImageView(ImageView image) {
-        cardImage = image;
     }
 
     @Override
@@ -299,6 +337,33 @@ public class CreditCardEntry extends HorizontalScrollView implements
         }
     }
 
+    public void setCardNumberHint(String hint) {
+        creditCardText.setHint(hint);
+    }
+
+    /**
+     * set the card number will auto focus next field if param is true
+     */
+    public void setCardNumber(String cardNumber, boolean nextField) {
+        setValue(this.creditCardText, cardNumber, nextField);
+    }
+
+    public void setCardImageView(ImageView image) {
+        cardImage = image;
+    }
+
+    public void setExpDate(String expiration, boolean nextField) {
+        setValue(this.expDateText, expiration, nextField);
+    }
+
+    public void setSecurityCode(String securityCode, boolean nextField) {
+        setValue(this.securityCodeText, securityCode, nextField);
+    }
+
+    public void setZipCode(String zip, boolean nextField) {
+        setValue(this.zipCodeText, zip, nextField);
+    }
+
     @SuppressWarnings("unused")
     public ImageView getBackCardImage() {
         return backCardImage;
@@ -324,44 +389,44 @@ public class CreditCardEntry extends HorizontalScrollView implements
         return true;
     }
 
-    /**
-     * set the card number will auto focus next field if param is true
-     */
-    public void setCardNumber(String cardNumber, boolean nextField) {
-        final CreditCardFieldDelegate delegate;
+    private void setValue(CreditEntryFieldBase fieldToSet, String value, boolean nextField) {
+        CreditCardFieldDelegate delegate = null;
         if (!nextField) {
-            delegate = creditCardText.getDelegate();
+            delegate = fieldToSet.getDelegate();
             // temp delegate that only deals with type.. this sucks.. TODO gut this delegate business
-            creditCardText.setDelegate(new CreditCardFieldDelegate() {
-                @Override
-                public void onCardTypeChange(CardType type) {
-                    delegate.onCardTypeChange(type);
-                }
-
-                @Override
-                public void onCreditCardNumberValid() {
-                    updateLast4();
-                }
-
-                @Override
-                public void onBadInput(EditText field) {
-                    delegate.onBadInput(field);
-                }
-
-                @Override public void onExpirationDateValid() {}
-                @Override public void onSecurityCodeValid() {}
-                @Override public void onZipCodeValid() { }
-                @Override public void focusOnField(CreditEntryFieldBase field) { }
-                @Override public void focusOnPreviousField(CreditEntryFieldBase field) { }
-            });
-        } else {
-            delegate = null;
+            fieldToSet.setDelegate(getDelegate(delegate));
         }
 
-        creditCardText.setText(cardNumber);
-        if (!nextField) {
-            creditCardText.setDelegate(delegate);
+        fieldToSet.setText(value);
+
+        if (delegate != null) {
+            fieldToSet.setDelegate(delegate);
         }
+    }
+
+    private CreditCardFieldDelegate getDelegate(final CreditCardFieldDelegate delegate) {
+        return new CreditCardFieldDelegate() {
+            @Override
+            public void onCardTypeChange(CardType type) {
+                delegate.onCardTypeChange(type);
+            }
+
+            @Override
+            public void onCreditCardNumberValid() {
+                updateLast4();
+            }
+
+            @Override
+            public void onBadInput(EditText field) {
+                delegate.onBadInput(field);
+            }
+
+            @Override public void onExpirationDateValid() {}
+            @Override public void onSecurityCodeValid() {}
+            @Override public void onZipCodeValid() { }
+            @Override public void focusOnField(CreditEntryFieldBase field) { }
+            @Override public void focusOnPreviousField(CreditEntryFieldBase field) { }
+        };
     }
 
     public void clearAll() {
@@ -492,5 +557,37 @@ public class CreditCardEntry extends HorizontalScrollView implements
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
         return false;
+    }
+
+    static class SavedState extends BaseSavedState {
+        SparseArray childrenStates;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in, ClassLoader classLoader) {
+            super(in);
+            childrenStates = in.readSparseArray(classLoader);
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeSparseArray(childrenStates);
+        }
+
+        public static final Creator<SavedState> CREATOR
+                = ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in, ClassLoader loader) {
+                return new SavedState(in, loader);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        });
     }
 }
