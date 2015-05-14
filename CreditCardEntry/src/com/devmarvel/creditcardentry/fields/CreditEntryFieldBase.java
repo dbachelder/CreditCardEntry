@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -27,8 +28,9 @@ public abstract class CreditEntryFieldBase extends EditText implements
 
 	CreditCardFieldDelegate delegate;
 	final Context context;
-	
-	private boolean valid = false;
+    String lastValue = null;
+
+    private boolean valid = false;
 
 	public CreditEntryFieldBase(Context context) {
 		super(context);
@@ -65,8 +67,16 @@ public abstract class CreditEntryFieldBase extends EditText implements
 			if (delegate != null) {
 				delegate.focusOnPreviousField(this);
 			}
-		}
+		} else if(!String.valueOf(s).equals(String.valueOf(lastValue))) {
+            lastValue = String.valueOf(s);
+            textChanged(s, start, before, end);
+        }
 	}
+
+    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    @Override public void afterTextChanged(Editable s) {}
+
+    public void textChanged(CharSequence s, int start, int before, int end) { }
 
 	@Override
 	public InputConnection onCreateInputConnection(@NonNull EditorInfo outAttrs) {

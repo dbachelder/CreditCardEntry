@@ -111,6 +111,9 @@ In code:
 
 # Version History
 
+###5/14/2015
+ - don't call complete callback twice
+
 ###5/13/2015
  - add setters for other CC fields
  - correctly manage state such that more than one form on a screen can handle state change

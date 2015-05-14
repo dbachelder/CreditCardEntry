@@ -36,29 +36,26 @@ public class SecurityCodeText extends CreditEntryFieldBase {
 	}
 
 	/* TextWatcher Implementation Methods */
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-	}
-
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 	public void afterTextChanged(Editable s) {
+        if(type == null) {
+            this.removeTextChangedListener(this);
+            this.setText("");
+            this.addTextChangedListener(this);
+        }
+    }
 
+    public void textChanged(CharSequence s, int start, int before, int count) {
 		if (type != null) {
 			String number = s.toString();
 
 			if (number.length() == length) {
 				delegate.onSecurityCodeValid();
 				setValid(true);
-			}
-			else
-			{
+			} else {
 				setValid(false);
 			}
-		} else {
-			this.removeTextChangedListener(this);
-			this.setText("");
-			this.addTextChangedListener(this);
 		}
-
 	}
 
 	@SuppressWarnings("unused")

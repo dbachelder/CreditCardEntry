@@ -1,7 +1,6 @@
 package com.devmarvel.creditcardentry.fields;
 
 import android.content.Context;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.util.AttributeSet;
 
@@ -35,10 +34,8 @@ public class ZipCodeText extends CreditEntryFieldBase {
 		return context.getString(R.string.ZipHelp);
 	}
 
-	/* TextWatcher Implementation Methods */
-	public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-	public void afterTextChanged(Editable s) {
+	@Override
+	public void textChanged(CharSequence s, int start, int before, int end) {
 		String zipCode = s.toString();
 		if (zipCode.length() == 5) {
 			delegate.onZipCodeValid();
