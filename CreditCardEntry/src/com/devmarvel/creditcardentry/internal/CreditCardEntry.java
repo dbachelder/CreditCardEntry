@@ -1,11 +1,14 @@
 package com.devmarvel.creditcardentry.internal;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -23,6 +26,7 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -97,7 +101,6 @@ public class CreditCardEntry extends HorizontalScrollView implements
         setLayoutParams(params);
         this.setHorizontalScrollBarEnabled(false);
         this.setOnTouchListener(this);
-        this.setSmoothScrollingEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             container = new LinearLayout(context);
@@ -281,44 +284,14 @@ public class CreditCardEntry extends HorizontalScrollView implements
         }
 
         if (!scrolling) {
-            View childAt = getChildAt(0);
-            int childWidth = childAt == null ? 0 : childAt.getMeasuredWidth();
-            if (field instanceof CreditCardText) {
-                scrolling = true;
-                new CountDownTimer(300, 16) {
-                    public void onTick(long millisUntilFinished) {
-                        scrollTo((int) (millisUntilFinished), 0);
-                    }
-
-                    public void onFinish() {
-                        scrollTo(0, 0);
-                        field.requestFocus();
-                        scrolling = false;
-                    }
-                }.start();
-            } else if (getScrollX() + getWidth() < childWidth) {
-                scrolling = true;
-                // if we're not already scrolled all the way right
-                final int target = field.getLeft();
-                final int duration = 400;
-                new CountDownTimer(duration, 16) {
-                    final int startingPoint = getScrollX();
-
-                    public void onTick(long millisUntilFinished) {
-                        long increment = target * (duration - millisUntilFinished) / duration;
-                        long scrollTo = startingPoint + increment;
-                        scrollTo((int) scrollTo, 0);
-                    }
-
-                    public void onFinish() {
-                        scrollTo(target, 0);
-                        field.requestFocus();
-                        scrolling = false;
-                    }
-                }.start();
-            } else {
-                field.requestFocus();
-            }
+            scrolling = true;
+            scrollToTarget(field instanceof CreditCardText ? 0 : field.getLeft(), new Runnable() {
+                @Override
+                public void run() {
+                    scrolling = false;
+                    field.requestFocus();
+                }
+            });
         }
 
         if (field instanceof SecurityCodeText) {
@@ -326,6 +299,36 @@ public class CreditCardEntry extends HorizontalScrollView implements
             updateCardImage(true);
         } else {
             updateCardImage(false);
+        }
+    }
+
+    private void scrollToTarget(int target, final Runnable after) {
+        int scrollX = getScrollX();
+        if(scrollX == target) {
+            if (after != null) after.run();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                ValueAnimator realSmoothScrollAnimation = ValueAnimator.ofInt(scrollX, target).setDuration(500);
+                realSmoothScrollAnimation.setInterpolator(new DecelerateInterpolator());
+                realSmoothScrollAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        scrollTo((Integer) animation.getAnimatedValue(), 0);
+                    }
+                });
+
+                realSmoothScrollAnimation.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (after != null) after.run();
+                    }
+                });
+                realSmoothScrollAnimation.start();
+            } else {
+                smoothScrollTo(target, 0);
+                if (after != null) after.run();
+            }
         }
     }
 

@@ -111,6 +111,9 @@ In code:
 
 # Version History
 
+###5/16/2015
+ - use an animator to do the scroll
+
 ###5/14/2015
  - don't call complete callback twice
 
