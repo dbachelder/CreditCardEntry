@@ -83,7 +83,7 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CreditCardForm);
 		setTextColor(typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK));
 		setHintTextColor(typedArray.getColor(R.styleable.CreditCardForm_hint_text_color, Color.LTGRAY));
-		setCursorDrawableColor(typedArray.getColor(R.styleable.CreditCardForm_cursor_color, Color.WHITE));
+		setCursorDrawableColor(typedArray.getColor(R.styleable.CreditCardForm_cursor_color, Color.BLACK));
 		typedArray.recycle();
 	}
 

@@ -63,7 +63,7 @@ XML
  * `app:helper_text_color` - change the text color of the hints that appear below the widget by default.
  * `app:text_color` - change the input field's text color (`Color.BLACK` by default).
  * `app:hint_text_color` - change the input field's hint text color (`Color.LTGRAY` by default).
- * `app:cursor_color` - change the input field's cursor color (`Color.WHITE` by default).
+ * `app:cursor_color` - change the input field's cursor color (`Color.BLACK` by default).
  * `app:include_helper` - boolean to show/hide the helper text under the widget (`true` by default (i.e. helper is shown))
  * `app:include_zip` - boolean to show/hide the zip code in the form (`true` by default (i.e. zip is shown))
  * `app:include_exp` - boolean to show/hide the exp in the form (`true` by default (i.e. exp is shown))
