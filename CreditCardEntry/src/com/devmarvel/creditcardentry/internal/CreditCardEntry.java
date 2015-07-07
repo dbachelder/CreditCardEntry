@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.os.ParcelableCompat;
 import android.support.v4.os.ParcelableCompatCreatorCallbacks;
+import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.GestureDetector.OnGestureListener;
@@ -55,6 +57,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         OnTouchListener, OnGestureListener, CreditCardFieldDelegate {
 
     private final Context context;
+    private final int textColor;
 
     private ImageView cardImage;
     private ImageView backCardImage;
@@ -78,10 +81,14 @@ public class CreditCardEntry extends HorizontalScrollView implements
     private CardValidCallback onCardValidCallback;
 
     @SuppressWarnings("deprecation")
-    public CreditCardEntry(Context context, boolean includeExp, boolean includeSecurity, boolean includeZip, int style) {
+    public CreditCardEntry(Context context, boolean includeExp, boolean includeSecurity, boolean includeZip, AttributeSet attrs, int style) {
         super(context);
 
         this.context = context;
+
+        TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CreditCardForm, 0, 0);
+        textColor = typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK);
+        typedArray.recycle();
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -111,7 +118,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         container.setOrientation(LinearLayout.HORIZONTAL);
 
-        creditCardText = new CreditCardText(context);
+        creditCardText = new CreditCardText(context, attrs);
         creditCardText.setId(R.id.cc_card);
         creditCardText.setDelegate(this);
         creditCardText.setWidth(width);
@@ -121,9 +128,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
         textFourDigits = new TextView(context);
         textFourDigits.setTextSize(20);
+        textFourDigits.setTextColor(textColor);
         container.addView(textFourDigits);
 
-        expDateText = new ExpDateText(context);
+        expDateText = new ExpDateText(context, attrs);
         expDateText.setId(R.id.cc_exp);
         if (includeExp) {
             expDateText.setDelegate(this);
@@ -134,7 +142,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
             includedFields.add(currentField);
         }
 
-        securityCodeText = new SecurityCodeText(context);
+        securityCodeText = new SecurityCodeText(context, attrs);
         securityCodeText.setId(R.id.cc_ccv);
         if (includeSecurity) {
             securityCodeText.setDelegate(this);
@@ -159,7 +167,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
             includedFields.add(currentField);
         }
 
-        zipCodeText = new ZipCodeText(context);
+        zipCodeText = new ZipCodeText(context, attrs);
         zipCodeText.setId(R.id.cc_zip);
         if (includeZip) {
             zipCodeText.setDelegate(this);
@@ -264,7 +272,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                field.setTextColor(Color.BLACK);
+                field.setTextColor(textColor);
             }
         }, 1000);
     }

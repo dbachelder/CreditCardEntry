@@ -78,10 +78,10 @@ public class CreditCardForm extends RelativeLayout {
 			}
 		}
 
-		init(context, defStyle);
+		init(context, attrs, defStyle);
 	}
 
-	private void init(Context context, int style) {
+	private void init(Context context, AttributeSet attrs, int style) {
 		// the wrapper layout
 		LinearLayout layout;
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -126,7 +126,7 @@ public class CreditCardForm extends RelativeLayout {
 		// add the data entry form
 		LinearLayout.LayoutParams entryParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		entryParams.gravity = Gravity.CENTER_VERTICAL;
-		entry = new CreditCardEntry(context, includeExp, includeSecurity, includeZip,style);
+		entry = new CreditCardEntry(context, includeExp, includeSecurity, includeZip, attrs, style);
         entry.setId(R.id.cc_entry);
 
 		// this obnoxious 6 for bottom padding is to make the damn text centered on the image... if you know a better way... PLEASE HELP
