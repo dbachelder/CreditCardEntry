@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -247,8 +248,8 @@ public abstract class CreditEntryFieldBase extends EditText implements
 			Field fCursorDrawable = clazz.getDeclaredField("mCursorDrawable");
 			fCursorDrawable.setAccessible(true);
 			Drawable[] drawables = new Drawable[2];
-			drawables[0] = getContext().getResources().getDrawable(mCursorDrawableRes);
-			drawables[1] = getContext().getResources().getDrawable(mCursorDrawableRes);
+			drawables[0] = ContextCompat.getDrawable(getContext(), mCursorDrawableRes);
+			drawables[1] = ContextCompat.getDrawable(getContext(), mCursorDrawableRes);
 			drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
 			drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
 			fCursorDrawable.set(editor, drawables);
