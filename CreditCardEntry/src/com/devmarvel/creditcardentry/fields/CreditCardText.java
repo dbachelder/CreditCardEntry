@@ -45,8 +45,8 @@ public class CreditCardText extends CreditEntryFieldBase {
 			CardType type = CreditCardUtil.findCardType(number);
 
 			if (type.equals(CardType.INVALID)) {
-				delegate.onBadInput(this);
 				setValid(false);
+				delegate.onBadInput(this);
 				return;
 			}
 
@@ -65,11 +65,11 @@ public class CreditCardText extends CreditEntryFieldBase {
 
 			if (formatted.length() >= CreditCardUtil.lengthOfFormattedStringForType(type)) {
 				if (CreditCardUtil.isValidNumber(formatted)) {
-					delegate.onCreditCardNumberValid();
 					setValid(true);
+					delegate.onCreditCardNumberValid();
 				} else {
-					delegate.onBadInput(this);
 					setValid(false);
+					delegate.onBadInput(this);
 				}
 			}
 

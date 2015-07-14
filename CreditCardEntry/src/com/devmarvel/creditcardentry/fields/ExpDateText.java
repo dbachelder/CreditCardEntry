@@ -48,11 +48,11 @@ public class ExpDateText extends CreditEntryFieldBase {
 			this.addTextChangedListener(this);
 			
 			if(formatted.length() == 5) {
-				delegate.onExpirationDateValid();
 				setValid(true);
+				delegate.onExpirationDateValid();
 			} else if(formatted.length() < updatedString.length()) {
-				delegate.onBadInput(this);
 				setValid(false);
+				delegate.onBadInput(this);
 			}
 		}
 	}

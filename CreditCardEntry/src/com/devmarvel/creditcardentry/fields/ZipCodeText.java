@@ -38,8 +38,8 @@ public class ZipCodeText extends CreditEntryFieldBase {
 	public void textChanged(CharSequence s, int start, int before, int end) {
 		String zipCode = s.toString();
 		if (zipCode.length() == 5) {
-			delegate.onZipCodeValid();
 			setValid(true);
+			delegate.onZipCodeValid();
 		} else {
 			setValid(false);
 		}

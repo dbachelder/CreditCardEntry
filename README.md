@@ -114,6 +114,9 @@ In code:
 
 # Version History
 
+###7/15/2015
+ - fix for order of operations when invalidating card and calling delegate methods
+
 ###7/07/2015
  - Be able to change input field's text, hint and cursor color
 

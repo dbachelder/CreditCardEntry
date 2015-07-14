@@ -50,8 +50,8 @@ public class SecurityCodeText extends CreditEntryFieldBase {
 			String number = s.toString();
 
 			if (number.length() == length) {
-				delegate.onSecurityCodeValid();
 				setValid(true);
+				delegate.onSecurityCodeValid();
 			} else {
 				setValid(false);
 			}
