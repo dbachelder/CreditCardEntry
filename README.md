@@ -39,7 +39,7 @@ Add the project to your `dependencies`
 
         ...
 
-        compile 'com.github.dbachelder:CreditCardEntry:1.4.0'
+        compile 'com.github.dbachelder:CreditCardEntry:1.4.1'
     }
 ```
 
@@ -113,6 +113,9 @@ In code:
   - Diner's Club is not yet implemented, although the assets and regex seem to be in place
 
 # Version History
+
+###7/27/2015
+ - fix occasional NPE
 
 ###7/15/2015
  - fix for order of operations when invalidating card and calling delegate methods
