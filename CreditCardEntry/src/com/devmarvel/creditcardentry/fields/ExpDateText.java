@@ -1,17 +1,19 @@
 package com.devmarvel.creditcardentry.fields;
 
+import com.devmarvel.creditcardentry.R;
+import com.devmarvel.creditcardentry.internal.CreditCardUtil;
+
 import android.content.Context;
 import android.text.Editable;
 import android.util.AttributeSet;
-
-import com.devmarvel.creditcardentry.R;
-import com.devmarvel.creditcardentry.internal.CreditCardUtil;
 
 public class ExpDateText extends CreditEntryFieldBase {
 
 	private String previousString;
 
-	public ExpDateText(Context context) {
+    private String mHelperText;
+
+    public ExpDateText(Context context) {
 		super(context);
 		init();
 	}
@@ -57,8 +59,14 @@ public class ExpDateText extends CreditEntryFieldBase {
 		}
 	}
 
-	@Override
-	public String helperText() {
-		return context.getString(R.string.ExpirationDateHelp);
-	}
+    @Override
+    public void setHelperText(String helperText) {
+	mHelperText = helperText;
+    }
+
+    @Override
+    public String getHelperText() {
+	return (mHelperText != null ? mHelperText : context.getString(R.string.ExpirationDateHelp));
+    }
+
 }

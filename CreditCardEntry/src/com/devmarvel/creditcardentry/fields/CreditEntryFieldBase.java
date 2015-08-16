@@ -24,118 +24,130 @@ import android.widget.EditText;
 import com.devmarvel.creditcardentry.internal.CreditCardFieldDelegate;
 
 public abstract class CreditEntryFieldBase extends EditText implements
-		TextWatcher, OnKeyListener, OnClickListener {
+        TextWatcher, OnKeyListener, OnClickListener {
 
-	CreditCardFieldDelegate delegate;
-	final Context context;
+    CreditCardFieldDelegate delegate;
+
+    final Context context;
+
     String lastValue = null;
 
     private boolean valid = false;
 
-	public CreditEntryFieldBase(Context context) {
-		super(context);
-		this.context = context;
-		init();
-	}
+    public CreditEntryFieldBase(Context context) {
+        super(context);
+        this.context = context;
+        init();
+    }
 
-	public CreditEntryFieldBase(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		this.context = context;
-		init();
-	}
+    public CreditEntryFieldBase(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+        init();
+    }
 
-	public CreditEntryFieldBase(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		this.context = context;
-		init();
-	}
+    public CreditEntryFieldBase(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.context = context;
+        init();
+    }
 
-	void init() {
-		setGravity(Gravity.CENTER);
-		setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-		setBackgroundColor(color.transparent);
-		setInputType(InputType.TYPE_CLASS_NUMBER);
-		addTextChangedListener(this);
-		setOnKeyListener(this);
-		setOnClickListener(this);
-		setPadding(20, 0, 20, 0);
-	}
+    void init() {
+        setGravity(Gravity.CENTER);
+        setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        setBackgroundColor(color.transparent);
+        setInputType(InputType.TYPE_CLASS_NUMBER);
+        addTextChangedListener(this);
+        setOnKeyListener(this);
+        setOnClickListener(this);
+        setPadding(20, 0, 20, 0);
+    }
 
-	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int end) {
-		if (start == 0 && before == 1 && s.length() == 0) {
-			if (delegate != null) {
-				delegate.focusOnPreviousField(this);
-			}
-		} else if(!String.valueOf(s).equals(String.valueOf(lastValue))) {
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int end) {
+        if (start == 0 && before == 1 && s.length() == 0) {
+            if (delegate != null) {
+                delegate.focusOnPreviousField(this);
+            }
+        } else if (!String.valueOf(s).equals(String.valueOf(lastValue))) {
             lastValue = String.valueOf(s);
             textChanged(s, start, before, end);
         }
-	}
+    }
 
-    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-    @Override public void afterTextChanged(Editable s) {}
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 
-    public void textChanged(CharSequence s, int start, int before, int end) { }
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
 
-	@Override
-	public InputConnection onCreateInputConnection(@NonNull EditorInfo outAttrs) {
-		outAttrs.actionLabel = null;
-		outAttrs.inputType = InputType.TYPE_NULL;
-		outAttrs.imeOptions = EditorInfo.IME_ACTION_NONE;
-		return new BackInputConnection(super.onCreateInputConnection(outAttrs));
-	}
+    public void textChanged(CharSequence s, int start, int before, int end) {
+    }
 
-	@Override
-	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		if (event.getAction() == KeyEvent.ACTION_DOWN)
-			return false;
-		if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
-				|| keyCode == KeyEvent.KEYCODE_ALT_RIGHT
-				|| keyCode == KeyEvent.KEYCODE_SHIFT_LEFT
-				|| keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
-			return false;
+    @Override
+    public InputConnection onCreateInputConnection(@NonNull EditorInfo outAttrs) {
+        outAttrs.actionLabel = null;
+        outAttrs.inputType = InputType.TYPE_NULL;
+        outAttrs.imeOptions = EditorInfo.IME_ACTION_NONE;
+        return new BackInputConnection(super.onCreateInputConnection(outAttrs));
+    }
 
-		if (keyCode == KeyEvent.KEYCODE_DEL
-				&& this.getText().toString().length() == 0) {
-			if (delegate != null) {
-				delegate.focusOnPreviousField(this);
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            return false;
+        }
+        if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
+                || keyCode == KeyEvent.KEYCODE_ALT_RIGHT
+                || keyCode == KeyEvent.KEYCODE_SHIFT_LEFT
+                || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+            return false;
+        }
 
-	@Override
-	public void onClick(View v) {
-		setSelection(getText().length());
-	}
+        if (keyCode == KeyEvent.KEYCODE_DEL
+                && this.getText().toString().length() == 0) {
+            if (delegate != null) {
+                delegate.focusOnPreviousField(this);
+            }
+        }
+        return false;
+    }
 
-	@SuppressWarnings("unused")
-	public CreditCardFieldDelegate getDelegate() {
-		return delegate;
-	}
+    @Override
+    public void onClick(View v) {
+        setSelection(getText().length());
+    }
 
-	public void setDelegate(CreditCardFieldDelegate delegate) {
-		this.delegate = delegate;
-	}
+    @SuppressWarnings("unused")
+    public CreditCardFieldDelegate getDelegate() {
+        return delegate;
+    }
 
-	public abstract String helperText();
+    public void setDelegate(CreditCardFieldDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-	public boolean isValid() {
-		return valid;
-	}
+    public abstract void setHelperText(String helperText);
 
-	void setValid(boolean valid) {
-		this.valid = valid;
-	}
+    public abstract String getHelperText();
 
-	private void backInput() {
-		if (this.getText().toString().length() == 0) {
-			if (delegate != null) {
-				delegate.focusOnPreviousField(this);
-			}
-		}
-	}
+    public boolean isValid() {
+        return valid;
+    }
+
+    void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    private void backInput() {
+        if (this.getText().toString().length() == 0) {
+            if (delegate != null) {
+                delegate.focusOnPreviousField(this);
+            }
+        }
+    }
 
     @Override
     public Parcelable onSaveInstanceState() {
@@ -148,7 +160,7 @@ public abstract class CreditEntryFieldBase extends EditText implements
         return bundle;
     }
 
-	@Override
+    @Override
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
@@ -157,54 +169,57 @@ public abstract class CreditEntryFieldBase extends EditText implements
             String cc = bundle.getString("stateToSave");
             setText(cc);
             boolean focus = bundle.getBoolean("focus", false);
-            if(focus) requestFocus();
+            if (focus) {
+                requestFocus();
+            }
         } else {
             super.onRestoreInstanceState(state);
         }
     }
 
     private class BackInputConnection extends InputConnectionWrapper {
-		public BackInputConnection(InputConnection target) {
-			super(target, false);
-		}
 
-		@Override
-		public boolean sendKeyEvent(KeyEvent event) {
-			if (event.getAction() == KeyEvent.ACTION_DOWN
-							&& event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-				backInput();
-				// Un-comment if you wish to cancel the backspace:
-				// return false;
-			}
-			return super.sendKeyEvent(event);
-		}
+        public BackInputConnection(InputConnection target) {
+            super(target, false);
+        }
 
-		// From Android 4.1 this is called when the DEL key is pressed on the
-		// soft keyboard (and
-		// sendKeyEvent() is not called). We convert this to a "normal" key
-		// event.
-		@Override
-		public boolean deleteSurroundingText(int beforeLength, int afterLength) {
+        @Override
+        public boolean sendKeyEvent(KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN
+                    && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+                backInput();
+                // Un-comment if you wish to cancel the backspace:
+                // return false;
+            }
+            return super.sendKeyEvent(event);
+        }
 
-			if (android.os.Build.VERSION.SDK_INT < 11) {
-				return super.deleteSurroundingText(beforeLength, afterLength);
-			} else {
+        // From Android 4.1 this is called when the DEL key is pressed on the
+        // soft keyboard (and
+        // sendKeyEvent() is not called). We convert this to a "normal" key
+        // event.
+        @Override
+        public boolean deleteSurroundingText(int beforeLength, int afterLength) {
 
-				long eventTime = SystemClock.uptimeMillis();
+            if (android.os.Build.VERSION.SDK_INT < 11) {
+                return super.deleteSurroundingText(beforeLength, afterLength);
+            } else {
 
-				int flags = KeyEvent.FLAG_SOFT_KEYBOARD
-								| KeyEvent.FLAG_KEEP_TOUCH_MODE
-								| KeyEvent.FLAG_EDITOR_ACTION;
+                long eventTime = SystemClock.uptimeMillis();
 
-				sendKeyEvent(new KeyEvent(eventTime, eventTime,
-								KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL, 0, 0,
-								KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
+                int flags = KeyEvent.FLAG_SOFT_KEYBOARD
+                        | KeyEvent.FLAG_KEEP_TOUCH_MODE
+                        | KeyEvent.FLAG_EDITOR_ACTION;
 
-				sendKeyEvent(new KeyEvent(SystemClock.uptimeMillis(),
-								eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL, 0,
-								0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
-				return true;
-			}
-		}
-	}
+                sendKeyEvent(new KeyEvent(eventTime, eventTime,
+                        KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL, 0, 0,
+                        KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
+
+                sendKeyEvent(new KeyEvent(SystemClock.uptimeMillis(),
+                        eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL, 0,
+                        0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
+                return true;
+            }
+        }
+    }
 }
