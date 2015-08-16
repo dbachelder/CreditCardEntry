@@ -82,7 +82,7 @@ public class CreditCardUtil {
 		if (len <= CC_LEN_FOR_TYPE)
 			return cleaned;
 
-		ArrayList<String> gaps = new ArrayList<String>();
+		ArrayList<String> gaps = new ArrayList<>();
 
 		int segmentLengths[] = { 0, 0, 0 };
 
@@ -212,6 +212,7 @@ public class CreditCardUtil {
 	}
 
 	public static int securityCodeValid(CardType type) {
+		if(type == null) return 3;
 		switch (type) {
 		case AMEX:
 			return 4;

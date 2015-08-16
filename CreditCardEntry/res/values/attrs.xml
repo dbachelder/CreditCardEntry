@@ -7,6 +7,9 @@
         <attr name="include_helper"     format="boolean"/>
 
         <attr name="helper_text_color"  format="color"/>
+        <attr name="text_color"         format="color"/>
+        <attr name="hint_text_color"    format="color"/>
+        <attr name="cursor_color"       format="color"/>
         <attr name="card_number_hint"   format="string"/>
         <attr name="input_background"   format="reference"/>
     </declare-styleable>

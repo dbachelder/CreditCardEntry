@@ -1,13 +1,13 @@
 package com.devmarvel.creditcardentry.fields;
 
-import com.devmarvel.creditcardentry.R;
-import com.devmarvel.creditcardentry.internal.CreditCardUtil;
-import com.devmarvel.creditcardentry.library.CardType;
-
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.util.AttributeSet;
+
+import com.devmarvel.creditcardentry.R;
+import com.devmarvel.creditcardentry.internal.CreditCardUtil;
+import com.devmarvel.creditcardentry.library.CardType;
 
 public class SecurityCodeText extends CreditEntryFieldBase {
 
@@ -54,8 +54,8 @@ public class SecurityCodeText extends CreditEntryFieldBase {
             String number = s.toString();
 
             if (number.length() == length) {
-                delegate.onSecurityCodeValid();
                 setValid(true);
+                delegate.onSecurityCodeValid();
             } else {
                 setValid(false);
             }
@@ -84,3 +84,4 @@ public class SecurityCodeText extends CreditEntryFieldBase {
         return (mHelperText != null ? mHelperText : context.getString(R.string.SecurityCodeHelp));
     }
 }
+

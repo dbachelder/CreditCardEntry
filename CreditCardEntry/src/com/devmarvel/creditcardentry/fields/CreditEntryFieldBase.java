@@ -2,10 +2,15 @@ package com.devmarvel.creditcardentry.fields;
 
 import android.R.color;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -20,8 +25,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.devmarvel.creditcardentry.R;
 import com.devmarvel.creditcardentry.internal.CreditCardFieldDelegate;
+
+import java.lang.reflect.Field;
 
 public abstract class CreditEntryFieldBase extends EditText implements
         TextWatcher, OnKeyListener, OnClickListener {
@@ -43,16 +52,20 @@ public abstract class CreditEntryFieldBase extends EditText implements
     public CreditEntryFieldBase(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        init();
+        init(attrs);
     }
 
     public CreditEntryFieldBase(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.context = context;
-        init();
+        init(attrs);
     }
 
     void init() {
+        init(null);
+    }
+
+    void init(AttributeSet attrs) {
         setGravity(Gravity.CENTER);
         setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         setBackgroundColor(color.transparent);
@@ -61,6 +74,20 @@ public abstract class CreditEntryFieldBase extends EditText implements
         setOnKeyListener(this);
         setOnClickListener(this);
         setPadding(20, 0, 20, 0);
+
+        setStyle(attrs);
+    }
+
+    void setStyle(AttributeSet attrs) {
+        if (attrs == null) {
+            return;
+        }
+
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CreditCardForm);
+        setTextColor(typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK));
+        setHintTextColor(typedArray.getColor(R.styleable.CreditCardForm_hint_text_color, Color.LTGRAY));
+        setCursorDrawableColor(typedArray.getColor(R.styleable.CreditCardForm_cursor_color, Color.BLACK));
+        typedArray.recycle();
     }
 
     @Override
@@ -96,15 +123,13 @@ public abstract class CreditEntryFieldBase extends EditText implements
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN)
             return false;
-        }
         if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
                 || keyCode == KeyEvent.KEYCODE_ALT_RIGHT
                 || keyCode == KeyEvent.KEYCODE_SHIFT_LEFT
-                || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+                || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
             return false;
-        }
 
         if (keyCode == KeyEvent.KEYCODE_DEL
                 && this.getText().toString().length() == 0) {
@@ -169,9 +194,8 @@ public abstract class CreditEntryFieldBase extends EditText implements
             String cc = bundle.getString("stateToSave");
             setText(cc);
             boolean focus = bundle.getBoolean("focus", false);
-            if (focus) {
+            if (focus)
                 requestFocus();
-            }
         } else {
             super.onRestoreInstanceState(state);
         }
@@ -222,4 +246,29 @@ public abstract class CreditEntryFieldBase extends EditText implements
             }
         }
     }
+
+    public void setCursorDrawableColor(int color) {
+        //http://stackoverflow.com/questions/25996032/how-to-change-programatically-edittext-cursor-color-in-android
+        try {
+            Field fCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
+            fCursorDrawableRes.setAccessible(true);
+            int mCursorDrawableRes = fCursorDrawableRes.getInt(this);
+            Field fEditor = TextView.class.getDeclaredField("mEditor");
+            fEditor.setAccessible(true);
+            Object editor = fEditor.get(this);
+            Class<?> clazz = editor.getClass();
+            Field fCursorDrawable = clazz.getDeclaredField("mCursorDrawable");
+            fCursorDrawable.setAccessible(true);
+            Drawable[] drawables = new Drawable[2];
+            drawables[0] = ContextCompat.getDrawable(getContext(), mCursorDrawableRes);
+            drawables[1] = ContextCompat.getDrawable(getContext(), mCursorDrawableRes);
+            drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            fCursorDrawable.set(editor, drawables);
+        } catch (final Throwable ignored) {
+            //
+        }
+    }
+
 }
+
