@@ -1,5 +1,8 @@
 package com.devmarvel.creditcardentry.library;
 
+import com.devmarvel.creditcardentry.R;
+import com.devmarvel.creditcardentry.internal.CreditCardEntry;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -19,306 +22,350 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.devmarvel.creditcardentry.R;
-import com.devmarvel.creditcardentry.internal.CreditCardEntry;
-
 public class CreditCardForm extends RelativeLayout {
 
-	private CreditCardEntry entry;
-	private boolean includeExp = true;
-	private boolean includeSecurity = true;
-	private boolean includeZip = true;
-	private boolean includeHelper;
-	private int textHelperColor;
-	private Drawable inputBackground;
-	private String cardNumberHint = "1234 5678 9012 3456";
+    private CreditCardEntry entry;
 
-	public CreditCardForm(Context context) {
-		this(context, null);
-	}
+    private boolean includeExp = true;
 
-	public CreditCardForm(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
-	}
+    private boolean includeSecurity = true;
 
-	public CreditCardForm(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
+    private boolean includeZip = true;
 
-		if(!isInEditMode()) {
+    private boolean includeHelper;
 
-			// If the attributes are available, use them to color the icon
-			if (attrs != null) {
+    private int textHelperColor;
 
-				TypedArray typedArray = null;
-				try {
-					typedArray = context.getTheme().obtainStyledAttributes(
-							attrs,
-							R.styleable.CreditCardForm,
-							0,
-							0
-					);
+    private Drawable inputBackground;
 
-					this.cardNumberHint = typedArray.getString(R.styleable.CreditCardForm_card_number_hint);
-					this.includeExp = typedArray.getBoolean(R.styleable.CreditCardForm_include_exp, true);
-					this.includeSecurity = typedArray.getBoolean(R.styleable.CreditCardForm_include_security, true);
-					this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
-					this.includeHelper = typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
-					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(R.color.text_helper_color));
-					this.inputBackground = typedArray.getDrawable(R.styleable.CreditCardForm_input_background);
-				} finally {
-					if (typedArray != null) typedArray.recycle();
-				}
-			}
+    private String cardNumberHint = "1234 5678 9012 3456";
 
-			// defaults if not set by user
-			if(cardNumberHint == null) cardNumberHint = "1234 5678 9012 3456";
-			if(inputBackground == null) {
-				//noinspection deprecation
-				inputBackground = context.getResources().getDrawable(R.drawable.background_white);
-			}
-		}
+    public CreditCardForm(Context context) {
+        this(context, null);
+    }
 
-		init(context, defStyle);
-	}
+    public CreditCardForm(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-	private void init(Context context, int style) {
-		// the wrapper layout
-		LinearLayout layout;
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			layout = new LinearLayout(context);
-		} else {
-			layout = new LinearLayout(context);
-		}
-		layout.setId(R.id.cc_form_layout);
-		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-		params.addRule(LinearLayout.HORIZONTAL);
-		params.setMargins(0, 0, 0, 0);
-		layout.setLayoutParams(params);
-		layout.setPadding(0, 0, 0, 0);
-		//noinspection deprecation
-		layout.setBackgroundDrawable(inputBackground);
+    public CreditCardForm(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
 
-		// set up the card image container and images
-		FrameLayout cardImageFrame = new FrameLayout(context);
-		LinearLayout.LayoutParams frameParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		frameParams.gravity = Gravity.CENTER_VERTICAL;
-		cardImageFrame.setLayoutParams(frameParams);
-		cardImageFrame.setFocusable(true);
-		cardImageFrame.setFocusableInTouchMode(true);
-		cardImageFrame.setPadding(10, 0, 0, 0);
+        if (!isInEditMode()) {
 
-		ImageView cardFrontImage = new ImageView(context);
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		cardFrontImage.setLayoutParams(layoutParams);
-		cardFrontImage.setImageResource(CardType.INVALID.frontResource);
-		cardImageFrame.addView(cardFrontImage);
+            // If the attributes are available, use them to color the icon
+            if (attrs != null) {
 
-		ImageView cardBackImage = new ImageView(context);
-		layoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		cardBackImage.setLayoutParams(layoutParams);
-		cardBackImage.setImageResource(CardType.INVALID.backResource);
-		cardBackImage.setVisibility(View.GONE);
-		cardImageFrame.addView(cardBackImage);
-		layout.addView(cardImageFrame);
+                TypedArray typedArray = null;
+                try {
+                    typedArray = context.getTheme().obtainStyledAttributes(
+                            attrs,
+                            R.styleable.CreditCardForm,
+                            0,
+                            0
+                    );
 
-		// add the data entry form
-		LinearLayout.LayoutParams entryParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		entryParams.gravity = Gravity.CENTER_VERTICAL;
-		entry = new CreditCardEntry(context, includeExp, includeSecurity, includeZip,style);
+                    this.cardNumberHint = typedArray.getString(R.styleable.CreditCardForm_card_number_hint);
+                    this.includeExp = typedArray.getBoolean(R.styleable.CreditCardForm_include_exp, true);
+                    this.includeSecurity = typedArray.getBoolean(R.styleable.CreditCardForm_include_security, true);
+                    this.includeZip = typedArray.getBoolean(R.styleable.CreditCardForm_include_zip, true);
+                    this.includeHelper = typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
+                    this.textHelperColor = typedArray
+                            .getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(R.color.text_helper_color));
+                    this.inputBackground = typedArray.getDrawable(R.styleable.CreditCardForm_input_background);
+                } finally {
+                    if (typedArray != null) {
+                        typedArray.recycle();
+                    }
+                }
+            }
+
+            // defaults if not set by user
+            if (cardNumberHint == null) {
+                cardNumberHint = "1234 5678 9012 3456";
+            }
+            if (inputBackground == null) {
+                //noinspection deprecation
+                inputBackground = context.getResources().getDrawable(R.drawable.background_white);
+            }
+        }
+
+        init(context, defStyle);
+    }
+
+    private void init(Context context, int style) {
+        // the wrapper layout
+        LinearLayout layout;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            layout = new LinearLayout(context);
+        } else {
+            layout = new LinearLayout(context);
+        }
+        layout.setId(R.id.cc_form_layout);
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        params.addRule(LinearLayout.HORIZONTAL);
+        params.setMargins(0, 0, 0, 0);
+        layout.setLayoutParams(params);
+        layout.setPadding(0, 0, 0, 0);
+        //noinspection deprecation
+        layout.setBackgroundDrawable(inputBackground);
+
+        // set up the card image container and images
+        FrameLayout cardImageFrame = new FrameLayout(context);
+        LinearLayout.LayoutParams frameParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        frameParams.gravity = Gravity.CENTER_VERTICAL;
+        cardImageFrame.setLayoutParams(frameParams);
+        cardImageFrame.setFocusable(true);
+        cardImageFrame.setFocusableInTouchMode(true);
+        cardImageFrame.setPadding(10, 0, 0, 0);
+
+        ImageView cardFrontImage = new ImageView(context);
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        cardFrontImage.setLayoutParams(layoutParams);
+        cardFrontImage.setImageResource(CardType.INVALID.frontResource);
+        cardImageFrame.addView(cardFrontImage);
+
+        ImageView cardBackImage = new ImageView(context);
+        layoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        cardBackImage.setLayoutParams(layoutParams);
+        cardBackImage.setImageResource(CardType.INVALID.backResource);
+        cardBackImage.setVisibility(View.GONE);
+        cardImageFrame.addView(cardBackImage);
+        layout.addView(cardImageFrame);
+
+        // add the data entry form
+        LinearLayout.LayoutParams entryParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        entryParams.gravity = Gravity.CENTER_VERTICAL;
+        entry = new CreditCardEntry(context, includeExp, includeSecurity, includeZip, style);
         entry.setId(R.id.cc_entry);
 
-		// this obnoxious 6 for bottom padding is to make the damn text centered on the image... if you know a better way... PLEASE HELP
-		entry.setPadding(0, 0, 0, 6);
-		entry.setLayoutParams(entryParams);
+        // this obnoxious 6 for bottom padding is to make the damn text centered on the image... if you know a better way... PLEASE HELP
+        entry.setPadding(0, 0, 0, 6);
+        entry.setLayoutParams(entryParams);
 
-		// set any passed in attrs
-		entry.setCardImageView(cardFrontImage);
-		entry.setBackCardImage(cardBackImage);
-		entry.setCardNumberHint(cardNumberHint);
+        // set any passed in attrs
+        entry.setCardImageView(cardFrontImage);
+        entry.setBackCardImage(cardBackImage);
+        entry.setCardNumberHint(cardNumberHint);
 
-		this.addView(layout);
+        this.addView(layout);
 
-		// set up optional helper text view
-		if (includeHelper) {
-			TextView textHelp = new TextView(context);
+        // set up optional helper text view
+        if (includeHelper) {
+            TextView textHelp = new TextView(context);
             textHelp.setId(R.id.text_helper);
-			textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
-			textHelp.setTextColor(this.textHelperColor);
-			layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-			layoutParams.addRule(RelativeLayout.BELOW, layout.getId());
-			layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-			layoutParams.setMargins(0, 15, 0, 20);
-			textHelp.setLayoutParams(layoutParams);
-			entry.setTextHelper(textHelp);
-			this.addView(textHelp);
-		}
+            textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
+            textHelp.setTextColor(this.textHelperColor);
+            layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.BELOW, layout.getId());
+            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            layoutParams.setMargins(0, 15, 0, 20);
+            textHelp.setLayoutParams(layoutParams);
+            entry.setTextHelper(textHelp);
+            this.addView(textHelp);
+        }
 
-		layout.addView(entry);
-	}
+        layout.addView(entry);
+    }
 
-	public void setOnCardValidCallback(CardValidCallback callback) {
-		entry.setOnCardValidCallback(callback);
-	}
+    public void setOnCardValidCallback(CardValidCallback callback) {
+        entry.setOnCardValidCallback(callback);
+    }
 
-	/**
-	 * all internal components will be attached this same focus listener
-	 */
-	@Override
-	public void setOnFocusChangeListener(OnFocusChangeListener l) {
-		entry.setOnFocusChangeListener(l);
-	}
+    /** helper & hint setting **/
 
-	@Override
-	public OnFocusChangeListener getOnFocusChangeListener() {
-		return entry.getOnFocusChangeListener();
-	}
+    public void setCreditCardTextHelper(String text) {
+        entry.setCreditCardTextHelper(text);
+    }
 
-	@SuppressWarnings("unused")
-	public boolean isCreditCardValid() {
-		return entry.isCreditCardValid();
-	}
-	
-	@SuppressWarnings("unused")
-	public CreditCard getCreditCard() {
-		return entry.getCreditCard();
-	}
+    public void setCreditCardTextHint(String text) {
+        entry.setCreditCardTextHint(text);
+    }
 
-	/**
-	 * request focus for the credit card field
-	 */
-	@SuppressWarnings("unused")
-	public void focusCreditCard() {
-		entry.focusCreditCard();
-	}
+    public void setExpDateTextHelper(String text) {
+        entry.setExpDateTextHelper(text);
+    }
 
-	/**
-	 * request focus for the expiration field
-	 */
-	@SuppressWarnings("unused")
-	public void focusExp() {
-		entry.focusExp();
-	}
+    public void setExpDateTextHint(String text) {
+        entry.setExpDateTextHint(text);
+    }
 
-	/**
-	 * request focus for the security code field
-	 */
-	@SuppressWarnings("unused")
-	public void focusSecurityCode() {
-		entry.focusSecurityCode();
-	}
+    public void setSecurityCodeTextHelper(String text) {
+        entry.setSecurityCodeTextHelper(text);
+    }
 
-	/**
-	 * request focus for the zip field (IF it's enabled)
-	 */
-	@SuppressWarnings("unused")
-	public void focusZip() {
-		entry.focusZip();
-	}
+    public void setSecurityCodeTextHint(String text) {
+        entry.setSecurityCodeTextHint(text);
+    }
 
-	/**
-	 * clear and reset the entire form
-	 */
-	@SuppressWarnings("unused")
-	public void clearForm() {
-		entry.clearAll();
-	}
+    public void setZipCodeTextHelper(String text) {
+        entry.setZipCodeTextHelper(text);
+    }
 
-	/**
-	 * @param cardNumber the card number to show
-	 * @param focusNextField true to go to next field (only works if the number is valid)
-	 */
-	public void setCardNumber(String cardNumber, boolean focusNextField) {
-		entry.setCardNumber(cardNumber, focusNextField);
-	}
+    public void setZipCodeTextHint(String text) {
+        entry.setZipCodeTextHint(text);
+    }
 
-	/**
-	 * @param expirationDate the exp to show
-	 * @param focusNextField true to go to next field (only works if the number is valid)
-	 */
-	@SuppressWarnings("unused")
-	public void setExpDate(String expirationDate, boolean focusNextField) {
-		entry.setExpDate(expirationDate, focusNextField);
-	}
+    /**
+     * all internal components will be attached this same focus listener
+     */
+    @Override
+    public void setOnFocusChangeListener(OnFocusChangeListener l) {
+        entry.setOnFocusChangeListener(l);
+    }
 
-	/**
-	 * @param securityCode the security code to show
-	 * @param focusNextField true to go to next field (only works if the number is valid)
-	 */
-	@SuppressWarnings("unused")
-	public void setSecurityCode(String securityCode, boolean focusNextField) {
-		entry.setSecurityCode(securityCode, focusNextField);
-	}
+    @Override
+    public OnFocusChangeListener getOnFocusChangeListener() {
+        return entry.getOnFocusChangeListener();
+    }
 
-	/**
-	 * @param zip the zip to show
-	 * @param focusNextField true to go to next field (only works if the number is valid)
-	 */
-	@SuppressWarnings("unused")
-	public void setZipCode(String zip, boolean focusNextField) {
-		entry.setZipCode(zip, focusNextField);
-	}
+    @SuppressWarnings("unused")
+    public boolean isCreditCardValid() {
+        return entry.isCreditCardValid();
+    }
 
-	@Override
-	protected void dispatchSaveInstanceState(@NonNull SparseArray<Parcelable> container) {
-		dispatchFreezeSelfOnly(container);
-	}
+    @SuppressWarnings("unused")
+    public CreditCard getCreditCard() {
+        return entry.getCreditCard();
+    }
 
-	@Override
-	protected void dispatchRestoreInstanceState(@NonNull SparseArray<Parcelable> container) {
-		dispatchThawSelfOnly(container);
-	}
+    /**
+     * request focus for the credit card field
+     */
+    @SuppressWarnings("unused")
+    public void focusCreditCard() {
+        entry.focusCreditCard();
+    }
 
-	@Override
-	public void onRestoreInstanceState(Parcelable state) {
-		SavedState ss = (SavedState) state;
-		super.onRestoreInstanceState(ss.getSuperState());
-		for (int i = 0; i < getChildCount(); i++) {
-			getChildAt(i).restoreHierarchyState(ss.childrenStates);
-		}
-	}
+    /**
+     * request focus for the expiration field
+     */
+    @SuppressWarnings("unused")
+    public void focusExp() {
+        entry.focusExp();
+    }
 
-	@Override
-	protected Parcelable onSaveInstanceState() {
-		Parcelable superState = super.onSaveInstanceState();
-		SavedState ss = new SavedState(superState);
-		ss.childrenStates = new SparseArray();
-		for (int i = 0; i < getChildCount(); i++) {
-			getChildAt(i).saveHierarchyState(ss.childrenStates);
-		}
-		return ss;
-	}
+    /**
+     * request focus for the security code field
+     */
+    @SuppressWarnings("unused")
+    public void focusSecurityCode() {
+        entry.focusSecurityCode();
+    }
 
-	static class SavedState extends BaseSavedState {
-		SparseArray childrenStates;
+    /**
+     * request focus for the zip field (IF it's enabled)
+     */
+    @SuppressWarnings("unused")
+    public void focusZip() {
+        entry.focusZip();
+    }
 
-		SavedState(Parcelable superState) {
-			super(superState);
-		}
+    /**
+     * clear and reset the entire form
+     */
+    @SuppressWarnings("unused")
+    public void clearForm() {
+        entry.clearAll();
+    }
 
-		private SavedState(Parcel in, ClassLoader classLoader) {
-			super(in);
-			childrenStates = in.readSparseArray(classLoader);
-		}
+    /**
+     * @param cardNumber     the card number to show
+     * @param focusNextField true to go to next field (only works if the number is valid)
+     */
+    public void setCardNumber(String cardNumber, boolean focusNextField) {
+        entry.setCardNumber(cardNumber, focusNextField);
+    }
 
-		@Override
-		public void writeToParcel(Parcel out, int flags) {
-			super.writeToParcel(out, flags);
-			out.writeSparseArray(childrenStates);
-		}
+    /**
+     * @param expirationDate the exp to show
+     * @param focusNextField true to go to next field (only works if the number is valid)
+     */
+    @SuppressWarnings("unused")
+    public void setExpDate(String expirationDate, boolean focusNextField) {
+        entry.setExpDate(expirationDate, focusNextField);
+    }
 
-		public static final Creator<SavedState> CREATOR
-				= ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<SavedState>() {
-			@Override
-			public SavedState createFromParcel(Parcel in, ClassLoader loader) {
-				return new SavedState(in, loader);
-			}
+    /**
+     * @param securityCode   the security code to show
+     * @param focusNextField true to go to next field (only works if the number is valid)
+     */
+    @SuppressWarnings("unused")
+    public void setSecurityCode(String securityCode, boolean focusNextField) {
+        entry.setSecurityCode(securityCode, focusNextField);
+    }
 
-			@Override
-			public SavedState[] newArray(int size) {
-				return new SavedState[size];
-			}
-		});
-	}
+    /**
+     * @param zip            the zip to show
+     * @param focusNextField true to go to next field (only works if the number is valid)
+     */
+    @SuppressWarnings("unused")
+    public void setZipCode(String zip, boolean focusNextField) {
+        entry.setZipCode(zip, focusNextField);
+    }
+
+    @Override
+    protected void dispatchSaveInstanceState(@NonNull SparseArray<Parcelable> container) {
+        dispatchFreezeSelfOnly(container);
+    }
+
+    @Override
+    protected void dispatchRestoreInstanceState(@NonNull SparseArray<Parcelable> container) {
+        dispatchThawSelfOnly(container);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).restoreHierarchyState(ss.childrenStates);
+        }
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.childrenStates = new SparseArray();
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).saveHierarchyState(ss.childrenStates);
+        }
+        return ss;
+    }
+
+    static class SavedState extends BaseSavedState {
+
+        SparseArray childrenStates;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in, ClassLoader classLoader) {
+            super(in);
+            childrenStates = in.readSparseArray(classLoader);
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeSparseArray(childrenStates);
+        }
+
+        public static final Creator<SavedState> CREATOR
+                = ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in, ClassLoader loader) {
+                return new SavedState(in, loader);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        });
+    }
 }

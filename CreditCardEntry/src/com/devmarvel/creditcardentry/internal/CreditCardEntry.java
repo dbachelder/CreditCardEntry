@@ -1,5 +1,15 @@
 package com.devmarvel.creditcardentry.internal;
 
+import com.devmarvel.creditcardentry.R;
+import com.devmarvel.creditcardentry.fields.CreditCardText;
+import com.devmarvel.creditcardentry.fields.CreditEntryFieldBase;
+import com.devmarvel.creditcardentry.fields.ExpDateText;
+import com.devmarvel.creditcardentry.fields.SecurityCodeText;
+import com.devmarvel.creditcardentry.fields.ZipCodeText;
+import com.devmarvel.creditcardentry.library.CardType;
+import com.devmarvel.creditcardentry.library.CardValidCallback;
+import com.devmarvel.creditcardentry.library.CreditCard;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -34,16 +44,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.devmarvel.creditcardentry.R;
-import com.devmarvel.creditcardentry.fields.CreditCardText;
-import com.devmarvel.creditcardentry.fields.CreditEntryFieldBase;
-import com.devmarvel.creditcardentry.fields.ExpDateText;
-import com.devmarvel.creditcardentry.fields.SecurityCodeText;
-import com.devmarvel.creditcardentry.fields.ZipCodeText;
-import com.devmarvel.creditcardentry.library.CardType;
-import com.devmarvel.creditcardentry.library.CardValidCallback;
-import com.devmarvel.creditcardentry.library.CreditCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -280,7 +280,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
     @Override
     public void focusOnField(final CreditEntryFieldBase field) {
         if (this.textHelper != null) {
-            this.textHelper.setText(field.helperText());
+            this.textHelper.setText(field.getHelperText());
         }
 
         if (!scrolling) {
@@ -593,4 +593,39 @@ public class CreditCardEntry extends HorizontalScrollView implements
             }
         });
     }
+
+    /** helper & hint setting **/
+
+    public void setCreditCardTextHelper(String text) {
+        creditCardText.setHelperText(text);
+    }
+
+    public void setCreditCardTextHint(String text) {
+        creditCardText.setHint(text);
+    }
+
+    public void setExpDateTextHelper(String text) {
+        expDateText.setHelperText(text);
+    }
+
+    public void setExpDateTextHint(String text) {
+        expDateText.setHint(text);
+    }
+
+    public void setSecurityCodeTextHelper(String text) {
+        securityCodeText.setHelperText(text);
+    }
+
+    public void setSecurityCodeTextHint(String text) {
+        securityCodeText.setHint(text);
+    }
+
+    public void setZipCodeTextHelper(String text) {
+        zipCodeText.setHelperText(text);
+    }
+
+    public void setZipCodeTextHint(String text) {
+        zipCodeText.setHint(text);
+    }
+
 }
