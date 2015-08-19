@@ -114,6 +114,11 @@ In code:
 
 # Version History
 
+###8/18/2015
+ - fix typo in hint for exp date
+ - fix for dates not being able to exceed 2034
+ - fix for current month being invalid
+
 ###7/27/2015
  - fix occasional NPE
 
