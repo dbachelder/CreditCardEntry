@@ -65,7 +65,6 @@ public class CreditCardEntry extends HorizontalScrollView implements
     private final ExpDateText expDateText;
     private final SecurityCodeText securityCodeText;
     private final ZipCodeText zipCodeText;
-    private final LinearLayout container;
 
     private Map<CreditEntryFieldBase, CreditEntryFieldBase> nextFocusField = new HashMap<>(4);
     private Map<CreditEntryFieldBase, CreditEntryFieldBase> prevFocusField = new HashMap<>(4);
@@ -81,7 +80,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
     private CardValidCallback onCardValidCallback;
 
     @SuppressWarnings("deprecation")
-    public CreditCardEntry(Context context, boolean includeExp, boolean includeSecurity, boolean includeZip, AttributeSet attrs, int style) {
+    public CreditCardEntry(Context context, boolean includeExp, boolean includeSecurity, boolean includeZip, AttributeSet attrs, @SuppressWarnings("UnusedParameters") int style) {
         super(context);
 
         this.context = context;
@@ -109,11 +108,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         this.setHorizontalScrollBarEnabled(false);
         this.setOnTouchListener(this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            container = new LinearLayout(context);
-        } else {
-            container = new LinearLayout(context);
-        }
+        LinearLayout container = new LinearLayout(context);
         container.setId(R.id.cc_entry_internal);
         container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         container.setOrientation(LinearLayout.HORIZONTAL);
@@ -242,6 +237,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         dispatchThawSelfOnly(container);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onRestoreInstanceState(Parcelable state) {
         SavedState ss = (SavedState) state;
@@ -251,6 +247,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
@@ -287,19 +284,26 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
     @Override
     public void focusOnField(final CreditEntryFieldBase field) {
-        if (this.textHelper != null) {
-            this.textHelper.setText(field.helperText());
-        }
-
-        if (!scrolling) {
+        field.requestFocus();
+        if(!scrolling) {
             scrolling = true;
             scrollToTarget(field instanceof CreditCardText ? 0 : field.getLeft(), new Runnable() {
                 @Override
                 public void run() {
                     scrolling = false;
-                    field.requestFocus();
+                    // if there was another focus before we were done.. catch up.
+                    if(!field.hasFocus()) {
+                        View newFocus = getFocusedChild();
+                        if (newFocus instanceof CreditEntryFieldBase) {
+                            focusOnField((CreditEntryFieldBase) newFocus);
+                        }
+                    }
                 }
             });
+        }
+
+        if (this.textHelper != null) {
+            this.textHelper.setText(field.helperText());
         }
 
         if (field instanceof SecurityCodeText) {
@@ -582,6 +586,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
             childrenStates = in.readSparseArray(classLoader);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);

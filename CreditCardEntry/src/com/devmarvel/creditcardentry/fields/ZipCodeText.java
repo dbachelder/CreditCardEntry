@@ -36,8 +36,7 @@ public class ZipCodeText extends CreditEntryFieldBase {
 
 	@Override
 	public void textChanged(CharSequence s, int start, int before, int end) {
-		String zipCode = s.toString();
-		if (zipCode.length() == 5) {
+		if (s.length() == 5) {
 			setValid(true);
 			delegate.onZipCodeValid();
 		} else {
