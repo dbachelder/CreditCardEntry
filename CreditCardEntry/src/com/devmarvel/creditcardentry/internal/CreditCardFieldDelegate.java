@@ -14,18 +14,18 @@ public interface CreditCardFieldDelegate {
   // When the card type is identified
   void onCardTypeChange(CardType type);
 
-  void onCreditCardNumberValid();
+  void onCreditCardNumberValid(String remainder);
 
-  void onExpirationDateValid();
+  void onExpirationDateValid(String remainder);
 
   // Image should flip to back for security code
-  void onSecurityCodeValid();
+  void onSecurityCodeValid(String remainder);
 
   void onZipCodeValid();
 
   void onBadInput(EditText field);
 
-  void focusOnField(CreditEntryFieldBase field);
+  void focusOnField(CreditEntryFieldBase field, String initialValue);
 
   void focusOnPreviousField(CreditEntryFieldBase field);
 }

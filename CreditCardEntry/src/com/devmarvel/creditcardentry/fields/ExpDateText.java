@@ -41,20 +41,28 @@ public class ExpDateText extends CreditEntryFieldBase {
 
 		// if delete occurred do not format
 		if (updatedString.length() > previousString.length()) {
-			this.removeTextChangedListener(this);
-			String formatted = CreditCardUtil.formatExpirationDate(s.toString());
-			this.setText(formatted);
-			this.setSelection(formatted.length());
-			this.addTextChangedListener(this);
-			
-			if(formatted.length() == 5) {
-				setValid(true);
-				delegate.onExpirationDateValid();
-			} else if(formatted.length() < updatedString.length()) {
-				setValid(false);
-				delegate.onBadInput(this);
-			}
+			formatAndSetText(updatedString);
 		}
+	}
+
+	public void formatAndSetText(String updatedString) {
+		this.removeTextChangedListener(this);
+		String formatted = CreditCardUtil.formatExpirationDate(updatedString);
+		this.setText(formatted);
+		this.setSelection(formatted.length());
+		this.addTextChangedListener(this);
+
+		if(formatted.length() == 5) {
+            setValid(true);
+            String remainder = null;
+            if(updatedString.startsWith(formatted)) {
+                remainder = updatedString.replace(formatted, "");
+            }
+            delegate.onExpirationDateValid(remainder);
+        } else if(formatted.length() < updatedString.length()) {
+            setValid(false);
+            delegate.onBadInput(this);
+        }
 	}
 
 	@Override

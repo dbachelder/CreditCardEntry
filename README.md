@@ -39,7 +39,7 @@ Add the project to your `dependencies`
 
         ...
 
-        compile 'com.github.dbachelder:CreditCardEntry:1.4.3'
+        compile 'com.github.dbachelder:CreditCardEntry:1.4.4'
     }
 ```
 
@@ -113,6 +113,9 @@ In code:
   - Diner's Club is not yet implemented, although the assets and regex seem to be in place
 
 # Version History
+
+###8/21/2015
+ - don't drop key strokes after backspace
 
 ###8/21/2015
  - focus change behavior can now keep up with very fast typing

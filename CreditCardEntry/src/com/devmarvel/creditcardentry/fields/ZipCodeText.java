@@ -43,4 +43,10 @@ public class ZipCodeText extends CreditEntryFieldBase {
 			setValid(false);
 		}
 	}
+
+	public void formatAndSetText(String text) {
+		this.removeTextChangedListener(this);
+		this.setText(text);
+		this.addTextChangedListener(this);
+	}
 }

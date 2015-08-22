@@ -2,7 +2,6 @@ package com.devmarvel.creditcardentry.fields;
 
 import android.content.Context;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.util.AttributeSet;
 
 import com.devmarvel.creditcardentry.R;
@@ -37,6 +36,7 @@ public class SecurityCodeText extends CreditEntryFieldBase {
 
 	/* TextWatcher Implementation Methods */
 	public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
 	public void afterTextChanged(Editable s) {
         if(type == null) {
             this.removeTextChangedListener(this);
@@ -45,11 +45,20 @@ public class SecurityCodeText extends CreditEntryFieldBase {
         }
     }
 
+	public void formatAndSetText(String s) {
+		setText(s);
+	}
+
     public void textChanged(CharSequence s, int start, int before, int count) {
 		if (type != null) {
-			if (s.length() == length) {
+			if (s.length() >= length) {
 				setValid(true);
-				delegate.onSecurityCodeValid();
+				String remainder = null;
+				if(s.length() > length()) remainder = String.valueOf(s).substring(length);
+				this.removeTextChangedListener(this);
+				setText(String.valueOf(s).substring(0, length));
+				this.addTextChangedListener(this);
+				delegate.onSecurityCodeValid(remainder);
 			} else {
 				setValid(false);
 			}
@@ -64,8 +73,6 @@ public class SecurityCodeText extends CreditEntryFieldBase {
 	public void setType(CardType type) {
 		this.type = type;
 		this.length = CreditCardUtil.securityCodeValid(type);
-		
-		setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
 	}
 
 	@Override

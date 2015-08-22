@@ -149,7 +149,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (EditorInfo.IME_ACTION_DONE == actionId) {
-                        onSecurityCodeValid();
+                        onSecurityCodeValid("");
                         return true;
                     }
                     return false;
@@ -205,26 +205,26 @@ public class CreditCardEntry extends HorizontalScrollView implements
     }
 
     @Override
-    public void onCreditCardNumberValid() {
-        nextField(this.creditCardText);
+    public void onCreditCardNumberValid(String remainder) {
+        nextField(this.creditCardText, remainder);
 
         updateLast4();
     }
 
     @Override
-    public void onExpirationDateValid() {
-        nextField(this.expDateText);
+    public void onExpirationDateValid(String remainder) {
+        nextField(this.expDateText, remainder);
     }
 
     @Override
-    public void onSecurityCodeValid() {
-        nextField(securityCodeText);
+    public void onSecurityCodeValid(String remainder) {
+        nextField(securityCodeText, remainder);
         updateCardImage(false);
     }
 
     @Override
     public void onZipCodeValid() {
-        nextField(zipCodeText);
+        nextField(zipCodeText, null);
     }
 
     @Override
@@ -282,8 +282,11 @@ public class CreditCardEntry extends HorizontalScrollView implements
         zipCodeText.setOnFocusChangeListener(l);
     }
 
-    @Override
     public void focusOnField(final CreditEntryFieldBase field) {
+        focusOnField(field, null);
+    }
+
+    public void focusOnField(final CreditEntryFieldBase field, String initialFieldValue) {
         field.requestFocus();
         if(!scrolling) {
             scrolling = true;
@@ -302,6 +305,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
             });
         }
 
+        if(initialFieldValue != null && initialFieldValue.length() > 0) {
+            field.formatAndSetText(initialFieldValue);
+        }
+
         if (this.textHelper != null) {
             this.textHelper.setText(field.helperText());
         }
@@ -312,6 +319,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         } else {
             updateCardImage(false);
         }
+        field.setSelection(field.getText().length());
     }
 
     private void scrollToTarget(int target, final Runnable after) {
@@ -427,7 +435,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
             }
 
             @Override
-            public void onCreditCardNumberValid() {
+            public void onCreditCardNumberValid(String remainder) {
                 updateLast4();
             }
 
@@ -436,10 +444,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
                 delegate.onBadInput(field);
             }
 
-            @Override public void onExpirationDateValid() {}
-            @Override public void onSecurityCodeValid() {}
+            @Override public void onExpirationDateValid(String remainder) {}
+            @Override public void onSecurityCodeValid(String remainder) {}
             @Override public void onZipCodeValid() { }
-            @Override public void focusOnField(CreditEntryFieldBase field) { }
+            @Override public void focusOnField(CreditEntryFieldBase field, String initialValue) { }
             @Override public void focusOnPreviousField(CreditEntryFieldBase field) { }
         };
     }
@@ -504,12 +512,12 @@ public class CreditCardEntry extends HorizontalScrollView implements
         textFourDigits.setText(digits);
     }
 
-    private void nextField(CreditEntryFieldBase currentField) {
+    private void nextField(CreditEntryFieldBase currentField, String initialFieldValue) {
         CreditEntryFieldBase next = nextFocusField.get(currentField);
         if (next == null) {
             entryComplete(currentField);
         } else {
-            focusOnField(next);
+            focusOnField(next, initialFieldValue);
         }
     }
 

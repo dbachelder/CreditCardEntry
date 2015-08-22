@@ -42,43 +42,52 @@ public class CreditCardText extends CreditEntryFieldBase {
 	public void afterTextChanged(Editable s) {
 		String number = s.toString();
 		if (number.length() >= CreditCardUtil.CC_LEN_FOR_TYPE) {
-			CardType type = CreditCardUtil.findCardType(number);
-
-			if (type.equals(CardType.INVALID)) {
-				setValid(false);
-				delegate.onBadInput(this);
-				return;
-			}
-
-			if (this.type != type) {
-				delegate.onCardTypeChange(type);
-			}
-			this.type = type;
-
-			String formatted = CreditCardUtil.formatForViewing(number, type);
-			if (!number.equalsIgnoreCase(formatted)) {
-				this.removeTextChangedListener(this);
-				this.setText(formatted);
-				this.setSelection(formatted.length());
-				this.addTextChangedListener(this);
-			}
-
-			if (formatted.length() >= CreditCardUtil.lengthOfFormattedStringForType(type)) {
-				if (CreditCardUtil.isValidNumber(formatted)) {
-					setValid(true);
-					delegate.onCreditCardNumberValid();
-				} else {
-					setValid(false);
-					delegate.onBadInput(this);
-				}
-			}
-
+			formatAndSetText(number);
 		} else {
 			if (this.type != null) {
 				this.type = null;
 				delegate.onCardTypeChange(CardType.INVALID);
 			}
 		}
+	}
+
+	@Override
+	public void formatAndSetText(String number) {
+		CardType type = CreditCardUtil.findCardType(number);
+
+		if (type.equals(CardType.INVALID)) {
+            setValid(false);
+            delegate.onBadInput(this);
+            return;
+        }
+
+		if (this.type != type) {
+            delegate.onCardTypeChange(type);
+        }
+		this.type = type;
+
+		String formatted = CreditCardUtil.formatForViewing(number, type);
+		if (!number.equalsIgnoreCase(formatted)) {
+            this.removeTextChangedListener(this);
+            this.setText(formatted);
+            this.setSelection(formatted.length());
+            this.addTextChangedListener(this);
+        }
+
+		if (formatted.length() >= CreditCardUtil.lengthOfFormattedStringForType(type)) {
+
+            String remainder = null;
+            if (number.startsWith(formatted)) {
+                remainder = number.replace(formatted, "");
+            }
+            if (CreditCardUtil.isValidNumber(formatted)) {
+                setValid(true);
+                delegate.onCreditCardNumberValid(remainder);
+            } else {
+                setValid(false);
+                delegate.onBadInput(this);
+            }
+        }
 	}
 
 	public CardType getType() {
