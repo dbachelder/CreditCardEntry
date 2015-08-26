@@ -57,7 +57,8 @@ public class CreditCardEntry extends HorizontalScrollView implements
         OnTouchListener, OnGestureListener, CreditCardFieldDelegate {
 
     private final Context context;
-    private final int textColor;
+    // null textColor means we want to use the system default color instead of providing our own.
+    private final Integer textColor;
 
     private ImageView cardImage;
     private ImageView backCardImage;
@@ -86,7 +87,11 @@ public class CreditCardEntry extends HorizontalScrollView implements
         this.context = context;
 
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CreditCardForm, 0, 0);
-        textColor = typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK);
+        if (!typedArray.getBoolean(R.styleable.CreditCardForm_default_text_colors, false)) {
+            textColor = typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK);
+        } else {
+            textColor = null;
+        }
         typedArray.recycle();
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -123,7 +128,9 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
         textFourDigits = new TextView(context);
         textFourDigits.setTextSize(20);
-        textFourDigits.setTextColor(textColor);
+        if (textColor != null) {
+            textFourDigits.setTextColor(textColor);
+        }
         container.addView(textFourDigits);
 
         expDateText = new ExpDateText(context, attrs);

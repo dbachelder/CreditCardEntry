@@ -82,9 +82,13 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		}
 
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CreditCardForm);
-		setTextColor(typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK));
-		setHintTextColor(typedArray.getColor(R.styleable.CreditCardForm_hint_text_color, Color.LTGRAY));
-		setCursorDrawableColor(typedArray.getColor(R.styleable.CreditCardForm_cursor_color, Color.BLACK));
+		// If CreditCardForm_default_text_colors is true, we will not set any text or cursor colors
+		// and just use the defaults provided by the system / theme.
+		if (!typedArray.getBoolean(R.styleable.CreditCardForm_default_text_colors, false)) {
+			setTextColor(typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK));
+			setHintTextColor(typedArray.getColor(R.styleable.CreditCardForm_hint_text_color, Color.LTGRAY));
+			setCursorDrawableColor(typedArray.getColor(R.styleable.CreditCardForm_cursor_color, Color.BLACK));
+		}
 		typedArray.recycle();
 	}
 
