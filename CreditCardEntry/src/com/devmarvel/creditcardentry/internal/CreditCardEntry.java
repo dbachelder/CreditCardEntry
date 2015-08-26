@@ -276,7 +276,9 @@ public class CreditCardEntry extends HorizontalScrollView implements
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                field.setTextColor(textColor);
+                if (textColor != null) {
+                    field.setTextColor(textColor);
+                }
             }
         }, 1000);
     }
