@@ -31,6 +31,7 @@ public class CreditCardForm extends RelativeLayout {
 	private boolean includeHelper;
 	private int textHelperColor;
 	private Drawable inputBackground;
+	private boolean useDefaultColors;
 	private String cardNumberHint = "1234 5678 9012 3456";
 
 	public CreditCardForm(Context context) {
@@ -65,6 +66,7 @@ public class CreditCardForm extends RelativeLayout {
 					this.includeHelper = typedArray.getBoolean(R.styleable.CreditCardForm_include_helper, true);
 					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(R.color.text_helper_color));
 					this.inputBackground = typedArray.getDrawable(R.styleable.CreditCardForm_input_background);
+					this.useDefaultColors = typedArray.getBoolean(R.styleable.CreditCardForm_default_text_colors, false);
 				} finally {
 					if (typedArray != null) typedArray.recycle();
 				}
@@ -145,7 +147,9 @@ public class CreditCardForm extends RelativeLayout {
 			TextView textHelp = new TextView(context);
             textHelp.setId(R.id.text_helper);
 			textHelp.setText(getResources().getString(R.string.CreditCardNumberHelp));
-			textHelp.setTextColor(this.textHelperColor);
+			if (useDefaultColors) {
+				textHelp.setTextColor(this.textHelperColor);
+			}
 			layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			layoutParams.addRule(RelativeLayout.BELOW, layout.getId());
 			layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);

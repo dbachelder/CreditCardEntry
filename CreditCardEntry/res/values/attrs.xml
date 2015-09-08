@@ -12,5 +12,6 @@
         <attr name="cursor_color"       format="color"/>
         <attr name="card_number_hint"   format="string"/>
         <attr name="input_background"   format="reference"/>
+        <attr name="default_text_colors" format="boolean"/>
     </declare-styleable>
 </resources>
