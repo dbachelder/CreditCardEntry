@@ -37,7 +37,7 @@ public abstract class CreditEntryFieldBase extends EditText implements
 
 	CreditCardFieldDelegate delegate;
 	final Context context;
-    CharSequence lastValue = null;
+    String lastValue = null;
 
     private boolean valid = false;
 
@@ -98,10 +98,13 @@ public abstract class CreditEntryFieldBase extends EditText implements
 			if (delegate != null) {
 				delegate.focusOnPreviousField(this);
 			}
-		} else if(!s.equals(lastValue)) {
-            lastValue = s;
-            textChanged(s, start, before, end);
-        }
+		} else {
+			String tmp = String.valueOf(s);
+			if (!tmp.equals(lastValue)) {
+				lastValue = tmp;
+				textChanged(s, start, before, end);
+			}
+		}
 	}
 
     public abstract void formatAndSetText(String updatedString);
