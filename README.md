@@ -117,6 +117,8 @@ In code:
   - Diner's Club is not yet implemented, although the assets and regex seem to be in place
 
 # Version History
+###9/17/2015
+ - Changed how the ZipCodeText is validating zip codes so it will work with other countries.
 
 ###9/17/2015
  - fix for `isCreditCardValid()` returning `true` when it is not
