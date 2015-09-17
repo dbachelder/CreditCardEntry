@@ -39,7 +39,7 @@ Add the project to your `dependencies`
 
         ...
 
-        compile 'com.github.dbachelder:CreditCardEntry:1.4.6'
+        compile 'com.github.dbachelder:CreditCardEntry:1.4.7'
     }
 ```
 
@@ -117,10 +117,9 @@ In code:
   - Diner's Club is not yet implemented, although the assets and regex seem to be in place
 
 # Version History
-###9/17/2015
- - Changed how the ZipCodeText is validating zip codes so it will work with other countries.
 
 ###9/17/2015
+ - Changed how the ZipCodeText is validating zip codes so it will work with other countries.
  - fix for `isCreditCardValid()` returning `true` when it is not
 
 ###9/8/2015
