@@ -39,7 +39,7 @@ Add the project to your `dependencies`
 
         ...
 
-        compile 'com.github.dbachelder:CreditCardEntry:1.4.5'
+        compile 'com.github.dbachelder:CreditCardEntry:1.4.6'
     }
 ```
 
@@ -117,6 +117,9 @@ In code:
   - Diner's Club is not yet implemented, although the assets and regex seem to be in place
 
 # Version History
+
+###9/17/2015
+ - fix for `isCreditCardValid()` returning `true` when it is not
 
 ###9/8/2015
  - fix bug where isValidCard would be called many times

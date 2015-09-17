@@ -87,7 +87,9 @@ public class CreditCardText extends CreditEntryFieldBase {
                 setValid(false);
                 delegate.onBadInput(this);
             }
-        }
+        } else {
+			setValid(false);
+		}
 	}
 
 	public CardType getType() {

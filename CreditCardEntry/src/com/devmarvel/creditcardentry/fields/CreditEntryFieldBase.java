@@ -177,10 +177,8 @@ public abstract class CreditEntryFieldBase extends EditText implements
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
         bundle.putParcelable("instanceState", super.onSaveInstanceState());
-        boolean focus = hasFocus();
-        bundle.putBoolean("focus", focus);
-        String value = String.valueOf(this.getText());
-        bundle.putString("stateToSave", value);
+		bundle.putBoolean("focus", hasFocus());
+		bundle.putString("stateToSave", String.valueOf(this.getText()));
         return bundle;
     }
 
