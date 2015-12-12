@@ -77,6 +77,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
     private boolean showingBack;
     private boolean scrolling = false;
+    private boolean animateOnError = true;
 
     private CardValidCallback onCardValidCallback;
 
@@ -268,10 +269,12 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
     @Override
     public void onBadInput(final EditText field) {
-        Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
-        field.startAnimation(shake);
-        field.setTextColor(Color.RED);
+        if (animateOnError) {
+            Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
+            field.startAnimation(shake);
+        }
 
+        field.setTextColor(Color.RED);
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -434,6 +437,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
         if (delegate != null) {
             fieldToSet.setDelegate(delegate);
         }
+    }
+
+    public void setAnimateOnError(boolean animateOnError) {
+        this.animateOnError = animateOnError;
     }
 
     private CreditCardFieldDelegate getDelegate(final CreditCardFieldDelegate delegate) {
