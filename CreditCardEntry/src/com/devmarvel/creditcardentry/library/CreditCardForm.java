@@ -32,6 +32,7 @@ public class CreditCardForm extends RelativeLayout {
 	private int textHelperColor;
 	private Drawable inputBackground;
 	private boolean useDefaultColors;
+	private boolean animateOnError;
 	private String cardNumberHint = "1234 5678 9012 3456";
 
 	public CreditCardForm(Context context) {
@@ -67,6 +68,7 @@ public class CreditCardForm extends RelativeLayout {
 					this.textHelperColor = typedArray.getColor(R.styleable.CreditCardForm_helper_text_color, getResources().getColor(R.color.text_helper_color));
 					this.inputBackground = typedArray.getDrawable(R.styleable.CreditCardForm_input_background);
 					this.useDefaultColors = typedArray.getBoolean(R.styleable.CreditCardForm_default_text_colors, false);
+					this.animateOnError = typedArray.getBoolean(R.styleable.CreditCardForm_animate_on_error, true);
 				} finally {
 					if (typedArray != null) typedArray.recycle();
 				}
@@ -139,6 +141,8 @@ public class CreditCardForm extends RelativeLayout {
 		entry.setCardImageView(cardFrontImage);
 		entry.setBackCardImage(cardBackImage);
 		entry.setCardNumberHint(cardNumberHint);
+
+		entry.setAnimateOnError(animateOnError);
 
 		this.addView(layout);
 
