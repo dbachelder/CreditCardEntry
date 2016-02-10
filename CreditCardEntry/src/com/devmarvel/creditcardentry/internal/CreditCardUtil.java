@@ -93,6 +93,7 @@ public class CreditCardUtil {
 		switch (type) {
 		case VISA:
 		case MASTERCARD:
+		case JCB:
 		case DISCOVER: // { 4-4-4-4}
 			gaps.add(" ");
 			segmentLengths[0] = 4;
@@ -106,6 +107,14 @@ public class CreditCardUtil {
 			segmentLengths[0] = 6;
 			gaps.add(" ");
 			segmentLengths[1] = 5;
+			gaps.add("");
+			segmentLengths[2] = 0;
+			break;
+		case DINERS:// {4-6-4}
+			gaps.add(" ");
+			segmentLengths[0] = 6;
+			gaps.add(" ");
+			segmentLengths[1] = 4;
 			gaps.add("");
 			segmentLengths[2] = 0;
 			break;
@@ -138,11 +147,15 @@ public class CreditCardUtil {
 		switch (type) {
 		case VISA:
 		case MASTERCARD:
+		case JCB:
 		case DISCOVER: // { 4-4-4-4}
 			idx = 16 + 3;
 			break;
 		case AMEX: // {4-6-5}
 			idx = 15 + 2;
+			break;
+		case DINERS:// {4-6-4}
+			idx = 14 + 2;
 			break;
 		default:
 			idx = 0;
@@ -231,6 +244,8 @@ public class CreditCardUtil {
 		case INVALID:
 		case MASTERCARD:
 		case VISA:
+		case DINERS:
+		case JCB:
 		default:
 			return 3;
 		}
