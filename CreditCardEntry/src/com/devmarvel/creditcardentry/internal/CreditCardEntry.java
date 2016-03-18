@@ -1,15 +1,5 @@
 package com.devmarvel.creditcardentry.internal;
 
-import com.devmarvel.creditcardentry.R;
-import com.devmarvel.creditcardentry.fields.CreditCardText;
-import com.devmarvel.creditcardentry.fields.CreditEntryFieldBase;
-import com.devmarvel.creditcardentry.fields.ExpDateText;
-import com.devmarvel.creditcardentry.fields.SecurityCodeText;
-import com.devmarvel.creditcardentry.fields.ZipCodeText;
-import com.devmarvel.creditcardentry.library.CardType;
-import com.devmarvel.creditcardentry.library.CardValidCallback;
-import com.devmarvel.creditcardentry.library.CreditCard;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -47,6 +37,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.devmarvel.creditcardentry.R;
+import com.devmarvel.creditcardentry.fields.CreditCardText;
+import com.devmarvel.creditcardentry.fields.CreditEntryFieldBase;
+import com.devmarvel.creditcardentry.fields.ExpDateText;
+import com.devmarvel.creditcardentry.fields.SecurityCodeText;
+import com.devmarvel.creditcardentry.fields.ZipCodeText;
+import com.devmarvel.creditcardentry.library.CardType;
+import com.devmarvel.creditcardentry.library.CardValidCallback;
+import com.devmarvel.creditcardentry.library.CreditCard;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +57,8 @@ public class CreditCardEntry extends HorizontalScrollView implements
         OnTouchListener, OnGestureListener, CreditCardFieldDelegate {
 
     private final Context context;
-    private final int textColor;
+    // null textColor means we want to use the system default color instead of providing our own.
+    private final Integer textColor;
 
     private ImageView cardImage;
     private ImageView backCardImage;
@@ -65,7 +66,6 @@ public class CreditCardEntry extends HorizontalScrollView implements
     private final ExpDateText expDateText;
     private final SecurityCodeText securityCodeText;
     private final ZipCodeText zipCodeText;
-    private final LinearLayout container;
 
     private Map<CreditEntryFieldBase, CreditEntryFieldBase> nextFocusField = new HashMap<>(4);
     private Map<CreditEntryFieldBase, CreditEntryFieldBase> prevFocusField = new HashMap<>(4);
@@ -77,17 +77,22 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
     private boolean showingBack;
     private boolean scrolling = false;
+    private boolean animateOnError = true;
 
     private CardValidCallback onCardValidCallback;
 
     @SuppressWarnings("deprecation")
-    public CreditCardEntry(Context context, boolean includeExp, boolean includeSecurity, boolean includeZip, AttributeSet attrs, int style) {
+    public CreditCardEntry(Context context, boolean includeExp, boolean includeSecurity, boolean includeZip, AttributeSet attrs, @SuppressWarnings("UnusedParameters") int style) {
         super(context);
 
         this.context = context;
 
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CreditCardForm, 0, 0);
-        textColor = typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK);
+        if (!typedArray.getBoolean(R.styleable.CreditCardForm_default_text_colors, false)) {
+            textColor = typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK);
+        } else {
+            textColor = null;
+        }
         typedArray.recycle();
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -109,11 +114,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         this.setHorizontalScrollBarEnabled(false);
         this.setOnTouchListener(this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            container = new LinearLayout(context);
-        } else {
-            container = new LinearLayout(context);
-        }
+        LinearLayout container = new LinearLayout(context);
         container.setId(R.id.cc_entry_internal);
         container.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         container.setOrientation(LinearLayout.HORIZONTAL);
@@ -128,7 +129,9 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
         textFourDigits = new TextView(context);
         textFourDigits.setTextSize(20);
-        textFourDigits.setTextColor(textColor);
+        if (textColor != null) {
+            textFourDigits.setTextColor(textColor);
+        }
         container.addView(textFourDigits);
 
         expDateText = new ExpDateText(context, attrs);
@@ -154,7 +157,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (EditorInfo.IME_ACTION_DONE == actionId) {
-                        onSecurityCodeValid();
+                        onSecurityCodeValid("");
                         return true;
                     }
                     return false;
@@ -210,26 +213,26 @@ public class CreditCardEntry extends HorizontalScrollView implements
     }
 
     @Override
-    public void onCreditCardNumberValid() {
-        nextField(this.creditCardText);
+    public void onCreditCardNumberValid(String remainder) {
+        nextField(this.creditCardText, remainder);
 
         updateLast4();
     }
 
     @Override
-    public void onExpirationDateValid() {
-        nextField(this.expDateText);
+    public void onExpirationDateValid(String remainder) {
+        nextField(this.expDateText, remainder);
     }
 
     @Override
-    public void onSecurityCodeValid() {
-        nextField(securityCodeText);
+    public void onSecurityCodeValid(String remainder) {
+        nextField(securityCodeText, remainder);
         updateCardImage(false);
     }
 
     @Override
     public void onZipCodeValid() {
-        nextField(zipCodeText);
+        nextField(zipCodeText, null);
     }
 
     @Override
@@ -242,6 +245,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         dispatchThawSelfOnly(container);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onRestoreInstanceState(Parcelable state) {
         SavedState ss = (SavedState) state;
@@ -251,6 +255,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
@@ -264,15 +269,19 @@ public class CreditCardEntry extends HorizontalScrollView implements
 
     @Override
     public void onBadInput(final EditText field) {
-        Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
-        field.startAnimation(shake);
-        field.setTextColor(Color.RED);
+        if (animateOnError) {
+            Animation shake = AnimationUtils.loadAnimation(context, R.anim.shake);
+            field.startAnimation(shake);
+        }
 
+        field.setTextColor(Color.RED);
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                field.setTextColor(textColor);
+                if (textColor != null) {
+                    field.setTextColor(textColor);
+                }
             }
         }, 1000);
     }
@@ -285,21 +294,35 @@ public class CreditCardEntry extends HorizontalScrollView implements
         zipCodeText.setOnFocusChangeListener(l);
     }
 
-    @Override
     public void focusOnField(final CreditEntryFieldBase field) {
-        if (this.textHelper != null) {
-            this.textHelper.setText(field.getHelperText());
-        }
+        focusOnField(field, null);
+    }
 
-        if (!scrolling) {
+    public void focusOnField(final CreditEntryFieldBase field, String initialFieldValue) {
+        field.requestFocus();
+        if(!scrolling) {
             scrolling = true;
             scrollToTarget(field instanceof CreditCardText ? 0 : field.getLeft(), new Runnable() {
                 @Override
                 public void run() {
                     scrolling = false;
-                    field.requestFocus();
+                    // if there was another focus before we were done.. catch up.
+                    if(!field.hasFocus()) {
+                        View newFocus = getFocusedChild();
+                        if (newFocus instanceof CreditEntryFieldBase) {
+                            focusOnField((CreditEntryFieldBase) newFocus);
+                        }
+                    }
                 }
             });
+        }
+
+        if(initialFieldValue != null && initialFieldValue.length() > 0) {
+            field.formatAndSetText(initialFieldValue);
+        }
+
+        if (this.textHelper != null) {
+            this.textHelper.setText(field.getHelperText());
         }
 
         if (field instanceof SecurityCodeText) {
@@ -308,6 +331,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         } else {
             updateCardImage(false);
         }
+        field.setSelection(field.getText().length());
     }
 
     private void scrollToTarget(int target, final Runnable after) {
@@ -415,6 +439,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
         }
     }
 
+    public void setAnimateOnError(boolean animateOnError) {
+        this.animateOnError = animateOnError;
+    }
+
     private CreditCardFieldDelegate getDelegate(final CreditCardFieldDelegate delegate) {
         return new CreditCardFieldDelegate() {
             @Override
@@ -423,7 +451,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
             }
 
             @Override
-            public void onCreditCardNumberValid() {
+            public void onCreditCardNumberValid(String remainder) {
                 updateLast4();
             }
 
@@ -432,10 +460,10 @@ public class CreditCardEntry extends HorizontalScrollView implements
                 delegate.onBadInput(field);
             }
 
-            @Override public void onExpirationDateValid() {}
-            @Override public void onSecurityCodeValid() {}
+            @Override public void onExpirationDateValid(String remainder) {}
+            @Override public void onSecurityCodeValid(String remainder) {}
             @Override public void onZipCodeValid() { }
-            @Override public void focusOnField(CreditEntryFieldBase field) { }
+            @Override public void focusOnField(CreditEntryFieldBase field, String initialValue) { }
             @Override public void focusOnPreviousField(CreditEntryFieldBase field) { }
         };
     }
@@ -500,12 +528,12 @@ public class CreditCardEntry extends HorizontalScrollView implements
         textFourDigits.setText(digits);
     }
 
-    private void nextField(CreditEntryFieldBase currentField) {
+    private void nextField(CreditEntryFieldBase currentField, String initialFieldValue) {
         CreditEntryFieldBase next = nextFocusField.get(currentField);
         if (next == null) {
             entryComplete(currentField);
         } else {
-            focusOnField(next);
+            focusOnField(next, initialFieldValue);
         }
     }
 
@@ -582,6 +610,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
             childrenStates = in.readSparseArray(classLoader);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);

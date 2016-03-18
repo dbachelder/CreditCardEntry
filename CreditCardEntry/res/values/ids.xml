@@ -8,4 +8,5 @@
     <item name="cc_ccv" type="id">4444</item>
     <item name="cc_zip" type="id">5555</item>
     <item name="text_helper" type="id">2000</item>
+    <item name="null_color" type="color">234234</item>
 </resources>

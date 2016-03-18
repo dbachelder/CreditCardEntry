@@ -65,15 +65,15 @@ public abstract class CreditEntryFieldBase extends EditText implements
         init(null);
     }
 
-    void init(AttributeSet attrs) {
-        setGravity(Gravity.CENTER);
-        setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-        setBackgroundColor(color.transparent);
-        setInputType(InputType.TYPE_CLASS_NUMBER);
-        addTextChangedListener(this);
-        setOnKeyListener(this);
-        setOnClickListener(this);
-        setPadding(20, 0, 20, 0);
+	void init(AttributeSet attrs) {
+		setGravity(Gravity.CENTER);
+		setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+		setBackgroundColor(getResources().getColor(color.transparent));
+		setInputType(InputType.TYPE_CLASS_NUMBER);
+		addTextChangedListener(this);
+		setOnKeyListener(this);
+		setOnClickListener(this);
+		setPadding(20, 0, 20, 0);
 
         setStyle(attrs);
     }
@@ -83,109 +83,110 @@ public abstract class CreditEntryFieldBase extends EditText implements
             return;
         }
 
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CreditCardForm);
-        setTextColor(typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK));
-        setHintTextColor(typedArray.getColor(R.styleable.CreditCardForm_hint_text_color, Color.LTGRAY));
-        setCursorDrawableColor(typedArray.getColor(R.styleable.CreditCardForm_cursor_color, Color.BLACK));
-        typedArray.recycle();
-    }
+		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CreditCardForm);
+		// If CreditCardForm_default_text_colors is true, we will not set any text or cursor colors
+		// and just use the defaults provided by the system / theme.
+		if (!typedArray.getBoolean(R.styleable.CreditCardForm_default_text_colors, false)) {
+			setTextColor(typedArray.getColor(R.styleable.CreditCardForm_text_color, Color.BLACK));
+			setHintTextColor(typedArray.getColor(R.styleable.CreditCardForm_hint_text_color, Color.LTGRAY));
+			setCursorDrawableColor(typedArray.getColor(R.styleable.CreditCardForm_cursor_color, Color.BLACK));
+		}
+		typedArray.recycle();
+	}
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int end) {
-        if (start == 0 && before == 1 && s.length() == 0) {
-            if (delegate != null) {
-                delegate.focusOnPreviousField(this);
-            }
-        } else if (!String.valueOf(s).equals(String.valueOf(lastValue))) {
-            lastValue = String.valueOf(s);
-            textChanged(s, start, before, end);
-        }
-    }
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int end) {
+		if (start == 0 && before == 1 && s.length() == 0) {
+			if (delegate != null) {
+				delegate.focusOnPreviousField(this);
+			}
+		} else {
+			String tmp = String.valueOf(s);
+			if (!tmp.equals(lastValue)) {
+				lastValue = tmp;
+				textChanged(s, start, before, end);
+			}
+		}
+	}
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
+	public abstract void formatAndSetText(String updatedString);
 
-    @Override
-    public void afterTextChanged(Editable s) {
-    }
+    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    @Override public void afterTextChanged(Editable s) {}
 
-    public void textChanged(CharSequence s, int start, int before, int end) {
-    }
+    public void textChanged(CharSequence s, int start, int before, int end) { }
 
-    @Override
-    public InputConnection onCreateInputConnection(@NonNull EditorInfo outAttrs) {
-        outAttrs.actionLabel = null;
-        outAttrs.inputType = InputType.TYPE_NULL;
-        outAttrs.imeOptions = EditorInfo.IME_ACTION_NONE;
-        return new BackInputConnection(super.onCreateInputConnection(outAttrs));
-    }
+	@Override
+	public InputConnection onCreateInputConnection(@NonNull EditorInfo outAttrs) {
+		outAttrs.actionLabel = null;
+		outAttrs.inputType = InputType.TYPE_NULL;
+		outAttrs.imeOptions = EditorInfo.IME_ACTION_NONE;
+		return new BackInputConnection(super.onCreateInputConnection(outAttrs));
+	}
 
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN)
-            return false;
-        if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
-                || keyCode == KeyEvent.KEYCODE_ALT_RIGHT
-                || keyCode == KeyEvent.KEYCODE_SHIFT_LEFT
-                || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
-            return false;
+	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN)
+			return false;
+		if (keyCode == KeyEvent.KEYCODE_ALT_LEFT
+				|| keyCode == KeyEvent.KEYCODE_ALT_RIGHT
+				|| keyCode == KeyEvent.KEYCODE_SHIFT_LEFT
+				|| keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
+			return false;
 
-        if (keyCode == KeyEvent.KEYCODE_DEL
-                && this.getText().toString().length() == 0) {
-            if (delegate != null) {
-                delegate.focusOnPreviousField(this);
-            }
-        }
-        return false;
-    }
+		if (keyCode == KeyEvent.KEYCODE_DEL
+				&& this.getText().toString().length() == 0) {
+			if (delegate != null) {
+				delegate.focusOnPreviousField(this);
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public void onClick(View v) {
-        setSelection(getText().length());
-    }
+	@Override
+	public void onClick(View v) {
+		setSelection(getText().length());
+	}
 
-    @SuppressWarnings("unused")
-    public CreditCardFieldDelegate getDelegate() {
-        return delegate;
-    }
+	@SuppressWarnings("unused")
+	public CreditCardFieldDelegate getDelegate() {
+		return delegate;
+	}
 
-    public void setDelegate(CreditCardFieldDelegate delegate) {
-        this.delegate = delegate;
-    }
+	public void setDelegate(CreditCardFieldDelegate delegate) {
+		this.delegate = delegate;
+	}
 
-    public abstract void setHelperText(String helperText);
+	public abstract void setHelperText(String helperText);
 
-    public abstract String getHelperText();
+	public abstract String getHelperText();
 
-    public boolean isValid() {
-        return valid;
-    }
+	public boolean isValid() {
+		return valid;
+	}
 
-    void setValid(boolean valid) {
-        this.valid = valid;
-    }
+	void setValid(boolean valid) {
+		this.valid = valid;
+	}
 
-    private void backInput() {
-        if (this.getText().toString().length() == 0) {
-            if (delegate != null) {
-                delegate.focusOnPreviousField(this);
-            }
-        }
-    }
+	private void backInput() {
+		if (this.getText().toString().length() == 0) {
+			if (delegate != null) {
+				delegate.focusOnPreviousField(this);
+			}
+		}
+	}
 
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
         bundle.putParcelable("instanceState", super.onSaveInstanceState());
-        boolean focus = hasFocus();
-        bundle.putBoolean("focus", focus);
-        String value = String.valueOf(this.getText());
-        bundle.putString("stateToSave", value);
+		bundle.putBoolean("focus", hasFocus());
+		bundle.putString("stateToSave", String.valueOf(this.getText()));
         return bundle;
     }
 
-    @Override
+	@Override
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
@@ -271,4 +272,3 @@ public abstract class CreditEntryFieldBase extends EditText implements
     }
 
 }
-

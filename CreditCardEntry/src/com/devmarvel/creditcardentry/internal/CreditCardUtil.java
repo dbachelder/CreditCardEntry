@@ -18,6 +18,10 @@ import java.util.regex.Pattern;
 @SuppressLint("SimpleDateFormat")
 public class CreditCardUtil {
 	public static final int CC_LEN_FOR_TYPE = 4; // number of characters to determine length
+	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/yyyy");
+	static {
+		simpleDateFormat.setLenient(false);
+	}
 
 	private static String cleanNumber(String number) {
 		return number.replaceAll("\\s", "");
@@ -148,7 +152,6 @@ public class CreditCardUtil {
 	}
 
 	public static String formatExpirationDate(String text) {
-
 		try {
 			switch (text.length()) {
 			case 1:
@@ -174,10 +177,11 @@ public class CreditCardUtil {
 					text = text.substring(0, 2) + "/" + text.substring(2, 3);
 				}
 			case 4:
+                Calendar now = getCurrentExpDate();
+                String currentYearStr = String.valueOf(now.get(Calendar.YEAR));
+
 				int yearDigit = Integer.parseInt(text.substring(3, 4));
-				String year = String.valueOf(Calendar.getInstance().get(
-						Calendar.YEAR));
-				int currentYearDigit = Integer.parseInt(year.substring(2, 3));
+				int currentYearDigit = Integer.parseInt(currentYearStr.substring(2, 3));
 				if (yearDigit < currentYearDigit) {
 					// Less than current year invalid
 					return text.substring(0, 3);
@@ -185,11 +189,12 @@ public class CreditCardUtil {
 					return text;
 				}
 			case 5:
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"MM/yy");
-				simpleDateFormat.setLenient(false);
-				Date expiry = simpleDateFormat.parse(text);
-				if (expiry.before(new Date())) {
+                // always make the year in the current century
+                Calendar now2 = getCurrentExpDate();
+                String currentYearStr2 = String.valueOf(now2.get(Calendar.YEAR));
+                String yearStr = text.substring(0,3) + currentYearStr2.substring(0,2) + text.substring(3, 5);
+                Date expiry = simpleDateFormat.parse(yearStr);
+				if (expiry.before(now2.getTime())) {
 					// Invalid exp date
 					return text.substring(0, 4);
 				} else {
@@ -211,7 +216,13 @@ public class CreditCardUtil {
 		return "";
 	}
 
-	public static int securityCodeValid(CardType type) {
+    private static Calendar getCurrentExpDate() {
+        Calendar now = Calendar.getInstance();
+        now.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), 0, 0, 0);
+        return now;
+    }
+
+    public static int securityCodeValid(CardType type) {
 		if(type == null) return 3;
 		switch (type) {
 		case AMEX:
