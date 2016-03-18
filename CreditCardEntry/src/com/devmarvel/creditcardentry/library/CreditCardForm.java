@@ -93,6 +93,12 @@ public class CreditCardForm extends RelativeLayout {
 		} else {
 			layout = new LinearLayout(context);
 		}
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            //ignore RTL layout direction
+            layout.setLayoutDirection(LAYOUT_DIRECTION_LTR);
+        }
+
 		layout.setId(R.id.cc_form_layout);
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
