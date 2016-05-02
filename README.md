@@ -118,6 +118,11 @@ In code:
 
 # Version History
 
+###3/30/2016
+ - made the CreditCardForm work in RTL layout 
+ - added getHelperText/setHelperText to CreditEntryFieldBase
+ - added setting hint & helper texts to fields
+
 ###9/17/2015
  - Changed how the ZipCodeText is validating zip codes so it will work with other countries.
  - fix for `isCreditCardValid()` returning `true` when it is not

@@ -7,7 +7,10 @@ import android.util.AttributeSet;
 import com.devmarvel.creditcardentry.R;
 
 public class ZipCodeText extends CreditEntryFieldBase {
+
 	private int maxChars;
+	
+    private String mHelperText;
 
 	public ZipCodeText(Context context) {
 		super(context);
@@ -32,8 +35,13 @@ public class ZipCodeText extends CreditEntryFieldBase {
 	}
 
 	@Override
-	public String helperText() {
-		return context.getString(R.string.ZipHelp);
+	public void setHelperText(String helperText) {
+		mHelperText = helperText;
+	}
+
+	@Override
+	public String getHelperText() {
+		return (mHelperText != null ? mHelperText : context.getString(R.string.ZipHelp));
 	}
 
 	@Override

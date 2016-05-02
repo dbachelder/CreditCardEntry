@@ -93,6 +93,12 @@ public class CreditCardForm extends RelativeLayout {
 		} else {
 			layout = new LinearLayout(context);
 		}
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            //ignore RTL layout direction
+            layout.setLayoutDirection(LAYOUT_DIRECTION_LTR);
+        }
+
 		layout.setId(R.id.cc_form_layout);
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -329,4 +335,39 @@ public class CreditCardForm extends RelativeLayout {
 			}
 		});
 	}
+
+    /** helper & hint setting **/
+
+    public void setCreditCardTextHelper(String text) {
+        entry.setCreditCardTextHelper(text);
+    }
+
+    public void setCreditCardTextHint(String text) {
+        entry.setCreditCardTextHint(text);
+    }
+
+    public void setExpDateTextHelper(String text) {
+        entry.setExpDateTextHelper(text);
+    }
+
+    public void setExpDateTextHint(String text) {
+        entry.setExpDateTextHint(text);
+    }
+
+    public void setSecurityCodeTextHelper(String text) {
+        entry.setSecurityCodeTextHelper(text);
+    }
+
+    public void setSecurityCodeTextHint(String text) {
+        entry.setSecurityCodeTextHint(text);
+    }
+
+    public void setZipCodeTextHelper(String text) {
+        entry.setZipCodeTextHelper(text);
+    }
+
+    public void setZipCodeTextHint(String text) {
+        entry.setZipCodeTextHint(text);
+    }
 }
+

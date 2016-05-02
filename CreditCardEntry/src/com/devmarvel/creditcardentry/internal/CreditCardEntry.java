@@ -322,7 +322,7 @@ public class CreditCardEntry extends HorizontalScrollView implements
         }
 
         if (this.textHelper != null) {
-            this.textHelper.setText(field.helperText());
+            this.textHelper.setText(field.getHelperText());
         }
 
         if (field instanceof SecurityCodeText) {
@@ -630,4 +630,39 @@ public class CreditCardEntry extends HorizontalScrollView implements
             }
         });
     }
+
+    /** helper & hint setting **/
+
+    public void setCreditCardTextHelper(String text) {
+        creditCardText.setHelperText(text);
+    }
+
+    public void setCreditCardTextHint(String text) {
+        creditCardText.setHint(text);
+    }
+
+    public void setExpDateTextHelper(String text) {
+        expDateText.setHelperText(text);
+    }
+
+    public void setExpDateTextHint(String text) {
+        expDateText.setHint(text);
+    }
+
+    public void setSecurityCodeTextHelper(String text) {
+        securityCodeText.setHelperText(text);
+    }
+
+    public void setSecurityCodeTextHint(String text) {
+        securityCodeText.setHint(text);
+    }
+
+    public void setZipCodeTextHelper(String text) {
+        zipCodeText.setHelperText(text);
+    }
+
+    public void setZipCodeTextHint(String text) {
+        zipCodeText.setHint(text);
+    }
+
 }

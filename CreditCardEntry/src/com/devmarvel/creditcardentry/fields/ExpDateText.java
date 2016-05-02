@@ -11,7 +11,9 @@ public class ExpDateText extends CreditEntryFieldBase {
 
 	private String previousString;
 
-	public ExpDateText(Context context) {
+    private String mHelperText;
+
+    public ExpDateText(Context context) {
 		super(context);
 		init();
 	}
@@ -65,8 +67,14 @@ public class ExpDateText extends CreditEntryFieldBase {
         }
 	}
 
-	@Override
-	public String helperText() {
-		return context.getString(R.string.ExpirationDateHelp);
-	}
+    @Override
+    public void setHelperText(String helperText) {
+	mHelperText = helperText;
+    }
+
+    @Override
+    public String getHelperText() {
+	return (mHelperText != null ? mHelperText : context.getString(R.string.ExpirationDateHelp));
+    }
+
 }

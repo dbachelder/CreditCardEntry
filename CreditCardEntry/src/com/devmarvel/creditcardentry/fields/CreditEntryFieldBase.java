@@ -33,35 +33,37 @@ import com.devmarvel.creditcardentry.internal.CreditCardFieldDelegate;
 import java.lang.reflect.Field;
 
 public abstract class CreditEntryFieldBase extends EditText implements
-		TextWatcher, OnKeyListener, OnClickListener {
+        TextWatcher, OnKeyListener, OnClickListener {
 
-	CreditCardFieldDelegate delegate;
-	final Context context;
+    CreditCardFieldDelegate delegate;
+
+    final Context context;
+
     String lastValue = null;
 
     private boolean valid = false;
 
-	public CreditEntryFieldBase(Context context) {
-		super(context);
-		this.context = context;
-		init();
-	}
+    public CreditEntryFieldBase(Context context) {
+        super(context);
+        this.context = context;
+        init();
+    }
 
-	public CreditEntryFieldBase(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		this.context = context;
-		init(attrs);
-	}
+    public CreditEntryFieldBase(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+        init(attrs);
+    }
 
-	public CreditEntryFieldBase(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		this.context = context;
-		init(attrs);
-	}
+    public CreditEntryFieldBase(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.context = context;
+        init(attrs);
+    }
 
-	void init() {
-		init(null);
-	}
+    void init() {
+        init(null);
+    }
 
 	void init(AttributeSet attrs) {
 		setGravity(Gravity.CENTER);
@@ -73,13 +75,13 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		setOnClickListener(this);
 		setPadding(20, 0, 20, 0);
 
-		setStyle(attrs);
-	}
+        setStyle(attrs);
+    }
 
-	void setStyle(AttributeSet attrs) {
-		if (attrs == null) {
-			return;
-		}
+    void setStyle(AttributeSet attrs) {
+        if (attrs == null) {
+            return;
+        }
 
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CreditCardForm);
 		// If CreditCardForm_default_text_colors is true, we will not set any text or cursor colors
@@ -107,7 +109,7 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		}
 	}
 
-    public abstract void formatAndSetText(String updatedString);
+	public abstract void formatAndSetText(String updatedString);
 
     @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
     @Override public void afterTextChanged(Editable s) {}
@@ -155,7 +157,9 @@ public abstract class CreditEntryFieldBase extends EditText implements
 		this.delegate = delegate;
 	}
 
-	public abstract String helperText();
+	public abstract void setHelperText(String helperText);
+
+	public abstract String getHelperText();
 
 	public boolean isValid() {
 		return valid;
@@ -191,78 +195,80 @@ public abstract class CreditEntryFieldBase extends EditText implements
             String cc = bundle.getString("stateToSave");
             setText(cc);
             boolean focus = bundle.getBoolean("focus", false);
-            if(focus) requestFocus();
+            if (focus)
+                requestFocus();
         } else {
             super.onRestoreInstanceState(state);
         }
     }
 
     private class BackInputConnection extends InputConnectionWrapper {
-		public BackInputConnection(InputConnection target) {
-			super(target, false);
-		}
 
-		@Override
-		public boolean sendKeyEvent(KeyEvent event) {
-			if (event.getAction() == KeyEvent.ACTION_DOWN
-							&& event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-				backInput();
-				// Un-comment if you wish to cancel the backspace:
-				// return false;
-			}
-			return super.sendKeyEvent(event);
-		}
+        public BackInputConnection(InputConnection target) {
+            super(target, false);
+        }
 
-		// From Android 4.1 this is called when the DEL key is pressed on the
-		// soft keyboard (and
-		// sendKeyEvent() is not called). We convert this to a "normal" key
-		// event.
-		@Override
-		public boolean deleteSurroundingText(int beforeLength, int afterLength) {
+        @Override
+        public boolean sendKeyEvent(KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN
+                    && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+                backInput();
+                // Un-comment if you wish to cancel the backspace:
+                // return false;
+            }
+            return super.sendKeyEvent(event);
+        }
 
-			if (android.os.Build.VERSION.SDK_INT < 11) {
-				return super.deleteSurroundingText(beforeLength, afterLength);
-			} else {
+        // From Android 4.1 this is called when the DEL key is pressed on the
+        // soft keyboard (and
+        // sendKeyEvent() is not called). We convert this to a "normal" key
+        // event.
+        @Override
+        public boolean deleteSurroundingText(int beforeLength, int afterLength) {
 
-				long eventTime = SystemClock.uptimeMillis();
+            if (android.os.Build.VERSION.SDK_INT < 11) {
+                return super.deleteSurroundingText(beforeLength, afterLength);
+            } else {
 
-				int flags = KeyEvent.FLAG_SOFT_KEYBOARD
-								| KeyEvent.FLAG_KEEP_TOUCH_MODE
-								| KeyEvent.FLAG_EDITOR_ACTION;
+                long eventTime = SystemClock.uptimeMillis();
 
-				sendKeyEvent(new KeyEvent(eventTime, eventTime,
-								KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL, 0, 0,
-								KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
+                int flags = KeyEvent.FLAG_SOFT_KEYBOARD
+                        | KeyEvent.FLAG_KEEP_TOUCH_MODE
+                        | KeyEvent.FLAG_EDITOR_ACTION;
 
-				sendKeyEvent(new KeyEvent(SystemClock.uptimeMillis(),
-								eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL, 0,
-								0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
-				return true;
-			}
-		}
-	}
+                sendKeyEvent(new KeyEvent(eventTime, eventTime,
+                        KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL, 0, 0,
+                        KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
 
-	public void setCursorDrawableColor(int color) {
-		//http://stackoverflow.com/questions/25996032/how-to-change-programatically-edittext-cursor-color-in-android
-		try {
-			Field fCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
-			fCursorDrawableRes.setAccessible(true);
-			int mCursorDrawableRes = fCursorDrawableRes.getInt(this);
-			Field fEditor = TextView.class.getDeclaredField("mEditor");
-			fEditor.setAccessible(true);
-			Object editor = fEditor.get(this);
-			Class<?> clazz = editor.getClass();
-			Field fCursorDrawable = clazz.getDeclaredField("mCursorDrawable");
-			fCursorDrawable.setAccessible(true);
-			Drawable[] drawables = new Drawable[2];
-			drawables[0] = ContextCompat.getDrawable(getContext(), mCursorDrawableRes);
-			drawables[1] = ContextCompat.getDrawable(getContext(), mCursorDrawableRes);
-			drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
-			drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
-			fCursorDrawable.set(editor, drawables);
-		} catch (final Throwable ignored) {
-			//
-		}
-	}
+                sendKeyEvent(new KeyEvent(SystemClock.uptimeMillis(),
+                        eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL, 0,
+                        0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0, flags));
+                return true;
+            }
+        }
+    }
+
+    public void setCursorDrawableColor(int color) {
+        //http://stackoverflow.com/questions/25996032/how-to-change-programatically-edittext-cursor-color-in-android
+        try {
+            Field fCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
+            fCursorDrawableRes.setAccessible(true);
+            int mCursorDrawableRes = fCursorDrawableRes.getInt(this);
+            Field fEditor = TextView.class.getDeclaredField("mEditor");
+            fEditor.setAccessible(true);
+            Object editor = fEditor.get(this);
+            Class<?> clazz = editor.getClass();
+            Field fCursorDrawable = clazz.getDeclaredField("mCursorDrawable");
+            fCursorDrawable.setAccessible(true);
+            Drawable[] drawables = new Drawable[2];
+            drawables[0] = ContextCompat.getDrawable(getContext(), mCursorDrawableRes);
+            drawables[1] = ContextCompat.getDrawable(getContext(), mCursorDrawableRes);
+            drawables[0].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            drawables[1].setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            fCursorDrawable.set(editor, drawables);
+        } catch (final Throwable ignored) {
+            //
+        }
+    }
 
 }

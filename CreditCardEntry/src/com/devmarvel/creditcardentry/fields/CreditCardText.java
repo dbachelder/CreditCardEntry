@@ -11,7 +11,10 @@ import com.devmarvel.creditcardentry.internal.CreditCardUtil;
 import com.devmarvel.creditcardentry.library.CardType;
 
 public class CreditCardText extends CreditEntryFieldBase {
+
 	private CardType type;
+
+	private String mHelperText;
 
 	public CreditCardText(Context context) {
 		super(context);
@@ -36,7 +39,9 @@ public class CreditCardText extends CreditEntryFieldBase {
 	}
 
 	/* TextWatcher Implementation Methods */
-	@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+	}
 
 	@Override
 	public void afterTextChanged(Editable s) {
@@ -51,43 +56,42 @@ public class CreditCardText extends CreditEntryFieldBase {
 		}
 	}
 
-	@Override
 	public void formatAndSetText(String number) {
 		CardType type = CreditCardUtil.findCardType(number);
 
 		if (type.equals(CardType.INVALID)) {
-            setValid(false);
-            delegate.onBadInput(this);
-            return;
-        }
+			setValid(false);
+			delegate.onBadInput(this);
+			return;
+		}
 
 		if (this.type != type) {
-            delegate.onCardTypeChange(type);
-        }
+			delegate.onCardTypeChange(type);
+		}
 		this.type = type;
 
 		String formatted = CreditCardUtil.formatForViewing(number, type);
 		if (!number.equalsIgnoreCase(formatted)) {
-            this.removeTextChangedListener(this);
-            this.setText(formatted);
-            this.setSelection(formatted.length());
-            this.addTextChangedListener(this);
-        }
+			this.removeTextChangedListener(this);
+			this.setText(formatted);
+			this.setSelection(formatted.length());
+			this.addTextChangedListener(this);
+		}
 
 		if (formatted.length() >= CreditCardUtil.lengthOfFormattedStringForType(type)) {
 
-            String remainder = null;
-            if (number.startsWith(formatted)) {
-                remainder = number.replace(formatted, "");
-            }
-            if (CreditCardUtil.isValidNumber(formatted)) {
-                setValid(true);
-                delegate.onCreditCardNumberValid(remainder);
-            } else {
-                setValid(false);
-                delegate.onBadInput(this);
-            }
-        } else {
+			String remainder = null;
+			if (number.startsWith(formatted)) {
+				remainder = number.replace(formatted, "");
+			}
+			if (CreditCardUtil.isValidNumber(formatted)) {
+				setValid(true);
+				delegate.onCreditCardNumberValid(remainder);
+			} else {
+				setValid(false);
+				delegate.onBadInput(this);
+			}
+		} else {
 			setValid(false);
 		}
 	}
@@ -97,7 +101,12 @@ public class CreditCardText extends CreditEntryFieldBase {
 	}
 
 	@Override
-	public String helperText() {
-		return context.getString(R.string.CreditCardNumberHelp);
+	public void setHelperText(String helperText) {
+		mHelperText = helperText;
+	}
+
+	@Override
+	public String getHelperText() {
+		return (mHelperText != null ? mHelperText : context.getString(R.string.CreditCardNumberHelp));
 	}
 }
