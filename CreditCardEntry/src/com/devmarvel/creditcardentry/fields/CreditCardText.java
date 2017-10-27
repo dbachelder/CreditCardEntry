@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 
 import com.devmarvel.creditcardentry.R;
@@ -69,8 +70,10 @@ public class CreditCardText extends CreditEntryFieldBase {
 			delegate.onCardTypeChange(type);
 		}
 		this.type = type;
+		Log.e("Card type:", this.type.toString());
 
 		String formatted = CreditCardUtil.formatForViewing(number, type);
+		Log.e("Formatted:", formatted);
 		if (!number.equalsIgnoreCase(formatted)) {
 			this.removeTextChangedListener(this);
 			this.setText(formatted);

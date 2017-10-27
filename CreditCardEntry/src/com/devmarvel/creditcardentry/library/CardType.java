@@ -14,6 +14,7 @@ class CardRegex {
     static final String REGX_DISCOVER = "^6(?:011|5[0-9]{2})[0-9]{12}$"; // Discover 16
     static final String REGX_DINERS_CLUB = "^3(?:0[0-5]|[68][0-9])[0-9]{11}$"; // DinersClub 14
     static final String REGX_JCB = "^35[0-9]{14}$"; // JCB 16
+    static final String REGX_VERVE = "^(506099|5061[0-8][0-9]|50619[0-8])[0-9]{13}$"; // Interswitch Verve [Nigeria]
 
     static final String REGX_VISA_TYPE = "^4[0-9]{3}?"; // VISA 16
     static final String REGX_MC_TYPE = "^5[1-5][0-9]{2}$"; // MC 16
@@ -21,6 +22,7 @@ class CardRegex {
     static final String REGX_DISCOVER_TYPE = "^6(?:011|5[0-9]{2})$"; // Discover 16
     static final String REGX_DINERS_CLUB_TYPE = "^3(?:0[0-5]|[68][0-9])[0-9]$"; // DinersClub 14
     static final String REGX_JCB_TYPE = "^35[0-9]{2}$"; // JCB 15
+    static final String REGX_VERVE_TYPE = "^506[0,1]$"; // Interswitch Verve [Nigeria]
 
 }
 
@@ -34,6 +36,7 @@ public enum CardType implements Serializable {
     DISCOVER("Discover", R.drawable.discover, CardRegex.REGX_DISCOVER, CardRegex.REGX_DISCOVER_TYPE),
     DINERS("DinersClub",R.drawable.diners_club,CardRegex.REGX_DINERS_CLUB,CardRegex.REGX_DINERS_CLUB_TYPE),
     JCB("JCB",R.drawable.jcb_payment_ico,CardRegex.REGX_JCB,CardRegex.REGX_JCB_TYPE),
+    VERVE("Verve", R.drawable.payment_ic_verve, CardRegex.REGX_VERVE, CardRegex.REGX_VERVE_TYPE),
     INVALID("Unknown", R.drawable.unknown_cc, null, null);
 
   /** name for humans */

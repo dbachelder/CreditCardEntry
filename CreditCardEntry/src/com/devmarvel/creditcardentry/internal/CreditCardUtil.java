@@ -1,6 +1,7 @@
 package com.devmarvel.creditcardentry.internal;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.devmarvel.creditcardentry.library.CardType;
 
@@ -88,7 +89,7 @@ public class CreditCardUtil {
 
 		ArrayList<String> gaps = new ArrayList<>();
 
-		int segmentLengths[] = { 0, 0, 0 };
+		int segmentLengths[] = { 0, 0, 0, 0, 0 };
 
 		switch (type) {
 		case VISA:
@@ -101,6 +102,7 @@ public class CreditCardUtil {
 			segmentLengths[1] = 4;
 			gaps.add(" ");
 			segmentLengths[2] = 4;
+			gaps.add(" ");
 			break;
 		case AMEX: // {4-6-5}
 			gaps.add(" ");
@@ -109,6 +111,7 @@ public class CreditCardUtil {
 			segmentLengths[1] = 5;
 			gaps.add("");
 			segmentLengths[2] = 0;
+			gaps.add(" ");
 			break;
 		case DINERS:// {4-6-4}
 			gaps.add(" ");
@@ -117,6 +120,17 @@ public class CreditCardUtil {
 			segmentLengths[1] = 4;
 			gaps.add("");
 			segmentLengths[2] = 0;
+			gaps.add(" ");
+			break;
+		case VERVE: // { 4-4-4-4-3}
+			gaps.add(" ");
+			segmentLengths[0] = 4;
+			gaps.add(" ");
+			segmentLengths[1] = 4;
+			gaps.add(" ");
+			segmentLengths[2] = 4;
+			gaps.add(" ");
+			segmentLengths[3] = 4;
 			break;
 		default:
 			return enteredNumber;
@@ -135,8 +149,13 @@ public class CreditCardUtil {
 		end = segmentLengths[2] + end > len ? len : segmentLengths[2] + end;
 		String segment4 = cleaned.substring(start, end);
 
-		String ret = String.format("%s%s%s%s%s%s%s", segment1, gaps.get(0),
-				segment2, gaps.get(1), segment3, gaps.get(2), segment4);
+		start = end;
+		end = segmentLengths[3] + end > len ? len : segmentLengths[3] + end;
+		String segment5 = cleaned.substring(start, end);
+
+		String ret = String.format("%s%s%s%s%s%s%s%s%s", segment1, gaps.get(0),
+				segment2, gaps.get(1), segment3, gaps.get(2), segment4,
+				gaps.get(3), segment5);
 
 		return ret.trim();
 	}
@@ -145,6 +164,9 @@ public class CreditCardUtil {
 		int idx;
 
 		switch (type) {
+		case VERVE: //{ 4-4-4-4-3}
+			idx = 19 + 4;
+			break;
 		case VISA:
 		case MASTERCARD:
 		case JCB:
@@ -160,7 +182,6 @@ public class CreditCardUtil {
 		default:
 			idx = 0;
 		}
-
 		return idx;
 	}
 
@@ -246,6 +267,7 @@ public class CreditCardUtil {
 		case VISA:
 		case DINERS:
 		case JCB:
+		case VERVE:
 		default:
 			return 3;
 		}

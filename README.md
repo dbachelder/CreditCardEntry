@@ -118,6 +118,10 @@ In code:
 
 # Version History
 
+###7/25/2017
+ - added InterSwitch Verve card image
+ - added InterSwitch Verve Regex to Card Enum
+
 ###3/30/2016
  - made the CreditCardForm work in RTL layout 
  - added getHelperText/setHelperText to CreditEntryFieldBase

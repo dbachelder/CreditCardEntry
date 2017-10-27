@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
@@ -12,5 +12,5 @@ repositories {
 }
 
 task wrapper(type: Wrapper) {
-        gradleVersion = '2.2.1'
+        gradleVersion = '2.3.3'
 }
