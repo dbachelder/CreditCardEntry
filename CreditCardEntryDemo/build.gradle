@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        jcenter()
         mavenCentral()
         google()
     }
@@ -10,14 +11,16 @@ buildscript {
 apply plugin: 'com.android.application'
 
 repositories {
+    jcenter()
     mavenCentral()
+    google()
 }
 
 android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 28
     }
 
@@ -35,6 +38,5 @@ android {
 }
 
 dependencies {
-    compile project(':CreditCardEntry')
-    compile 'com.android.support:support-v4:25.3.1'
+    implementation project(':CreditCardEntry')
 }
