@@ -40,7 +40,7 @@ public enum CardType implements Serializable {
     INVALID("Unknown", R.drawable.unknown_cc, null, null);
 
   /** name for humans */
-    public final String name;
+    public final String friendlyName;
 
   /** regex that matches the entire card number */
     public final String fullRegex;
@@ -54,8 +54,8 @@ public enum CardType implements Serializable {
   /** drawable for the back of the card */
     public final int backResource = R.drawable.cc_back;
 
-    CardType(String name, @DrawableRes int imageResource, String fullRegex, String typeRegex) {
-        this.name = name;
+    CardType(String friendlyName, @DrawableRes int imageResource, String fullRegex, String typeRegex) {
+        this.friendlyName = friendlyName;
         this.frontResource = imageResource;
         this.fullRegex = fullRegex;
         this.typeRegex = typeRegex;
@@ -63,6 +63,6 @@ public enum CardType implements Serializable {
 
     @Override
     public String toString() {
-        return name;
+        return friendlyName;
     }
 }
