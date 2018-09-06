@@ -118,85 +118,85 @@ In code:
 
 # Version History
 
-###7/25/2017
+### 7/25/2017
  - added InterSwitch Verve card image
  - added InterSwitch Verve Regex to Card Enum
 
-###3/30/2016
+### 3/30/2016
  - made the CreditCardForm work in RTL layout 
  - added getHelperText/setHelperText to CreditEntryFieldBase
  - added setting hint & helper texts to fields
 
-###9/17/2015
+### 9/17/2015
  - Changed how the ZipCodeText is validating zip codes so it will work with other countries.
  - fix for `isCreditCardValid()` returning `true` when it is not
 
-###9/8/2015
+### 9/8/2015
  - fix bug where isValidCard would be called many times
  - allow for using colors from theme
 
-###8/21/2015
+### 8/21/2015
  - don't drop key strokes after backspace
 
-###8/21/2015
+### 8/21/2015
  - focus change behavior can now keep up with very fast typing
  - several minor performance tweaks
 
-###8/18/2015
+### 8/18/2015
  - fix typo in hint for exp date
  - fix for dates not being able to exceed 2034
  - fix for current month being invalid
 
-###7/27/2015
+### 7/27/2015
  - fix occasional NPE
 
-###7/15/2015
+### 7/15/2015
  - fix for order of operations when invalidating card and calling delegate methods
 
-###7/07/2015
+### 7/07/2015
  - Be able to change input field's text, hint and cursor color
 
-###5/16/2015
+### 5/16/2015
  - use an animator to do the scroll
 
-###5/14/2015
+### 5/14/2015
  - don't call complete callback twice
 
-###5/13/2015
+### 5/13/2015
  - add setters for other CC fields
  - correctly manage state such that more than one form on a screen can handle state change
 
-###5/11/2015
+### 5/11/2015
  - Added clearForm()
 
-###4/27/2015
+### 4/27/2015
  - removed a bunch of dead resources reducing aar size by ~17%
 
-###4/26/2015
+### 4/26/2015
  - fixed corner radius of card back
  - allow setting an invalid number programmatically
 
-###4/24/2015
+### 4/24/2015
  - Done IME causes validation check and keyboard dismiss
  - All fields except credit card # are now optional
  - Allow setting credit card number programmatically
 
-###4/21/2015
+### 4/21/2015
  - Don't focus credit card by default. Add mechanism for clients to focus any field if desired.
  - CardType now contains image drawable ids for front and back of card
  - The credit card placeholder hint can now be specified via xml
  - Setting focus change listener now delegates to all internal fields.
  - Background of widget is now configurable
 
-###4/20/2015
+### 4/20/2015
  - Flip the card image back to the front after CVV field loses focus
  - Expose CardType on CreditCard object
  - Transferred repo ownership
 
-###4/19/2015
+### 4/19/2015
  - Don't scroll when scrolling is already happening
 
-###4/18/2015
+### 4/18/2015
  - Made helper optional (app:include_helper="false")
  - Fixed a ton of lint warnings
  - Fixed vertical alignment of form fields
@@ -204,18 +204,18 @@ In code:
  - Last 4 of card now tappable to enter edit mode
  - updated image assets
 
-###4/8/2015
+### 4/8/2015
  - Always return CreditCard object when requested even when invalid
 
-###4/7/2015
+### 4/7/2015
  - Made zip code optional (app:include_zip="false")
  - added callback when data entry is complete and card is valid
  - optionally specify helper text color in XML attrs
 
-###5/11/2013
+### 5/11/2013
  - Updated Demo added screenshots
 
-###4/2/2013
+### 4/2/2013
  - Initial Commit
 
 [1]: https://raw.github.com/dbachelder/CreditCardEntry/master/demo.gif "Demo GIF"
