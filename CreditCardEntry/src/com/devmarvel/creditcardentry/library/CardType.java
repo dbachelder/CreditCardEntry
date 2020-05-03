@@ -1,6 +1,6 @@
 package com.devmarvel.creditcardentry.library;
 
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 
 import com.devmarvel.creditcardentry.R;
 
